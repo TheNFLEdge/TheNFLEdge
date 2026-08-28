@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The NFL Edge Archive Vault</title>
+    <style>
+        :root {
+            --ink: #101820;
+            --navy: #00205b;
+            --red: #bf0a30;
+            --white: #ffffff;
+            --gray: #c7c9cb;
+            --muted: #303840;
+            --line: rgba(16, 24, 32, .25);
+            --panel: #f3f4f5;
+            --space-sm: 12px;
+            --space-md: 24px;
+            --space-lg: 52px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--gray);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: var(--space-lg) 22px 80px;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            box-shadow: 6px 6px 0 var(--red);
+            padding: clamp(26px, 4vw, 54px);
+        }
+
+        .tag {
+            margin: 0 0 16px;
+            color: var(--red);
+            font: 700 13px/1.2 Arial, sans-serif;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            color: var(--navy);
+            font-size: clamp(34px, 5vw, 62px);
+            line-height: .96;
+            letter-spacing: -1px;
+        }
+
+        .intro {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: clamp(18px, 2.1vw, 24px);
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 19px;
+            color: var(--white);
+            background: var(--red);
+            font: 700 13px Arial, sans-serif;
+            letter-spacing: .4px;
+            text-decoration: none;
+        }
+
+        .button.secondary {
+            color: var(--navy);
+            background: transparent;
+            border: 2px solid var(--navy);
+        }
+
+        .summary {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid var(--line);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--panel);
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--navy);
+            color: var(--white);
+            font: 700 13px Arial, sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 16px;
+            line-height: 1.45;
+        }
+
+        tbody tr:nth-child(even) td {
+            background: rgba(0, 32, 91, 0.02);
+        }
+
+        .season {
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .text-muted { color: var(--muted); }
+
+        .text-red { color: var(--red); }
+
+        a {
+            color: var(--red);
+        }
+
+        .note {
+            margin-top: 22px;
+            color: var(--muted);
+            font: 700 12px/1.5 Arial, sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 24px 14px 52px;
+            }
+
+            .card {
+                padding: clamp(18px, 4vw, 54px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="card">
+            <div class="tag">The NFL Edge</div>
+            <h1>Archive Vault</h1>
+            <p class="intro">A season-by-season jump page for the historical NFL picks, score projections, and weekly game analysis from the archive years.</p>
+
+            <div class="actions">
+                <a class="button" href="../nfle26-C00.htm">Back to the 2026 homepage</a>
+                <a class="button secondary" href="../NFLwTmp.htm">View the next week</a>
+            </div>
+
+            <div class="summary">
+                <table aria-label="NFL archive seasons">
+                    <thead>
+                        <tr>
+                            <th>Season</th>
+                            <th>Record</th>
+                            <th>ATS</th>
+                            <th>Archive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="season">2025</td><td>242-30 (88.9%)</td><td>Not available</td><td>Season results pending archive recovery</td></tr>
+                        <tr><td class="season">2020</td><td>Not available</td><td>Not available</td><td><a href="./2020/nfle.htm">Open 2020 archive</a></td></tr>
+                        <tr><td class="season">2017</td><td>Not available</td><td>Not available</td><td><a href="./2017/nfle.htm">Open 2017 archive</a></td></tr>
+                        <tr><td class="season">2016</td><td>166-89 (65.10%)</td><td>151-105 (58.98%)</td><td><a href="./2016/16arch.html">Open 2016 archive</a></td></tr>
+                        <tr><td class="season">2015</td><td>162-94 (63.28%)</td><td>151-105 (58.98%)</td><td><a href="./2015/nfl15arch.html">Open 2015 archive</a></td></tr>
+                        <tr><td class="season">2014</td><td>83-48 (63.36%)</td><td>63-70 (47.37%)</td><td><a href="./2014/14arch.html">Open 2014 archive</a></td></tr>
+                        <tr><td class="season">2013</td><td>164-93 (63.81%)</td><td>136-121 (52.92%)</td><td><a href="./2013/nfl13arch.xhtml">Open 2013 archive</a></td></tr>
+                        <tr><td class="season">2012</td><td>160-97 (62%)</td><td>139-116 (55%)</td><td><a href="./2012/12arch.htm">Open 2012 archive</a></td></tr>
+                        <tr><td class="season">2011</td><td>176 winners (68%)</td><td>Not available</td><td><a href="./2011/11arch.html">Open 2011 archive</a></td></tr>
+                        <tr><td class="season">2010</td><td>Not available</td><td>Preseason: 86%</td><td><a href="./2010/10arch.html">Open 2010 archive</a></td></tr>
+                        <tr><td class="season">2009</td><td>175-77 (69%)</td><td>Not available</td><td><a href="./2009/09arch.html">Open 2009 archive</a></td></tr>
+                        <tr><td class="season">2008</td><td>159-91 (64%)</td><td>Not available</td><td><a href="./2008/08arch.html">Open 2008 archive</a></td></tr>
+                        <tr><td class="season">2007</td><td>160-96 (63%)</td><td>Not available</td><td><a href="./2007/07arch.html">Open 2007 archive</a></td></tr>
+                        <tr><td class="season">2006</td><td>163-93 (64%)</td><td>Not available</td><td><a href="./2006/06archives.html">Open 2006 archive</a></td></tr>
+                        <tr><td class="season">2005</td><td>167-88 (65%)</td><td>Not available</td><td><a href="./2005/05Archives.htm">Open 2005 archive</a></td></tr>
+                        <tr><td class="season">2004</td><td>162-94 (63%)</td><td>Not available</td><td><a href="./2004/04Archives.htm">Open 2004 archive</a></td></tr>
+                        <tr><td class="season">2003</td><td>169-87 (66%)</td><td>Not available</td><td><a href="./2003/03Archives.htm">Open 2003 archive</a></td></tr>
+                        <tr><td class="season">2002</td><td>156-100 (61%)</td><td>Not available</td><td><a href="./2002/02Archives.htm">Open 2002 archive</a></td></tr>
+                        <tr><td class="season">2001</td><td>153-94 (62%)</td><td>Not available</td><td><a href="./2001/01Archives.htm">Open 2001 archive</a></td></tr>
+                        <tr><td class="season">2000</td><td>132-82 (62%)</td><td>Not available</td><td><a href="./2000/00Archives.htm">Open 2000 archive</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note">Records are taken from the available season summaries. Older archive links are retained for future recovery; unavailable ATS totals are marked explicitly.</div>
+        </div>
+    </div>
+</body>
+</html>
