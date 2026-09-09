@@ -8,8 +8,8 @@ HANDOFF_FILE = ROOT / "nfl_data_handoff.json"
 TEMPLATE_FILE = ROOT / "nfle26-template.htm"
 
 P_MULTIPLIERS = {
-    "1.0": float(os.getenv("PG_PI0", "2.0")),
-    "0.75": float(os.getenv("PG_PI7", "2.0")),
+    "1.0": float(os.getenv("PG_PI0", "2.4")),
+    "0.75": float(os.getenv("PG_PI7", "2.2")),
     "0.5": float(os.getenv("PG_PPI5", "2.0")),
     "0.25": float(os.getenv("PG_PI2", "1.66")),
     "0.0": float(os.getenv("PG_PI_X", "1.5")),
