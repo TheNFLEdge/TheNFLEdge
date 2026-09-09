@@ -241,6 +241,45 @@
             text-decoration: none;
         }
 
+        .button.primary-picks {
+            min-width: min(100%, 430px);
+            padding: 12px 24px 16px;
+            color: var(--white);
+            background: var(--red);
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--red), 8px 8px 0 var(--navy);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .primary-picks .button-kicker {
+            display: block;
+            margin-bottom: 5px;
+            font: 700 10px/1 Arial, sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .primary-picks .button-title {
+            display: block;
+            font: 700 clamp(16px, 2vw, 21px)/1.05 Georgia, "Times New Roman", serif;
+            letter-spacing: .5px;
+        }
+
+        .primary-picks .button-title strong {
+            display: block;
+            margin: 3px 0;
+            color: #ffd700;
+            font-size: 1.18em;
+            letter-spacing: 1px;
+        }
+
+        .primary-picks:hover,
+        .primary-picks:focus-visible {
+            color: var(--white);
+            background: var(--navy);
+            box-shadow: 0 0 0 3px var(--navy), 8px 8px 0 var(--red);
+        }
+
         .button.secondary {
             color: var(--navy);
             background: transparent;
@@ -301,7 +340,10 @@
                     <p class="dek">Greggy the Greek's The NFL Edge is the original totally FREE internet analytics picks and projection website. Utilizing Greggy's proprietary computer algorithm, we celebrate our 43rd season of projecting NFL regular-season game scores, building on the success of our most successful season ever when our computer correctly identified the winner in 88.9% of the 2025 regular-season contests.</p>
 
                     <div class="actions">
-                        <a class="button" href="nfleTMP.htm">The next weeks picks</a>
+                        <a class="button primary-picks" href="nfleTMP.htm">
+                            <span class="button-kicker">Click here</span>
+                            <span class="button-title">Get this week's<br><strong>PanaGeo-computer generated</strong><br>NFL score projection!</span>
+                        </a>
                         <a class="button secondary" href="archives/index.html">the NFL Edge Archives</a>
                     </div>
                 </div>
