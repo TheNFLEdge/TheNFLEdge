@@ -28,6 +28,23 @@
         .ad-box a { color: #ffd700; }
         .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
         .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
+
+        @media (max-width: 560px) {
+            .page { width: 100%; padding: 24px 12px 48px; overflow-x: hidden; }
+            .header { padding: 22px 16px; box-shadow: 5px 5px 0 var(--red); }
+            h1 { font-size: clamp(34px, 12vw, 52px); overflow-wrap: anywhere; }
+            .intro { font-size: 17px; line-height: 1.4; }
+            .game-list { gap: 12px; margin-top: 28px; }
+            .game-card { min-width: 0; padding: 16px; }
+            .game-card h2 { font-size: 20px; overflow-wrap: anywhere; }
+            .line, .pending { font-size: 13px; overflow-wrap: anywhere; }
+            table { table-layout: auto; font-size: 15px; }
+            td { display: block; width: 100% !important; padding: 8px 0 2px; overflow-wrap: anywhere; }
+            td + td { padding-top: 0; padding-bottom: 8px; color: var(--navy); font-size: 18px; line-height: 1.25; }
+            .ad-box { min-width: 0; padding: 16px; }
+            .ad-box h2 { font-size: 19px; }
+            .ad-box p { font-size: 15px; }
+        }
     </style>
 </head>
 <body>
