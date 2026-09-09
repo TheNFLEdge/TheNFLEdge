@@ -28,6 +28,23 @@
         .ad-box a { color: #ffd700; }
         .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
         .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
+
+        @media (max-width: 560px) {
+            .page { width: 100%; padding: 24px 12px 48px; overflow-x: hidden; }
+            .header { padding: 22px 16px; box-shadow: 5px 5px 0 var(--red); }
+            h1 { font-size: clamp(34px, 12vw, 52px); overflow-wrap: anywhere; }
+            .intro { font-size: 17px; line-height: 1.4; }
+            .game-list { gap: 12px; margin-top: 28px; }
+            .game-card { min-width: 0; padding: 16px; }
+            .game-card h2 { font-size: 20px; overflow-wrap: anywhere; }
+            .line, .pending { font-size: 13px; overflow-wrap: anywhere; }
+            table { table-layout: auto; font-size: 15px; }
+            td { display: block; width: 100% !important; padding: 8px 0 2px; overflow-wrap: anywhere; }
+            td + td { padding-top: 0; padding-bottom: 8px; color: var(--navy); font-size: 18px; line-height: 1.25; }
+            .ad-box { min-width: 0; padding: 16px; }
+            .ad-box h2 { font-size: 19px; }
+            .ad-box p { font-size: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -36,9 +53,10 @@
             <p class="eyebrow">The NFL Edge 2026</p>
             <h1>Week 1 Picks</h1>
             <p class="intro">Computer-generated score projections from Greggy the Greek's PanaGeoTech formula.</p>
+            <p class="intro">Note: Week 1 projections are based on combined data from multiple sources. These should all be weighted appropriately as none of these teams have played a single game yet as currently constitued.</p>
         </header>
         <section class="game-list" aria-label="NFL weekly projections">
-            <article class="game-card" data-game="NE-SEA"><h2>Game 1: NE @ SEA</h2><p class="line">Line: SEA -3 O/U 44.5</p><table><tr><td><b>Projected Score:</b></td><td>NE 19 - SEA 19</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NE-SEA--></td></tr></table></article>
+            <article class="game-card" data-game="NE-SEA"><h2>Game 1: NE @ SEA</h2><p class="line">Line: SEA -3 O/U 44.5</p><table><tr><td><b>Projected Score:</b></td><td>NE 19 - SEA 20</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NE-SEA--></td></tr></table></article>
 <article class="game-card" data-game="SF-LAR"><h2>Game 2: SF @ LAR</h2><p class="line">Line: LAR -3.5 O/U 48.5</p><table><tr><td><b>Projected Score:</b></td><td>SF 19 - LAR 28</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-SF-LAR--></td></tr></table></article>
 <article class="game-card" data-game="TB-CIN"><h2>Game 3: TB @ CIN</h2><p class="line">Line: CIN -3.5 O/U 50.5</p><table><tr><td><b>Projected Score:</b></td><td>TB 16 - CIN 25</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-TB-CIN--></td></tr></table></article>
 <article class="game-card" data-game="NO-DET"><h2>Game 4: NO @ DET</h2><p class="line">Line: DET -7 O/U 49.5</p><table><tr><td><b>Projected Score:</b></td><td>NO 18 - DET 23</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NO-DET--></td></tr></table></article>
