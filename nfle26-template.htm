@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The NFL Edge | Week {{WEEK}} Picks</title>
+    <style>
+        :root { --ink: #101820; --navy: #00205b; --red: #bf0a30; --gray: #c7c9cb; --white: #fff; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--gray); color: var(--ink); font-family: Georgia, "Times New Roman", serif; }
+        .page { max-width: 980px; margin: 0 auto; padding: 48px 24px 72px; }
+        .header, .game-card, .ad-box { background: var(--white); border: 1px solid rgba(16, 24, 32, .25); }
+        .header { padding: clamp(28px, 5vw, 52px); box-shadow: 9px 9px 0 var(--red); }
+        .eyebrow { margin: 0 0 12px; color: var(--red); font: 700 13px Arial, sans-serif; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { margin: 0; color: var(--navy); font-size: clamp(38px, 7vw, 70px); line-height: 1; }
+        .intro { font-size: 20px; line-height: 1.45; }
+        .game-list { display: grid; gap: 16px; margin-top: 48px; }
+        .game-card { padding: 22px; }
+        .game-card h2 { margin: 0 0 6px; color: var(--navy); font-size: 24px; }
+        .line, .pending { margin: 0 0 16px; font: 700 14px/1.4 Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; font-size: 17px; }
+        td { padding: 8px 0; border-top: 1px solid rgba(16, 24, 32, .18); }
+        td:first-child { width: 42%; }
+        .pending { color: var(--red); }
+        .ad-box { padding: 18px; color: var(--white); background: #111; border-color: #444; }
+        .ad-box h2 { margin: 0 0 10px; color: var(--white); font: 700 21px/1.2 Arial, sans-serif; }
+        .ad-box p { margin: 0 0 14px; font: 16px/1.45 Arial, sans-serif; }
+        .ad-box a { color: #ffd700; }
+        .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
+        .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="header">
+            <p class="eyebrow">The NFL Edge 2026</p>
+            <h1>Week {{WEEK}} Picks</h1>
+            <p class="intro">Computer-generated score projections from Greggy the Greek's PanaGeoTech formula.</p>
+        </header>
+        <section class="game-list" aria-label="NFL weekly projections">
+            <!-- GAME-CARDS -->
+            <!--ADVERTISEMENT-->
+        </section>
+    </main>
+</body>
+</html>

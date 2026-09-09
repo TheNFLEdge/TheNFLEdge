@@ -1,0 +1,710 @@
+{
+  "season": 2026,
+  "current_week": 4,
+  "target_week": 1,
+  "model": "week1-five-game-variant",
+  "matchups": [
+    {
+      "event_id": "401872656",
+      "date": "2026-09-10T00:20Z",
+      "away": "NE",
+      "home": "SEA",
+      "line": "SEA -3",
+      "ou": 44.5
+    },
+    {
+      "event_id": "401872657",
+      "date": "2026-09-11T00:35Z",
+      "away": "SF",
+      "home": "LAR",
+      "line": "LAR -3.5",
+      "ou": 48.5
+    },
+    {
+      "event_id": "401872925",
+      "date": "2026-09-13T17:00Z",
+      "away": "TB",
+      "home": "CIN",
+      "line": "CIN -3.5",
+      "ou": 50.5
+    },
+    {
+      "event_id": "401872923",
+      "date": "2026-09-13T17:00Z",
+      "away": "NO",
+      "home": "DET",
+      "line": "DET -7",
+      "ou": 49.5
+    },
+    {
+      "event_id": "401872924",
+      "date": "2026-09-13T17:00Z",
+      "away": "NYJ",
+      "home": "TEN",
+      "line": "TEN -1.5",
+      "ou": 39.5
+    },
+    {
+      "event_id": "401872659",
+      "date": "2026-09-13T17:00Z",
+      "away": "BAL",
+      "home": "IND",
+      "line": "BAL -3.5",
+      "ou": 47.5
+    },
+    {
+      "event_id": "401872658",
+      "date": "2026-09-13T17:00Z",
+      "away": "ATL",
+      "home": "PIT",
+      "line": "PIT -3.5",
+      "ou": 42.5
+    },
+    {
+      "event_id": "401872661",
+      "date": "2026-09-13T17:00Z",
+      "away": "CHI",
+      "home": "CAR",
+      "line": "CHI -3",
+      "ou": 46.5
+    },
+    {
+      "event_id": "401872922",
+      "date": "2026-09-13T17:00Z",
+      "away": "CLE",
+      "home": "JAX",
+      "line": "JAX -8.5",
+      "ou": 40.5
+    },
+    {
+      "event_id": "401872660",
+      "date": "2026-09-13T17:00Z",
+      "away": "BUF",
+      "home": "HOU",
+      "line": "BUF -1.5",
+      "ou": 44.5
+    },
+    {
+      "event_id": "401872928",
+      "date": "2026-09-13T20:25Z",
+      "away": "MIA",
+      "home": "LV",
+      "line": "LV -3.5",
+      "ou": 40.5
+    },
+    {
+      "event_id": "401872927",
+      "date": "2026-09-13T20:25Z",
+      "away": "GB",
+      "home": "MIN",
+      "line": "MIN -1.5",
+      "ou": 46.5
+    },
+    {
+      "event_id": "401872929",
+      "date": "2026-09-13T20:25Z",
+      "away": "WSH",
+      "home": "PHI",
+      "line": "PHI -5.5",
+      "ou": 44.5
+    },
+    {
+      "event_id": "401872926",
+      "date": "2026-09-13T20:25Z",
+      "away": "ARI",
+      "home": "LAC",
+      "line": "LAC -9.5",
+      "ou": 47.5
+    },
+    {
+      "event_id": "401872930",
+      "date": "2026-09-14T00:20Z",
+      "away": "DAL",
+      "home": "NYG",
+      "line": "DAL -3",
+      "ou": 48.5
+    },
+    {
+      "event_id": "401872931",
+      "date": "2026-09-15T00:15Z",
+      "away": "DEN",
+      "home": "KC",
+      "line": "KC -2.5",
+      "ou": 43.5
+    }
+  ],
+  "team_stats": {
+    "TB": {
+      "pf_sum": 73,
+      "pa_sum": 84,
+      "pfpq": 3.65,
+      "papq": 4.2,
+      "pfpq_avg": 0.73,
+      "papq_avg": 0.8400000000000001,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "CAR": {
+      "pf_sum": 126,
+      "pa_sum": 126,
+      "pfpq": 6.3,
+      "papq": 6.3,
+      "pfpq_avg": 1.26,
+      "papq_avg": 1.26,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "SF": {
+      "pf_sum": 101,
+      "pa_sum": 108,
+      "pfpq": 5.050000000000001,
+      "papq": 5.3999999999999995,
+      "pfpq_avg": 1.0100000000000002,
+      "papq_avg": 1.0799999999999998,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "SEA": {
+      "pf_sum": 104,
+      "pa_sum": 78,
+      "pfpq": 5.2,
+      "papq": 3.9000000000000004,
+      "pfpq_avg": 1.04,
+      "papq_avg": 0.78,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "ATL": {
+      "pf_sum": 104,
+      "pa_sum": 86,
+      "pfpq": 5.2,
+      "papq": 4.3,
+      "pfpq_avg": 1.04,
+      "papq_avg": 0.86,
+      "wins": 4,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "NO": {
+      "pf_sum": 98,
+      "pa_sum": 127,
+      "pfpq": 4.9,
+      "papq": 6.35,
+      "pfpq_avg": 0.9800000000000001,
+      "papq_avg": 1.27,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "CIN": {
+      "pf_sum": 128,
+      "pa_sum": 70,
+      "pfpq": 6.4,
+      "papq": 3.5,
+      "pfpq_avg": 1.28,
+      "papq_avg": 0.7,
+      "wins": 4,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "CLE": {
+      "pf_sum": 87,
+      "pa_sum": 102,
+      "pfpq": 4.3500000000000005,
+      "papq": 5.1000000000000005,
+      "pfpq_avg": 0.8700000000000001,
+      "papq_avg": 1.02,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "MIN": {
+      "pf_sum": 61,
+      "pa_sum": 70,
+      "pfpq": 3.05,
+      "papq": 3.5,
+      "pfpq_avg": 0.61,
+      "papq_avg": 0.7,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "GB": {
+      "pf_sum": 114,
+      "pa_sum": 126,
+      "pfpq": 5.699999999999999,
+      "papq": 6.300000000000001,
+      "pfpq_avg": 1.14,
+      "papq_avg": 1.2600000000000002,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "NYG": {
+      "pf_sum": 127,
+      "pa_sum": 49,
+      "pfpq": 6.3500000000000005,
+      "papq": 2.45,
+      "pfpq_avg": 1.27,
+      "papq_avg": 0.49000000000000005,
+      "wins": 4,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "DAL": {
+      "pf_sum": 122,
+      "pa_sum": 104,
+      "pfpq": 6.1,
+      "papq": 5.199999999999999,
+      "pfpq_avg": 1.22,
+      "papq_avg": 1.0399999999999998,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "JAX": {
+      "pf_sum": 125,
+      "pa_sum": 88,
+      "pfpq": 6.25,
+      "papq": 4.4,
+      "pfpq_avg": 1.25,
+      "papq_avg": 0.8800000000000001,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "TEN": {
+      "pf_sum": 86,
+      "pa_sum": 128,
+      "pfpq": 4.3,
+      "papq": 6.4,
+      "pfpq_avg": 0.86,
+      "papq_avg": 1.28,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "HOU": {
+      "pf_sum": 86,
+      "pa_sum": 99,
+      "pfpq": 4.3,
+      "papq": 4.95,
+      "pfpq_avg": 0.86,
+      "papq_avg": 0.99,
+      "wins": 1,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "IND": {
+      "pf_sum": 82,
+      "pa_sum": 133,
+      "pfpq": 4.1,
+      "papq": 6.65,
+      "pfpq_avg": 0.82,
+      "papq_avg": 1.33,
+      "wins": 0,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "BUF": {
+      "pf_sum": 145,
+      "pa_sum": 105,
+      "pfpq": 7.25,
+      "papq": 5.25,
+      "pfpq_avg": 1.45,
+      "papq_avg": 1.05,
+      "wins": 4,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "NYJ": {
+      "pf_sum": 57,
+      "pa_sum": 124,
+      "pfpq": 2.85,
+      "papq": 6.199999999999999,
+      "pfpq_avg": 0.5700000000000001,
+      "papq_avg": 1.2399999999999998,
+      "wins": 1,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "CHI": {
+      "pf_sum": 115,
+      "pa_sum": 99,
+      "pfpq": 5.75,
+      "papq": 4.95,
+      "pfpq_avg": 1.15,
+      "papq_avg": 0.99,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "DET": {
+      "pf_sum": 85,
+      "pa_sum": 84,
+      "pfpq": 4.25,
+      "papq": 4.199999999999999,
+      "pfpq_avg": 0.85,
+      "papq_avg": 0.8399999999999999,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "DEN": {
+      "pf_sum": 114,
+      "pa_sum": 86,
+      "pfpq": 5.7,
+      "papq": 4.3,
+      "pfpq_avg": 1.1400000000000001,
+      "papq_avg": 0.86,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "LAC": {
+      "pf_sum": 68,
+      "pa_sum": 103,
+      "pfpq": 3.4,
+      "papq": 5.15,
+      "pfpq_avg": 0.6799999999999999,
+      "papq_avg": 1.03,
+      "wins": 1,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "LV": {
+      "pf_sum": 72,
+      "pa_sum": 111,
+      "pfpq": 3.6,
+      "papq": 5.55,
+      "pfpq_avg": 0.72,
+      "papq_avg": 1.1099999999999999,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "KC": {
+      "pf_sum": 61,
+      "pa_sum": 79,
+      "pfpq": 3.05,
+      "papq": 3.95,
+      "pfpq_avg": 0.61,
+      "papq_avg": 0.79,
+      "wins": 0,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "LAR": {
+      "pf_sum": 128,
+      "pa_sum": 78,
+      "pfpq": 6.4,
+      "papq": 3.9,
+      "pfpq_avg": 1.28,
+      "papq_avg": 0.78,
+      "wins": 5,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "ARI": {
+      "pf_sum": 104,
+      "pa_sum": 155,
+      "pfpq": 5.2,
+      "papq": 7.75,
+      "pfpq_avg": 1.04,
+      "papq_avg": 1.55,
+      "wins": 1,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "NE": {
+      "pf_sum": 94,
+      "pa_sum": 90,
+      "pfpq": 4.7,
+      "papq": 4.5,
+      "pfpq_avg": 0.9400000000000001,
+      "papq_avg": 0.9,
+      "wins": 3,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "MIA": {
+      "pf_sum": 52,
+      "pa_sum": 118,
+      "pfpq": 2.6,
+      "papq": 5.8999999999999995,
+      "pfpq_avg": 0.52,
+      "papq_avg": 1.18,
+      "wins": 1,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "PHI": {
+      "pf_sum": 77,
+      "pa_sum": 125,
+      "pfpq": 3.85,
+      "papq": 6.25,
+      "pfpq_avg": 0.77,
+      "papq_avg": 1.25,
+      "wins": 0,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "WSH": {
+      "pf_sum": 83,
+      "pa_sum": 112,
+      "pfpq": 4.15,
+      "papq": 5.6,
+      "pfpq_avg": 0.8300000000000001,
+      "papq_avg": 1.1199999999999999,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "PIT": {
+      "pf_sum": 87,
+      "pa_sum": 108,
+      "pfpq": 4.35,
+      "papq": 5.4,
+      "pfpq_avg": 0.8699999999999999,
+      "papq_avg": 1.08,
+      "wins": 2,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason"
+      ]
+    },
+    "BAL": {
+      "pf_sum": 143,
+      "pa_sum": 63,
+      "pfpq": 7.1499999999999995,
+      "papq": 3.1499999999999995,
+      "pfpq_avg": 1.43,
+      "papq_avg": 0.6299999999999999,
+      "wins": 4,
+      "gp": 5,
+      "sources": [
+        "previous-regular-season",
+        "current-preseason",
+        "current-preseason",
+        "current-preseason",
+        "previous-regular-season"
+      ]
+    },
+    "AFC": {
+      "pf_sum": 115,
+      "pa_sum": 142,
+      "pfpq": 5.75,
+      "papq": 7.1,
+      "pfpq_avg": 2.875,
+      "papq_avg": 3.55,
+      "wins": 0,
+      "gp": 2,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season"
+      ]
+    },
+    "NFC": {
+      "pf_sum": 142,
+      "pa_sum": 115,
+      "pfpq": 7.1,
+      "papq": 5.75,
+      "pfpq_avg": 3.55,
+      "papq_avg": 2.875,
+      "wins": 2,
+      "gp": 2,
+      "sources": [
+        "previous-regular-season",
+        "previous-regular-season"
+      ]
+    }
+  }
+}

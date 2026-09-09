@@ -1,0 +1,11 @@
+{
+  "name": "thenfledge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "fetch:nfl": "node nfl-fetch.js",
+    "generate:projections": "python nfl-projection.py",
+    "ci:weekly": "npm run fetch:nfl && npm run generate:projections"
+  }
+}
