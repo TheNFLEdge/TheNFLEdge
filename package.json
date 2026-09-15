@@ -5,7 +5,10 @@
   "type": "commonjs",
   "scripts": {
     "fetch:nfl": "node nfl-fetch.js",
+    "refresh:scores": "npm run fetch:nfl",
     "generate:projections": "python nfl-projection.py",
-    "ci:weekly": "npm run fetch:nfl && npm run generate:projections"
+    "archive:nfl": "python nfl-archiver.py",
+    "rotate:nfl": "npm run fetch:nfl && npm run archive:nfl && npm run generate:projections",
+    "ci:weekly": "npm run rotate:nfl"
   }
 }

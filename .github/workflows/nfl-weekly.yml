@@ -25,27 +25,23 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Generate NFL data handoff
+      - name: Archive completed NFL week and rotate
         env:
           NFL_SEASON: '2026'
           ESPN_API_KEY: ${{ secrets.ESPN_API_KEY }}
           ESPN_BASE_URL: ${{ secrets.ESPN_BASE_URL }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_BASE_URL: ${{ secrets.ODDS_BASE_URL }}
-        run: npm run fetch:nfl
-
-      - name: Generate NFL projections
-        env:
           PG_PI_X: ${{ secrets.PG_PI_X }}
           PG_PI7: ${{ secrets.PG_PI7 }}
           PG_PPI5: ${{ secrets.PG_PPI5 }}
           PG_PI2: ${{ secrets.PG_PI2 }}
           PG_PI0: ${{ secrets.PG_PI0 }}
           PG_MD: ${{ secrets.PG_MD }}
-        run: npm run generate:projections
+        run: npm run rotate:nfl
 
       - name: Commit and push updates
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'Automated NFL weekly update'
-          file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json'
+          file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json archives/2026'
