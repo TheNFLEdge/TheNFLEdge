@@ -133,18 +133,6 @@
     }
   ],
   "team_stats": {
-    "KC": {
-      "pf_sum": 67,
-      "pa_sum": 55,
-      "wins": 1,
-      "gp": 4
-    },
-    "DEN": {
-      "pf_sum": 84,
-      "pa_sum": 77,
-      "wins": 2,
-      "gp": 4
-    },
     "ARI": {
       "pf_sum": 104,
       "pa_sum": 104,
@@ -229,6 +217,12 @@
       "wins": 2,
       "gp": 4
     },
+    "DEN": {
+      "pf_sum": 84,
+      "pa_sum": 77,
+      "wins": 2,
+      "gp": 4
+    },
     "NYJ": {
       "pf_sum": 62,
       "pa_sum": 57,
@@ -281,6 +275,12 @@
       "pf_sum": 61,
       "pa_sum": 79,
       "wins": 2,
+      "gp": 4
+    },
+    "KC": {
+      "pf_sum": 67,
+      "pa_sum": 55,
+      "wins": 1,
       "gp": 4
     },
     "LAR": {
