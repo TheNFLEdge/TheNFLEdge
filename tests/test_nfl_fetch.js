@@ -11,7 +11,7 @@ function annotate(projected, line, score) {
 }
 
 const winnerOnly = annotate('NE 17 - SEA 24', 'SEA -3', 'NE 20 - SEA 21');
-assert.match(winnerOnly, />NE 20 - SEA 21 W&nbsp;\(T\)<\/span>/);
+assert.match(winnerOnly, />NE 20 - SEA 21 W&nbsp;\(U\)<\/span>/);
 assert.doesNotMatch(winnerOnly, /final-score-cover/);
 
 const coverOnly = annotate('NE 24 - SEA 20', 'SEA -3', 'NE 20 - SEA 22');
@@ -20,10 +20,16 @@ assert.doesNotMatch(coverOnly, / W<\/span>/);
 
 const atsTie = annotate('NE 17 - SEA 24', 'SEA -3', 'NE 10 - SEA 13');
 assert.match(atsTie, /final-score-cover/);
-assert.match(atsTie, />NE 10 - SEA 13 W&nbsp;\(T\)<\/span>/);
+assert.match(atsTie, />NE 10 - SEA 13 W&nbsp;\(U\)<\/span>/);
 
 const winnerAndTotal = annotate('NE 17 - SEA 24', 'SEA -3', 'NE 10 - SEA 31');
-assert.match(winnerAndTotal, / W&nbsp;\(T\)<\/span>/);
+assert.match(winnerAndTotal, / W&nbsp;\(U\)<\/span>/);
+
+const overOnly = annotate('NE 20 - SEA 25', 'SEA -3', 'NE 20 - SEA 30');
+assert.match(overOnly, /&nbsp;\(O\)<\/span>/);
+
+const underOnly = annotate('NE 17 - SEA 24', 'SEA -3', 'NE 10 - SEA 20');
+assert.match(underOnly, /&nbsp;\(U\)<\/span>/);
 
 const rerun = annotateCompletedCard(winnerAndTotal, new Map([['NE_SEA', {
     scoreString: 'NE 10 - SEA 24',
@@ -31,6 +37,6 @@ const rerun = annotateCompletedCard(winnerAndTotal, new Map([['NE_SEA', {
     homeScore: 24
 }]]));
 assert.strictEqual((rerun.match(/\bW\b/g) || []).length, 1);
-assert.strictEqual((rerun.match(/\(T\)/g) || []).length, 1);
+assert.strictEqual((rerun.match(/\((O|U)\)/g) || []).length, 1);
 
 console.log('NFL score annotation tests passed');

@@ -15,6 +15,7 @@ P_MULTIPLIERS = {
     "0.0": float(os.getenv("PG_PI_X", "1.5")),
 }
 MARGIN_ADJUSTMENT = float(os.getenv("PG_MD", "2.0"))
+WEEK_TWO_SCORE_ADJUSTMENT = 2
 
 
 def confidence_bucket(wins, games):
@@ -45,7 +46,11 @@ def project_score(team, opponent, stats):
     return max(0, round(score))
 
 
-def render_card(index, matchup, stats):
+def project_week_two_score(team, opponent, stats):
+    return max(0, project_score(team, opponent, stats) - WEEK_TWO_SCORE_ADJUSTMENT)
+
+
+def render_card(index, matchup, stats, projection_function=project_score):
     away = matchup["away"]
     home = matchup["home"]
     line = matchup["line"]
@@ -53,8 +58,8 @@ def render_card(index, matchup, stats):
     if away not in stats or home not in stats or not stats[away]["gp"] or not stats[home]["gp"]:
         content = f'<p class="pending">Projection pending for {away} @ {home}; season data is not available yet.</p>'
     else:
-        away_score = project_score(away, home, stats)
-        home_score = project_score(home, away, stats)
+        away_score = projection_function(away, home, stats)
+        home_score = projection_function(home, away, stats)
         content = (
             f'<table><tr><td><b>Projected Score:</b></td>'
             f'<td>{away} {away_score} - {home} {home_score}</td></tr>'
@@ -78,12 +83,12 @@ def render_advertisement():
 </section>"""
 
 
-def render_week(matchups, stats):
+def render_week(matchups, stats, projection_function=project_score):
     sections = []
     for group_start in range(0, 16, 4):
         group = matchups[group_start:group_start + 4]
         sections.extend(
-            render_card(group_start + index, matchup, stats)
+            render_card(group_start + index, matchup, stats, projection_function)
             for index, matchup in enumerate(group, 1)
         )
         sections.append(render_advertisement())
@@ -96,7 +101,8 @@ def main():
     data = json.loads(HANDOFF_FILE.read_text(encoding="utf-8"))
     template = TEMPLATE_FILE.read_text(encoding="utf-8")
     week = int(data["target_week"])
-    weekly_content = render_week(data["matchups"], data["team_stats"])
+    projection_function = project_week_two_score if week == 2 else project_score
+    weekly_content = render_week(data["matchups"], data["team_stats"], projection_function)
     final_html = template.replace("{{WEEK}}", str(week)).replace("<!-- GAME-CARDS -->\n            <!--ADVERTISEMENT-->", weekly_content)
     (ROOT / "nfleTMP.htm").write_text(final_html, encoding="utf-8")
     (ROOT / f"nfle26-{week:02d}.htm").write_text(final_html, encoding="utf-8")
