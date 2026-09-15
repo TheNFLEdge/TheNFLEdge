@@ -1,0 +1,40 @@
+name: NFL In-Progress Score Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: NFL season to refresh
+        required: true
+        default: '2026'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-scores:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Refresh completed scores only
+        env:
+          NFL_SEASON: ${{ inputs.season }}
+          ESPN_API_KEY: ${{ secrets.ESPN_API_KEY }}
+          ESPN_BASE_URL: ${{ secrets.ESPN_BASE_URL }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_BASE_URL: ${{ secrets.ODDS_BASE_URL }}
+        run: npm run refresh:scores
+
+      - name: Commit score refresh
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: 'Refresh in-progress NFL scores'
+          file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json'
