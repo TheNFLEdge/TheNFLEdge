@@ -8,6 +8,9 @@ const ESPN_BASE_URL = process.env.ESPN_BASE_URL || 'https://site.web.api.espn.co
 const ODDS_BASE_URL = process.env.ODDS_BASE_URL || 'https://api.the-odds-api.com/v4';
 const ESPN_API_KEY = process.env.ESPN_API_KEY;
 const ODDS_API_KEY = process.env.ODDS_API_KEY;
+const SCORE_REFRESH_FILES = process.env.NFL_SCORE_REFRESH_FILES
+    ? process.env.NFL_SCORE_REFRESH_FILES.split(',').map(file => file.trim()).filter(Boolean)
+    : null;
 
 async function main() {
     const events = (await fetchEvents(SEASON, 2)).filter(event => {
@@ -221,21 +224,81 @@ function injectCompletedScores(events) {
         if (event.status?.type?.completed !== true) continue;
         const { home, away } = getTeams(event);
         const result = `${away.team.abbreviation.toUpperCase()} ${Number(away.score)} - ${home.team.abbreviation.toUpperCase()} ${Number(home.score)}`;
-        results.set(`${away.team.abbreviation}_${home.team.abbreviation}`.toUpperCase(), result);
+        results.set(`${away.team.abbreviation}_${home.team.abbreviation}`.toUpperCase(), {
+            scoreString: result,
+            awayScore: Number(away.score),
+            homeScore: Number(home.score)
+        });
     }
 
-    const files = fs.readdirSync(ROOT_DIR).filter(file => /^nfle(?:TMP|26-\d+)\.htm$/i.test(file));
+    const files = fs.readdirSync(ROOT_DIR).filter(file => {
+        if (SCORE_REFRESH_FILES) return SCORE_REFRESH_FILES.includes(file);
+        return /^nfle(?:TMP|26-\d+)\.htm$/i.test(file);
+    });
     for (const file of files) {
         const filePath = path.join(ROOT_DIR, file);
         const html = fs.readFileSync(filePath, 'utf8');
-        const updated = html.replace(/<!--FINAL-SCORE-([A-Z0-9]+)-([A-Z0-9]+)-->/gi, (marker, away, home) => {
-            return results.get(`${away}_${home}`.toUpperCase()) || marker;
-        });
+        const updated = html.replace(
+            /<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi,
+            block => annotateCompletedCard(block, results)
+        );
         if (updated !== html) fs.writeFileSync(filePath, updated, 'utf8');
     }
 }
 
-main().catch(error => {
-    console.error(`NFL fetch failed: ${error.message}`);
-    process.exitCode = 1;
-});
+function annotateCompletedCard(block, results) {
+    const matchupMatch = /data-game=["']([A-Z0-9]+)-([A-Z0-9]+)["']/i.exec(block);
+    if (!matchupMatch) return block;
+
+    const away = matchupMatch[1].toUpperCase();
+    const home = matchupMatch[2].toUpperCase();
+    const gameData = results.get(`${away}_${home}`.toUpperCase());
+    if (!gameData) return block;
+
+    const projectedMatch = /Projected Score:<\/b><\/td>\s*<td[^>]*>\s*[A-Z0-9]+\s+(-?\d+)\s*-\s*[A-Z0-9]+\s+(-?\d+)\s*<\/td>/i.exec(block);
+    const lineMatch = /Line:\s*([A-Z0-9]+)\s+([+-]\d+(?:\.\d+)?)\s+O\/U\s+(\d+(?:\.\d+)?)/i.exec(block);
+    if (!projectedMatch || !lineMatch) return replaceFinalScore(block, gameData.scoreString);
+
+    const projectedAway = Number(projectedMatch[1]);
+    const projectedHome = Number(projectedMatch[2]);
+    const spreadTeam = lineMatch[1].toUpperCase();
+    const spread = Number(lineMatch[2]);
+    const overUnder = Number(lineMatch[3]);
+    const actualAway = gameData.awayScore;
+    const actualHome = gameData.homeScore;
+
+    const projectedMargin = projectedAway - projectedHome;
+    const actualMargin = actualAway - actualHome;
+    const winnerCorrect = projectedMargin !== 0 && actualMargin !== 0 && Math.sign(projectedMargin) === Math.sign(actualMargin);
+    const projectedSpreadMargin = spreadTeam === away ? projectedAway - projectedHome : projectedHome - projectedAway;
+    const actualSpreadMargin = spreadTeam === away ? actualAway - actualHome : actualHome - actualAway;
+    const projectedCover = projectedSpreadMargin + spread;
+    const actualCover = actualSpreadMargin + spread;
+    const atsCorrect = projectedCover !== 0 && actualCover !== 0 && Math.sign(projectedCover) === Math.sign(actualCover);
+    const projectedTotal = projectedAway + projectedHome;
+    const actualTotal = actualAway + actualHome;
+    const totalCorrect = projectedTotal !== overUnder && actualTotal !== overUnder
+        && Math.sign(projectedTotal - overUnder) === Math.sign(actualTotal - overUnder);
+
+    const markers = `${winnerCorrect ? ' W' : ''}${totalCorrect ? '&nbsp;(T)' : ''}`;
+    const scoreMarkup = atsCorrect
+        ? `<span class="final-score final-score-cover" style="color: green; font-weight: 700">${gameData.scoreString}${markers}</span>`
+        : `<span class="final-score">${gameData.scoreString}${markers}</span>`;
+    return replaceFinalScore(block, scoreMarkup);
+}
+
+function replaceFinalScore(block, replacement) {
+    return block.replace(
+        /(<tr>\s*<td><b>Final Score:<\/b><\/td>\s*<td[^>]*>)[\s\S]*?(<\/td>\s*<\/tr>)/i,
+        `$1${replacement}$2`
+    );
+}
+
+if (require.main === module) {
+    main().catch(error => {
+        console.error(`NFL fetch failed: ${error.message}`);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = { annotateCompletedCard };
