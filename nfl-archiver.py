@@ -71,7 +71,12 @@ def classify_card(card, index):
     final_line_margin = final[0] - final[1] if line_team == away else final[1] - final[0]
     projected_cover = projected_line_margin + spread
     final_cover = final_line_margin + spread
-    ats = "push" if projected_cover == 0 or final_cover == 0 else "win" if (projected_cover > 0) == (final_cover > 0) else "loss"
+    if projected_cover == 0:
+        ats = "push"
+    elif final_cover == 0 or (projected_cover > 0) == (final_cover > 0):
+        ats = "win"
+    else:
+        ats = "loss"
     return winner, ats
 
 

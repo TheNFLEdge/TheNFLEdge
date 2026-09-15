@@ -27,6 +27,7 @@ jobs:
       - name: Refresh completed scores only
         env:
           NFL_SEASON: ${{ inputs.season }}
+          NFL_SCORE_REFRESH_FILES: nfleTMP.htm
           ESPN_API_KEY: ${{ secrets.ESPN_API_KEY }}
           ESPN_BASE_URL: ${{ secrets.ESPN_BASE_URL }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -37,4 +38,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'Refresh in-progress NFL scores'
-          file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json'
+          file_pattern: 'nfleTMP.htm nfl_data_handoff.json'
