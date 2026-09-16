@@ -110,6 +110,45 @@ class NflArchiverTests(unittest.TestCase):
             finally:
                 ARCHIVER.ARCHIVE_FILE = original_path
 
+    def test_main_archives_active_week_with_final_suffix(self):
+        weekly_html = """
+        <h1>Week 1 Picks</h1>
+        <article class="game-card" data-game="NE-SEA">
+          <p class="line">Line: SEA -3 O/U 44.5</p>
+          <table>
+            <tr><td><b>Projected Score:</b></td><td>NE 17 - SEA 24</td></tr>
+            <tr><td><b>Final Score:</b></td><td><span>NE 10 - SEA 24 W&nbsp;(U)</span></td></tr>
+          </table>
+        </article>
+        """
+        archive_html = """
+        <table id="weekly-results">
+          <tbody><tr id="season-total"><td>Season total</td><td>0-0-0</td><td>0.00%</td><td>0-0-0</td><td>0.00%</td></tr></tbody>
+        </table>
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            active_path = root / "nfleTMP.htm"
+            weekly_path = root / "nfle26-01.htm"
+            archive_dir = root / "archives" / "2026"
+            archive_path = archive_dir / "26_NFLEArch.htm"
+            active_path.write_text(weekly_html, encoding="utf-8")
+            weekly_path.write_text(weekly_html, encoding="utf-8")
+            archive_dir.mkdir(parents=True)
+            archive_path.write_text(archive_html, encoding="utf-8")
+
+            original_values = (ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE)
+            ARCHIVER.ACTIVE_FILE = active_path
+            ARCHIVER.ARCHIVE_DIR = archive_dir
+            ARCHIVER.ARCHIVE_FILE = archive_path
+            try:
+                ARCHIVER.main()
+                final_path = archive_dir / "nfle26-01F.htm"
+                self.assertTrue(final_path.exists())
+                self.assertIn('data-week="1"', archive_path.read_text(encoding="utf-8"))
+            finally:
+                ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE = original_values
+
 
 if __name__ == "__main__":
     unittest.main()

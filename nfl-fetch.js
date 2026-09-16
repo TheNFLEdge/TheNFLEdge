@@ -25,7 +25,7 @@ async function main() {
         .filter(event => event.status?.type?.state === 'pre')
         .map(event => Number(event.week?.number))
         .filter(Number.isFinite);
-    const targetWeek = upcomingWeeks.length ? Math.min(...upcomingWeeks) : currentWeek + 1;
+    const targetWeek = selectTargetWeek(currentWeek, upcomingWeeks);
     const teamStats = calculateRollingStats(completedEvents);
     let matchups = events
         .filter(event => Number(event.week?.number) === targetWeek && event.status?.type?.state === 'pre')
@@ -305,4 +305,9 @@ if (require.main === module) {
     });
 }
 
-module.exports = { annotateCompletedCard };
+module.exports = { annotateCompletedCard, selectTargetWeek };
+
+function selectTargetWeek(currentWeek, upcomingWeeks) {
+    const nextUpcomingWeeks = upcomingWeeks.filter(week => week > currentWeek);
+    return nextUpcomingWeeks.length ? Math.min(...nextUpcomingWeeks) : currentWeek + 1;
+}
