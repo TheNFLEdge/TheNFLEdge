@@ -1,6 +1,7 @@
 import json
 import math
 import os
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -104,9 +105,20 @@ def main():
     projection_function = project_week_two_score if week == 2 else project_score
     weekly_content = render_week(data["matchups"], data["team_stats"], projection_function)
     final_html = template.replace("{{WEEK}}", str(week)).replace("<!-- GAME-CARDS -->\n            <!--ADVERTISEMENT-->", weekly_content)
-    (ROOT / "nfleTMP.htm").write_text(final_html, encoding="utf-8")
-    (ROOT / f"nfle26-{week:02d}.htm").write_text(final_html, encoding="utf-8")
+    write_atomic(ROOT / "nfleTMP.htm", final_html)
+    write_atomic(ROOT / f"nfle26-{week:02d}.htm", final_html)
     print(f"NFL Week {week} projections written to nfleTMP.htm and nfle26-{week:02d}.htm")
+
+
+def write_atomic(path, content):
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+        handle.write(content)
+        temporary_path = Path(handle.name)
+    try:
+        temporary_path.replace(path)
+    except Exception:
+        temporary_path.unlink(missing_ok=True)
+        raise
 
 
 if __name__ == "__main__":

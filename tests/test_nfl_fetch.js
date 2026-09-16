@@ -1,5 +1,8 @@
 const assert = require('assert');
-const { annotateCompletedCard } = require('../nfl-fetch');
+const { annotateCompletedCard, selectTargetWeek } = require('../nfl-fetch');
+
+assert.strictEqual(selectTargetWeek(4, [1, 4, 5]), 5);
+assert.strictEqual(selectTargetWeek(4, [1, 2]), 5);
 
 function annotate(projected, line, score) {
     const block = `<article class="game-card" data-game="NE-SEA"><h2>Game 1</h2><p class="line">Line: ${line} O/U 44.5</p><table><tr><td><b>Projected Score:</b></td><td>${projected}</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NE-SEA--></td></tr></table></article>`;

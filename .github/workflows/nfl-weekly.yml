@@ -28,7 +28,7 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install -r requirements.txt
 
-      - name: Archive completed NFL week and rotate
+      - name: Fetch scores and prepare next-week handoff
         env:
           NFL_SEASON: '2026'
           ESPN_API_KEY: ${{ secrets.ESPN_API_KEY }}
@@ -41,7 +41,20 @@ jobs:
           PG_PI2: ${{ secrets.PG_PI2 }}
           PG_PI0: ${{ secrets.PG_PI0 }}
           PG_MD: ${{ secrets.PG_MD }}
-        run: npm run rotate:nfl
+        run: npm run fetch:nfl
+
+      - name: Archive completed NFL week
+        run: npm run archive:nfl
+
+      - name: Generate next NFL week
+        env:
+          PG_PI_X: ${{ secrets.PG_PI_X }}
+          PG_PI7: ${{ secrets.PG_PI7 }}
+          PG_PPI5: ${{ secrets.PG_PPI5 }}
+          PG_PI2: ${{ secrets.PG_PI2 }}
+          PG_PI0: ${{ secrets.PG_PI0 }}
+          PG_MD: ${{ secrets.PG_MD }}
+        run: npm run generate:projections
 
       - name: Commit and push updates
         uses: stefanzweifel/git-auto-commit-action@v7
