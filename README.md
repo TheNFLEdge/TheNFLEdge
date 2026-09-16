@@ -6,7 +6,7 @@ home of G.T.G. NFL Score projection algorithm and historical records
 The `NFLE26-Archiver` branch adds the weekly finalization and rotation workflow:
 
 1. `npm run fetch:nfl` retrieves ESPN scores and fills completed `FINAL-SCORE-*` markers.
-2. `npm run archive:nfl` verifies every game is final, tabulates winner and ATS results, copies the immutable `F` edition into `archives/2026`, and updates the season table.
+2. `npm run archive:nfl` verifies every game is final, tabulates winner and ATS results, moves the completed numbered edition into `archives/2026` as the immutable `F` edition, and updates the season table.
 3. `npm run generate:projections` creates the next upcoming edition and refreshes `nfleTMP.htm`.
 
 `npm run rotate:nfl` runs all three stages in order. The scheduled workflow in `.github/workflows/nfl-weekly.yml` uses the same command and commits the active page, handoff data, and 2026 archive updates.

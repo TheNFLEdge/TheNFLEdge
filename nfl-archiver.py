@@ -1,5 +1,4 @@
 import re
-import shutil
 import tempfile
 from pathlib import Path
 
@@ -94,6 +93,20 @@ def summarize(soup):
     return summary
 
 
+def week_is_complete(soup):
+    cards = soup.select("article.game-card")
+    if not cards:
+        return False
+    for card in cards:
+        final_cell = card.find(string=re.compile(r"Final Score", re.IGNORECASE))
+        if not final_cell:
+            return False
+        score_cell = final_cell.find_parent("td").find_next_sibling("td")
+        if not score_cell or parse_score(score_cell) is None:
+            return False
+    return True
+
+
 def percentage(wins, losses):
     total = wins + losses
     return f"{wins / total * 100:.2f}%" if total else "0.00%"
@@ -167,16 +180,9 @@ def atomic_write(path, content):
         raise
 
 
-def copy_atomic(source, destination):
+def move_atomic(source, destination):
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(dir=destination.parent, delete=False) as handle:
-        temporary_path = Path(handle.name)
-    try:
-        shutil.copyfile(source, temporary_path)
-        temporary_path.replace(destination)
-    except Exception:
-        temporary_path.unlink(missing_ok=True)
-        raise
+    source.replace(destination)
 
 
 def active_week_file():
@@ -190,10 +196,13 @@ def active_week_file():
 def main():
     week, weekly_file = active_week_file()
     _, soup = parse_week(weekly_file)
+    if not week_is_complete(soup):
+        print(f"Week {week} is not complete; skipping archive")
+        return
     summary = summarize(soup)
     final_file = ARCHIVE_DIR / f"nfle26-{week:02d}F.htm"
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-    copy_atomic(weekly_file, final_file)
+    move_atomic(weekly_file, final_file)
     update_archive(week, summary)
     print(
         f"Archived Week {week}: {summary['winner_win']}-{summary['winner_loss']}-{summary['winner_push']} "

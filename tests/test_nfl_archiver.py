@@ -56,6 +56,39 @@ class NflArchiverTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             ARCHIVER.summarize(soup)
 
+    def test_main_skips_incomplete_week(self):
+        weekly_html = """
+        <h1>Week 1 Picks</h1>
+        <article class="game-card" data-game="NE-SEA">
+          <p class="line">Line: SEA -3 O/U 44.5</p>
+          <table>
+            <tr><td><b>Projected Score:</b></td><td>NE 17 - SEA 24</td></tr>
+            <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NE-SEA--></td></tr>
+          </table>
+        </article>
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            active_path = root / "nfleTMP.htm"
+            weekly_path = root / "nfle26-01.htm"
+            archive_dir = root / "archives" / "2026"
+            archive_path = archive_dir / "26_NFLEArch.htm"
+            active_path.write_text(weekly_html, encoding="utf-8")
+            weekly_path.write_text(weekly_html, encoding="utf-8")
+            archive_dir.mkdir(parents=True)
+            archive_path.write_text('<table id="weekly-results"></table>', encoding="utf-8")
+
+            original_values = (ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE)
+            ARCHIVER.ACTIVE_FILE = active_path
+            ARCHIVER.ARCHIVE_DIR = archive_dir
+            ARCHIVER.ARCHIVE_FILE = archive_path
+            try:
+                ARCHIVER.main()
+                self.assertFalse((archive_dir / "nfle26-01F.htm").exists())
+                self.assertNotIn('data-week="1"', archive_path.read_text(encoding="utf-8"))
+            finally:
+                ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE = original_values
+
     def test_annotations_are_ignored_when_tabulating_final_scores(self):
         html = """
         <article class="game-card" data-game="NE-SEA">
@@ -145,6 +178,7 @@ class NflArchiverTests(unittest.TestCase):
                 ARCHIVER.main()
                 final_path = archive_dir / "nfle26-01F.htm"
                 self.assertTrue(final_path.exists())
+                self.assertFalse(weekly_path.exists())
                 self.assertIn('data-week="1"', archive_path.read_text(encoding="utf-8"))
             finally:
                 ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE = original_values
