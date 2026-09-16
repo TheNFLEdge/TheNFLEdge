@@ -1,5 +1,6 @@
 import re
 import shutil
+import tempfile
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -151,12 +152,36 @@ def update_archive(week, summary):
         else:
             table.append(new_row)
     update_totals(table)
-    ARCHIVE_FILE.write_text(str(soup), encoding="utf-8")
+    atomic_write(ARCHIVE_FILE, str(soup))
+
+
+def atomic_write(path, content):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+        handle.write(content)
+        temporary_path = Path(handle.name)
+    try:
+        temporary_path.replace(path)
+    except Exception:
+        temporary_path.unlink(missing_ok=True)
+        raise
+
+
+def copy_atomic(source, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=destination.parent, delete=False) as handle:
+        temporary_path = Path(handle.name)
+    try:
+        shutil.copyfile(source, temporary_path)
+        temporary_path.replace(destination)
+    except Exception:
+        temporary_path.unlink(missing_ok=True)
+        raise
 
 
 def active_week_file():
     week, _ = parse_week(ACTIVE_FILE)
-    weekly_file = ROOT / f"nfle26-{week:02d}.htm"
+    weekly_file = ACTIVE_FILE.parent / f"nfle26-{week:02d}.htm"
     if not weekly_file.exists():
         raise FileNotFoundError(f"Expected generated weekly file: {weekly_file}")
     return week, weekly_file
@@ -168,7 +193,7 @@ def main():
     summary = summarize(soup)
     final_file = ARCHIVE_DIR / f"nfle26-{week:02d}F.htm"
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(weekly_file, final_file)
+    copy_atomic(weekly_file, final_file)
     update_archive(week, summary)
     print(
         f"Archived Week {week}: {summary['winner_win']}-{summary['winner_loss']}-{summary['winner_push']} "
