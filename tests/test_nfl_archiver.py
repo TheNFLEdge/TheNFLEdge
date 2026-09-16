@@ -71,6 +71,20 @@ class NflArchiverTests(unittest.TestCase):
         self.assertEqual(summary["winner_win"], 1)
         self.assertEqual(summary["ats_win"], 1)
 
+    def test_ats_tie_is_a_cover_for_projected_side(self):
+        html = """
+        <article class="game-card" data-game="NE-SEA">
+          <p class="line">Line: SEA -3 O/U 44.5</p>
+          <table>
+            <tr><td>Projected Score:</td><td>NE 17 - SEA 24</td></tr>
+            <tr><td>Final Score:</td><td>NE 10 - SEA 13</td></tr>
+          </table>
+        </article>
+        """
+        summary = ARCHIVER.summarize(BeautifulSoup(html, "html.parser"))
+        self.assertEqual(summary["ats_win"], 1)
+        self.assertEqual(summary["ats_push"], 0)
+
     def test_archive_row_is_idempotent_and_updates_totals(self):
         archive_html = """
         <table id="weekly-results">

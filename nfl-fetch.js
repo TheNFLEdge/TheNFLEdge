@@ -274,13 +274,17 @@ function annotateCompletedCard(block, results) {
     const actualSpreadMargin = spreadTeam === away ? actualAway - actualHome : actualHome - actualAway;
     const projectedCover = projectedSpreadMargin + spread;
     const actualCover = actualSpreadMargin + spread;
-    const atsCorrect = projectedCover !== 0 && actualCover !== 0 && Math.sign(projectedCover) === Math.sign(actualCover);
+    const atsCorrect = projectedCover !== 0
+        && (actualCover === 0 || Math.sign(projectedCover) === Math.sign(actualCover));
     const projectedTotal = projectedAway + projectedHome;
     const actualTotal = actualAway + actualHome;
-    const totalCorrect = projectedTotal !== overUnder && actualTotal !== overUnder
-        && Math.sign(projectedTotal - overUnder) === Math.sign(actualTotal - overUnder);
+    const totalMarker = projectedTotal > overUnder && actualTotal > overUnder
+        ? '&nbsp;(O)'
+        : projectedTotal < overUnder && actualTotal < overUnder
+            ? '&nbsp;(U)'
+            : '';
 
-    const markers = `${winnerCorrect ? ' W' : ''}${totalCorrect ? '&nbsp;(T)' : ''}`;
+    const markers = `${winnerCorrect ? ' W' : ''}${totalMarker}`;
     const scoreMarkup = atsCorrect
         ? `<span class="final-score final-score-cover" style="color: green; font-weight: 700">${gameData.scoreString}${markers}</span>`
         : `<span class="final-score">${gameData.scoreString}${markers}</span>`;
