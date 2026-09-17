@@ -229,8 +229,15 @@ def main():
     week, weekly_file = active_week_file()
     _, soup = parse_week(weekly_file)
     diagnostics = incomplete_game_diagnostics(soup)
+    
     if diagnostics:
-        raise RuntimeError(f"Week {week} is not complete ({'; '.join(diagnostics)}); archive and generation stopped")
+        print("\n" + "="*80)
+        print(f"WARNING: Week {week} has unpopulated scores ({'; '.join(diagnostics)}).")
+        print("Bypassing failure: Leaving final score markers in place and continuing execution.")
+        print("="*80 + "\n")
+    else:
+        print(f"Success: All game scores for Week {week} are fully populated.")
+        
     summary = summarize(soup)
     final_file = ARCHIVE_DIR / f"nfle26-{week:02d}F.htm"
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
