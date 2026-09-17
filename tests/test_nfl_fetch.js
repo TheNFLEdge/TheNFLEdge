@@ -7,6 +7,10 @@ const {
     annotateCompletedCard,
     enforceSequentialTarget,
     loadAndValidateRotationState,
+    mergeProviderResults,
+    normalizeApiSportsGame,
+    normalizeHighlightlyMatch,
+    normalizeProviderScore,
     parseTargetOverride,
     resolveTargetWeek
 } = require('../nfl-fetch');
@@ -47,6 +51,31 @@ assert.strictEqual(resolveTargetWeek({ now: new Date(), events: weekTwoEvents, a
 for (const value of ['0', '-1', 'two', '2.5', '19', '']) {
     assert.throws(() => parseTargetOverride(value), /Invalid NFL_TARGET_WEEK/);
 }
+
+assert.deepStrictEqual(normalizeProviderScore('New England Patriots', 'Seattle Seahawks', 10, 13, 'test'), {
+    source: 'test', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13'
+});
+assert.deepStrictEqual(normalizeApiSportsGame({
+    game: { status: { short: 'FT' }, teams: { away: { name: 'New England Patriots' }, home: { name: 'Seattle Seahawks' } }, scores: { away: { total: 10 }, home: { total: 13 } } }
+}), {
+    source: 'api-sports', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13'
+});
+assert.deepStrictEqual(normalizeHighlightlyMatch({
+    completed: true, awayTeam: { name: 'New England Patriots', score: 10 }, homeTeam: { name: 'Seattle Seahawks', score: 13 }
+}), {
+    source: 'highlightly', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13'
+});
+assert.strictEqual(normalizeApiSportsGame({
+    game: { status: { short: 'Q3' }, teams: { away: { name: 'New England Patriots' }, home: { name: 'Seattle Seahawks' } }, scores: { away: { total: 10 }, home: { total: 13 } } }
+}), null);
+assert.strictEqual(mergeProviderResults([
+    { source: 'api-sports', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13' },
+    { source: 'highlightly', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13' }
+], ['NE_SEA']).size, 1);
+assert.throws(() => mergeProviderResults([
+    { source: 'api-sports', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13' },
+    { source: 'highlightly', away: 'NE', home: 'SEA', awayScore: 14, homeScore: 13, scoreString: 'NE 14 - SEA 13' }
+], ['NE_SEA']), /Fallback score disagreement/);
 
 function annotatedCard(projected, line, score) {
     const block = `<article class="game-card" data-game="NE-SEA"><h2>Game 1</h2><p class="line">Line: ${line} O/U 44.5</p><table><tr><td><b>Projected Score:</b></td><td>${projected}</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NE-SEA--></td></tr></table></article>`;

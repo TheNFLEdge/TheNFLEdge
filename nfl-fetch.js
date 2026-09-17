@@ -20,6 +20,11 @@ const ESPN_BASE_URL = process.env.ESPN_BASE_URL || 'https://site.web.api.espn.co
 const ODDS_BASE_URL = process.env.ODDS_BASE_URL || 'https://api.the-odds-api.com/v4';
 const ESPN_API_KEY = process.env.ESPN_API_KEY;
 const ODDS_API_KEY = process.env.ODDS_API_KEY;
+const API_SPORTS_KEY = process.env.API_SPORTS_KEY;
+const API_SPORTS_BASE_URL = process.env.API_SPORTS_BASE_URL || 'https://v1.american-football.api-sports.io';
+const HIGHLIGHTLY_API_KEY = process.env.HIGHLIGHTLY_API_KEY;
+const HIGHLIGHTLY_BASE_URL = process.env.HIGHLIGHTLY_BASE_URL;
+const HIGHLIGHTLY_HOST = process.env.HIGHLIGHTLY_HOST || 'nfl-ncaa-highlights-api.p.rapidapi.com';
 async function main(mode = getMode()) {
     if (mode === 'refresh') return refreshScores();
     if (mode === 'restore-viewport') return restoreViewport();
@@ -46,7 +51,13 @@ async function main(mode = getMode()) {
         .map(toMatchup);
 
     const canonicalHtml = fs.readFileSync(issuePath, 'utf8');
-    const finalizedHtml = annotateHtml(canonicalHtml, completedEvents);
+    let scoreResults = scoreResultsFromEvents(completedEvents);
+    let finalizedHtml = annotateHtml(canonicalHtml, scoreResults);
+    if (!isCompleteCanonical(finalizedHtml)) {
+        const fallbackResults = await fetchFallbackScores(finalizedHtml);
+        scoreResults = mergeScoreResults(scoreResults, fallbackResults);
+        finalizedHtml = annotateHtml(canonicalHtml, scoreResults);
+    }
     if (targetWeek === state.active_week || !isCompleteCanonical(finalizedHtml)) {
         writeViewportFromCanonical(canonicalHtml, completedEvents);
         throw new Error(`Active Week ${state.active_week} is not complete; no archive or next-week generation was performed.`);
@@ -117,7 +128,14 @@ async function refreshScores() {
         throw new Error('Refresh failed: nfleTMP.htm is malformed or contains no game cards. Run npm run restore:viewport.');
     }
     const events = await fetchEvents(SEASON, 2);
-    writeAtomic(viewportPath, annotateHtml(original, events.filter(isCompleted)));
+    let scoreResults = scoreResultsFromEvents(events.filter(isCompleted));
+    let updated = annotateHtml(original, scoreResults);
+    if (!isCompleteCanonical(updated)) {
+        const fallbackResults = await fetchFallbackScores(updated);
+        scoreResults = mergeScoreResults(scoreResults, fallbackResults);
+        updated = annotateHtml(original, scoreResults);
+    }
+    writeAtomic(viewportPath, updated);
     console.log('NFL viewport refreshed: nfleTMP.htm only');
 }
 
@@ -150,24 +168,158 @@ function writeAtomic(filePath, content) {
 }
 
 function writeViewportFromCanonical(canonicalHtml, events) {
-    writeAtomic(path.join(ROOT_DIR, 'nfleTMP.htm'), annotateHtml(canonicalHtml, events));
+    writeAtomic(path.join(ROOT_DIR, 'nfleTMP.htm'), annotateHtml(canonicalHtml, scoreResultsFromEvents(events)));
 }
 
-function annotateHtml(html, events) {
+function annotateHtml(html, results) {
+    const scoreResults = results instanceof Map ? results : scoreResultsFromEvents(results);
+    return html.replace(
+        /<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi,
+        block => annotateCompletedCard(block, scoreResults)
+    );
+}
+
+function scoreResultsFromEvents(events) {
     const results = new Map();
     for (const event of events) {
         const { home, away } = getTeams(event);
-        const scoreString = `${away.team.abbreviation.toUpperCase()} ${Number(away.score)} - ${home.team.abbreviation.toUpperCase()} ${Number(home.score)}`;
+        const awayScore = Number(away.score);
+        const homeScore = Number(home.score);
+        if (!Number.isFinite(awayScore) || !Number.isFinite(homeScore)) continue;
         results.set(`${away.team.abbreviation}_${home.team.abbreviation}`.toUpperCase(), {
-            scoreString,
-            awayScore: Number(away.score),
-            homeScore: Number(home.score)
+            source: 'espn',
+            away: away.team.abbreviation.toUpperCase(),
+            home: home.team.abbreviation.toUpperCase(),
+            scoreString: `${away.team.abbreviation.toUpperCase()} ${awayScore} - ${home.team.abbreviation.toUpperCase()} ${homeScore}`,
+            awayScore,
+            homeScore
         });
     }
-    return html.replace(
-        /<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi,
-        block => annotateCompletedCard(block, results)
-    );
+    return results;
+}
+
+async function fetchFallbackScores(html) {
+    const missing = missingMatchups(html);
+    if (!missing.length) return new Map();
+    const providerResults = [];
+    if (API_SPORTS_KEY) providerResults.push(fetchApiSportsScores());
+    if (HIGHLIGHTLY_API_KEY && HIGHLIGHTLY_BASE_URL) providerResults.push(fetchHighlightlyScores());
+    if (!providerResults.length) return new Map();
+    const responses = await Promise.allSettled(providerResults);
+    const successfulResults = responses
+        .filter(response => response.status === 'fulfilled')
+        .flatMap(response => response.value);
+    return mergeProviderResults(successfulResults, missing);
+}
+
+function missingMatchups(html) {
+    const missing = [];
+    const cards = html.match(/<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi) || [];
+    for (const card of cards) {
+        if (!/FINAL-SCORE-[A-Z0-9]+-[A-Z0-9]+/i.test(card)) continue;
+        const matchup = /data-game=["']([A-Z0-9]+)-([A-Z0-9]+)["']/i.exec(card);
+        if (matchup) missing.push(`${matchup[1].toUpperCase()}_${matchup[2].toUpperCase()}`);
+    }
+    return missing;
+}
+
+function mergeScoreResults(primary, fallback) {
+    const merged = new Map(primary);
+    for (const [key, result] of fallback) {
+        const existing = merged.get(key);
+        if (existing && (existing.awayScore !== result.awayScore || existing.homeScore !== result.homeScore)) {
+            throw new Error(`Score provider disagreement for ${key}: ${existing.source} reported ${existing.scoreString}; ${result.source} reported ${result.scoreString}.`);
+        }
+        if (!existing) merged.set(key, result);
+    }
+    return merged;
+}
+
+function mergeProviderResults(providerResults, missingKeys) {
+    const merged = new Map();
+    for (const result of providerResults) {
+        const key = `${result.away}_${result.home}`;
+        if (!missingKeys.includes(key)) continue;
+        const existing = merged.get(key);
+        if (existing && (existing.awayScore !== result.awayScore || existing.homeScore !== result.homeScore)) {
+            throw new Error(`Fallback score disagreement for ${key}: ${existing.source} reported ${existing.scoreString}; ${result.source} reported ${result.scoreString}.`);
+        }
+        merged.set(key, result);
+    }
+    return merged;
+}
+
+async function fetchApiSportsScores() {
+    const url = new URL(`${API_SPORTS_BASE_URL.replace(/\/$/, '')}/games`);
+    url.searchParams.set('league', '1');
+    url.searchParams.set('season', SEASON);
+    const response = await fetch(url, { headers: { 'x-apisports-key': API_SPORTS_KEY } });
+    if (!response.ok) throw new Error(`API-Sports score request failed with HTTP ${response.status}`);
+    const payload = await response.json();
+    return (payload.response || []).map(normalizeApiSportsGame).filter(Boolean);
+}
+
+async function fetchHighlightlyScores() {
+    const dates = Array.from({ length: 4 }, (_, index) => {
+        const date = new Date();
+        date.setUTCDate(date.getUTCDate() - index);
+        return date.toISOString().slice(0, 10);
+    });
+    const responses = await Promise.all(dates.map(async date => {
+        const url = new URL(`${HIGHLIGHTLY_BASE_URL.replace(/\/$/, '')}/matches`);
+        url.searchParams.set('date', date);
+        const response = await fetch(url, { headers: { 'x-rapidapi-key': HIGHLIGHTLY_API_KEY, 'x-rapidapi-host': HIGHLIGHTLY_HOST } });
+        if (!response.ok) throw new Error(`Highlightly score request failed with HTTP ${response.status}`);
+        return response.json();
+    }));
+    return responses.flatMap(payload => (payload.data || payload.matches || payload.response || []).map(normalizeHighlightlyMatch).filter(Boolean));
+}
+
+function normalizeApiSportsGame(game) {
+    const away = game.game?.teams?.away?.name || game.teams?.away?.name;
+    const home = game.game?.teams?.home?.name || game.teams?.home?.name;
+    const awayScore = Number(game.game?.scores?.away?.total ?? game.scores?.away?.total);
+    const homeScore = Number(game.game?.scores?.home?.total ?? game.scores?.home?.total);
+    const status = game.game?.status?.short || game.status?.short || game.game?.status?.long || game.status?.long;
+    return normalizeProviderScore(away, home, awayScore, homeScore, 'api-sports', isFinalProviderStatus(status));
+}
+
+function normalizeHighlightlyMatch(match) {
+    const away = match.awayTeam?.name || match.away?.name || match.teams?.away?.name || match.awayTeam;
+    const home = match.homeTeam?.name || match.home?.name || match.teams?.home?.name || match.homeTeam;
+    const awayScore = Number(match.awayTeam?.score ?? match.away?.score ?? match.scores?.away);
+    const homeScore = Number(match.homeTeam?.score ?? match.home?.score ?? match.scores?.home);
+    const status = match.status?.short || match.status?.type || match.status;
+    const completed = match.completed === true || match.isFinished === true || isFinalProviderStatus(status);
+    return normalizeProviderScore(away, home, awayScore, homeScore, 'highlightly', completed);
+}
+
+function isFinalProviderStatus(status) {
+    return /^(AOT|COMPLETED|FINAL|FINISHED|FT|POST|FINAL\/OT)$/i.test(String(status || '').trim());
+}
+
+const TEAM_ALIASES = {
+    'NEW ENGLAND PATRIOTS': 'NE', 'SEATTLE SEAHAWKS': 'SEA', 'SAN FRANCISCO 49ERS': 'SF',
+    'LOS ANGELES RAMS': 'LAR', 'TAMPA BAY BUCCANEERS': 'TB', 'CINCINNATI BENGALS': 'CIN',
+    'NEW ORLEANS SAINTS': 'NO', 'DETROIT LIONS': 'DET', 'NEW YORK JETS': 'NYJ', 'TENNESSEE TITANS': 'TEN',
+    'BALTIMORE RAVENS': 'BAL', 'INDIANAPOLIS COLTS': 'IND', 'ATLANTA FALCONS': 'ATL', 'PITTSBURGH STEELERS': 'PIT',
+    'CHICAGO BEARS': 'CHI', 'CAROLINA PANTHERS': 'CAR', 'CLEVELAND BROWNS': 'CLE', 'JACKSONVILLE JAGUARS': 'JAX',
+    'BUFFALO BILLS': 'BUF', 'HOUSTON TEXANS': 'HOU', 'MIAMI DOLPHINS': 'MIA', 'LAS VEGAS RAIDERS': 'LV',
+    'GREEN BAY PACKERS': 'GB', 'MINNESOTA VIKINGS': 'MIN', 'WASHINGTON COMMANDERS': 'WSH', 'PHILADELPHIA EAGLES': 'PHI',
+    'ARIZONA CARDINALS': 'ARI', 'LOS ANGELES CHARGERS': 'LAC', 'DALLAS COWBOYS': 'DAL', 'NEW YORK GIANTS': 'NYG',
+    'DENVER BRONCOS': 'DEN', 'KANSAS CITY CHIEFS': 'KC'
+};
+
+function normalizeTeam(value) {
+    const text = String(value || '').trim().toUpperCase();
+    return TEAM_ALIASES[text] || text;
+}
+
+function normalizeProviderScore(away, home, awayScore, homeScore, source, completed = true) {
+    const awayAbbreviation = normalizeTeam(away);
+    const homeAbbreviation = normalizeTeam(home);
+    if (!completed || !/^[A-Z0-9]{2,4}$/.test(awayAbbreviation) || !/^[A-Z0-9]{2,4}$/.test(homeAbbreviation) || !Number.isFinite(awayScore) || !Number.isFinite(homeScore)) return null;
+    return { source, away: awayAbbreviation, home: homeAbbreviation, awayScore, homeScore, scoreString: `${awayAbbreviation} ${awayScore} - ${homeAbbreviation} ${homeScore}` };
 }
 
 function isCompleteCanonical(html) {
@@ -391,6 +543,10 @@ module.exports = {
     annotateCompletedCard,
     enforceSequentialTarget,
     loadAndValidateRotationState,
+    mergeProviderResults,
+    normalizeApiSportsGame,
+    normalizeHighlightlyMatch,
+    normalizeProviderScore,
     parseTargetOverride,
     resolveTargetWeek,
     scheduleWindows

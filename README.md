@@ -36,6 +36,15 @@ Rotation groups regular-season ESPN events by week and uses each week's earliest
 
 Completed ESPN events remain valid inputs for score finalization and rolling statistics, but their reported week numbers do not independently advance rotation.
 
+## Score-provider fallback
+
+ESPN remains the primary score source. If a canonical game still has a final-score marker after ESPN data is applied, rotate and refresh mode can query optional secondary providers:
+
+- API-Sports/API-NFL: set `API_SPORTS_KEY`; the default base URL is `https://v1.american-football.api-sports.io` and can be overridden with `API_SPORTS_BASE_URL`.
+- Highlightly NFL API: set `HIGHLIGHTLY_API_KEY` and `HIGHLIGHTLY_BASE_URL`; set `HIGHLIGHTLY_HOST` when using a RapidAPI-hosted endpoint.
+
+Secondary results are accepted only when both scores are numeric and the provider marks the game final. Team names are normalized to the canonical abbreviations. If two providers disagree, rotation fails loudly and does not archive. If one optional provider is unavailable, a successful second provider may still be used. Missing keys, unavailable providers, or unresolved games do not invent scores; the canonical issue remains incomplete and rotation stops safely.
+
 ## Recovery runbook
 
 Inspect the state and publication files:
