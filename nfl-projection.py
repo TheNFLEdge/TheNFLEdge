@@ -139,7 +139,7 @@ def load_generation_state(target_week):
     archived_issue = ROOT / "archives" / "2026" / f"nfle26-{active_week:02d}F.htm"
     expected_hash = state.get("active_issue_sha256")
     source = active_issue if active_issue.exists() else archived_issue
-    if not source.exists() or hashlib.sha256(source.read_bytes()).hexdigest() != expected_hash:
+    if not source.exists() or canonical_sha256(source) != expected_hash:
         raise RuntimeError("Rotation state validation failed: the recorded active issue checksum cannot be verified.")
     return state
 
@@ -150,12 +150,17 @@ def write_manifest(week, canonical_path):
         "season": int(os.getenv("NFL_SEASON", "2026")),
         "active_week": week,
         "active_issue": f"nfle26-{week:02d}.htm",
-        "active_issue_sha256": hashlib.sha256(canonical_path.read_bytes()).hexdigest(),
+        "active_issue_sha256": canonical_sha256(canonical_path),
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "generated_by": "rotation",
         "viewport": "nfleTMP.htm"
     }
     write_json_atomic(STATE_FILE, manifest)
+
+
+def canonical_sha256(path):
+    content = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
 def write_json_atomic(path, value):

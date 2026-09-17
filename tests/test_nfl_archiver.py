@@ -22,7 +22,7 @@ class NflArchiverTests(unittest.TestCase):
             "season": 2026,
             "active_week": 1,
             "active_issue": issue_name,
-            "active_issue_sha256": hashlib.sha256(issue_path.read_bytes()).hexdigest(),
+            "active_issue_sha256": hashlib.sha256(issue_path.read_text(encoding="utf-8").replace("\r\n", "\n").encode("utf-8")).hexdigest(),
             "generated_at": "2026-09-16T03:30:00Z",
             "generated_by": "rotation",
             "viewport": "nfleTMP.htm"

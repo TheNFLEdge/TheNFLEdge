@@ -68,10 +68,10 @@ assert.strictEqual((rerun.match(/\bW\b/g) || []).length, 1);
 assert.strictEqual((rerun.match(/\((O|U)\)/g) || []).length, 1);
 
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nfl-rotation-'));
-const issue = '<h1>Week 2 Picks</h1><article class="game-card"></article>';
+const issue = '<h1>Week 2 Picks</h1>\r\n<article class="game-card"></article>';
 const issuePath = path.join(temporaryRoot, 'nfle26-02.htm');
 fs.writeFileSync(issuePath, issue);
-const hash = crypto.createHash('sha256').update(issue).digest('hex');
+const hash = crypto.createHash('sha256').update(issue.replace(/\r\n/g, '\n')).digest('hex');
 fs.writeFileSync(path.join(temporaryRoot, 'nfl_rotation_state.json'), JSON.stringify({
     schema_version: 1,
     season: 2026,
