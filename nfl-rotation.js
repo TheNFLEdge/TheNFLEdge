@@ -6,7 +6,8 @@ const STATE_FILE_NAME = 'nfl_rotation_state.json';
 const ISSUE_PATTERN = /^nfle26-([0-9]{2})\.htm$/;
 
 function sha256File(filePath) {
-    return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+    const content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+    return crypto.createHash('sha256').update(content, 'utf8').digest('hex');
 }
 
 function parseWeekHeading(html, fileName) {

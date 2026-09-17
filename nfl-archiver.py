@@ -211,13 +211,18 @@ def active_week_file():
     weekly_file = STATE_FILE.parent / issue
     if not weekly_file.exists():
         raise FileNotFoundError(f"Expected canonical weekly file: {weekly_file}")
-    actual_hash = hashlib.sha256(weekly_file.read_bytes()).hexdigest()
+    actual_hash = canonical_sha256(weekly_file)
     if actual_hash != state.get("active_issue_sha256"):
         raise RuntimeError("Rotation state validation failed: canonical issue checksum mismatch")
     heading_week, _ = parse_week(weekly_file)
     if heading_week != week:
         raise RuntimeError(f"Rotation state validation failed: canonical heading is Week {heading_week}, expected Week {week}")
     return week, weekly_file
+
+
+def canonical_sha256(path):
+    content = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
 def main():
