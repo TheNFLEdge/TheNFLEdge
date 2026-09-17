@@ -202,6 +202,7 @@ async function fetchFallbackScores(html) {
     const missing = missingMatchups(html);
     if (!missing.length) return new Map();
     const providerResults = [];
+    if (ODDS_API_KEY) providerResults.push(fetchOddsApiScores());
     if (API_SPORTS_KEY) providerResults.push(fetchApiSportsScores());
     if (HIGHLIGHTLY_API_KEY && HIGHLIGHTLY_BASE_URL) providerResults.push(fetchHighlightlyScores());
     if (!providerResults.length) return new Map();
@@ -259,6 +260,16 @@ async function fetchApiSportsScores() {
     return (payload.response || []).map(normalizeApiSportsGame).filter(Boolean);
 }
 
+async function fetchOddsApiScores() {
+    const url = new URL(`${ODDS_BASE_URL.replace(/\/$/, '')}/sports/americanfootball_nfl/scores`);
+    url.searchParams.set('daysFrom', '3');
+    url.searchParams.set('apiKey', ODDS_API_KEY);
+    const response = await fetch(url, { headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' } });
+    if (!response.ok) throw new Error(`Odds API score request failed with HTTP ${response.status}`);
+    const payload = await response.json();
+    return (Array.isArray(payload) ? payload : []).map(normalizeOddsApiScore).filter(Boolean);
+}
+
 async function fetchHighlightlyScores() {
     const dates = Array.from({ length: 4 }, (_, index) => {
         const date = new Date();
@@ -282,6 +293,14 @@ function normalizeApiSportsGame(game) {
     const homeScore = Number(game.game?.scores?.home?.total ?? game.scores?.home?.total);
     const status = game.game?.status?.short || game.status?.short || game.game?.status?.long || game.status?.long;
     return normalizeProviderScore(away, home, awayScore, homeScore, 'api-sports', isFinalProviderStatus(status));
+}
+
+function normalizeOddsApiScore(game) {
+    if (game.completed !== true) return null;
+    const scores = Array.isArray(game.scores) ? game.scores : [];
+    const awayScore = scores.find(score => score.name === game.away_team)?.score;
+    const homeScore = scores.find(score => score.name === game.home_team)?.score;
+    return normalizeProviderScore(game.away_team, game.home_team, Number(awayScore), Number(homeScore), 'odds-api', true);
 }
 
 function normalizeHighlightlyMatch(match) {
@@ -546,6 +565,7 @@ module.exports = {
     mergeProviderResults,
     normalizeApiSportsGame,
     normalizeHighlightlyMatch,
+    normalizeOddsApiScore,
     normalizeProviderScore,
     parseTargetOverride,
     resolveTargetWeek,
