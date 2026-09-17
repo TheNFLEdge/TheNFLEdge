@@ -1,7 +1,15 @@
 {
   "season": 2026,
-  "current_week": 4,
+  "active_week": 1,
   "target_week": 2,
+  "target_week_source": "date",
+  "generated_at": "2026-09-17T05:09:39.336Z",
+  "mode": "rotate",
+  "resolver": {
+    "now": "2026-09-17T05:09:39.336Z",
+    "lead_days": 3,
+    "grace_hours": 12
+  },
   "matchups": [
     {
       "event_id": "401872932",
@@ -9,14 +17,14 @@
       "away": "DET",
       "home": "BUF",
       "line": "BUF -4.5",
-      "ou": 53.5
+      "ou": 54.5
     },
     {
       "event_id": "401872933",
       "date": "2026-09-20T17:00Z",
       "away": "CAR",
       "home": "ATL",
-      "line": "CAR -1.5",
+      "line": "CAR -2.5",
       "ou": 43.5
     },
     {
@@ -24,8 +32,8 @@
       "date": "2026-09-20T17:00Z",
       "away": "MIN",
       "home": "CHI",
-      "line": "CHI -5.5",
-      "ou": 49.5
+      "line": "CHI -4.5",
+      "ou": 48.5
     },
     {
       "event_id": "401872939",
@@ -48,7 +56,7 @@
       "date": "2026-09-20T17:00Z",
       "away": "GB",
       "home": "NYJ",
-      "line": "GB -4.5",
+      "line": "GB -3.5",
       "ou": 44.5
     },
     {
@@ -57,7 +65,7 @@
       "away": "CLE",
       "home": "TB",
       "line": "TB -8.5",
-      "ou": 40.5
+      "ou": 41.5
     },
     {
       "event_id": "401872938",
@@ -65,14 +73,14 @@
       "away": "NO",
       "home": "BAL",
       "line": "BAL -8.5",
-      "ou": 47.5
+      "ou": 46.5
     },
     {
       "event_id": "401872934",
       "date": "2026-09-20T17:00Z",
       "away": "CIN",
       "home": "HOU",
-      "line": "HOU -3",
+      "line": "HOU -2.5",
       "ou": 46.5
     },
     {
@@ -81,14 +89,14 @@
       "away": "JAX",
       "home": "DEN",
       "line": "DEN -2.5",
-      "ou": 44.5
+      "ou": 45.5
     },
     {
       "event_id": "401872941",
       "date": "2026-09-20T20:05Z",
       "away": "LV",
       "home": "LAC",
-      "line": "LAC -7",
+      "line": "LAC -6.5",
       "ou": 43.5
     },
     {
@@ -96,7 +104,7 @@
       "date": "2026-09-20T20:25Z",
       "away": "WSH",
       "home": "DAL",
-      "line": "DAL -3.5",
+      "line": "DAL -4.5",
       "ou": 50.5
     },
     {
@@ -104,7 +112,7 @@
       "date": "2026-09-20T20:25Z",
       "away": "SEA",
       "home": "ARI",
-      "line": "SEA -4.5",
+      "line": "SEA -3.5",
       "ou": 41.5
     },
     {
@@ -113,7 +121,7 @@
       "away": "MIA",
       "home": "SF",
       "line": "SF -13.5",
-      "ou": 45.5
+      "ou": 44.5
     },
     {
       "event_id": "401872945",
@@ -121,7 +129,7 @@
       "away": "IND",
       "home": "KC",
       "line": "KC -6.5",
-      "ou": 47.5
+      "ou": 46.5
     },
     {
       "event_id": "401872947",
@@ -129,7 +137,7 @@
       "away": "NYG",
       "home": "LAR",
       "line": "LAR -7",
-      "ou": 48.5
+      "ou": 47.5
     }
   ],
   "team_stats": {
