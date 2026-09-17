@@ -33,6 +33,11 @@ jobs:
           NFL_SEASON: '2026'
           ESPN_API_KEY: ${{ secrets.ESPN_API_KEY }}
           ESPN_BASE_URL: ${{ secrets.ESPN_BASE_URL }}
+          API_SPORTS_KEY: ${{ secrets.API_SPORTS_KEY }}
+          API_SPORTS_BASE_URL: ${{ secrets.API_SPORTS_BASE_URL }}
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          HIGHLIGHTLY_BASE_URL: ${{ secrets.HIGHLIGHTLY_BASE_URL }}
+          HIGHLIGHTLY_HOST: ${{ secrets.HIGHLIGHTLY_HOST }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_BASE_URL: ${{ secrets.ODDS_BASE_URL }}
           PG_PI_X: ${{ secrets.PG_PI_X }}
