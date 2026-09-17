@@ -10,6 +10,7 @@ const {
     mergeProviderResults,
     normalizeApiSportsGame,
     normalizeHighlightlyMatch,
+    normalizeOddsApiScore,
     normalizeProviderScore,
     parseTargetOverride,
     resolveTargetWeek
@@ -59,6 +60,17 @@ assert.deepStrictEqual(normalizeApiSportsGame({
     game: { status: { short: 'FT' }, teams: { away: { name: 'New England Patriots' }, home: { name: 'Seattle Seahawks' } }, scores: { away: { total: 10 }, home: { total: 13 } } }
 }), {
     source: 'api-sports', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13'
+});
+assert.deepStrictEqual(normalizeOddsApiScore({
+    completed: true,
+    away_team: 'New England Patriots',
+    home_team: 'Seattle Seahawks',
+    scores: [
+        { name: 'Seattle Seahawks', score: '13' },
+        { name: 'New England Patriots', score: '10' }
+    ]
+}), {
+    source: 'odds-api', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13'
 });
 assert.deepStrictEqual(normalizeHighlightlyMatch({
     completed: true, awayTeam: { name: 'New England Patriots', score: 10 }, homeTeam: { name: 'Seattle Seahawks', score: 13 }
