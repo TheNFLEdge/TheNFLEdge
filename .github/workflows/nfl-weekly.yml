@@ -60,4 +60,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'Automated NFL weekly update'
-          file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json archives/2026'
+          file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json nfl_rotation_state.json archives/2026'

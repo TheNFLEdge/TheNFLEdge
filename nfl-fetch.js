@@ -1,5 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const {
+    copyAtomic,
+    enforceSequentialTarget,
+    loadAndValidateRotationState,
+    parseTargetOverride,
+    parseWeekHeading,
+    resolveTargetWeek,
+    scheduleWindows,
+    sha256File,
+    writeJsonAtomic,
+    writeRotationState
+} = require('./nfl-rotation');
 
 const ROOT_DIR = process.cwd();
 const SEASON = process.env.NFL_SEASON || '2026';
@@ -8,28 +20,45 @@ const ESPN_BASE_URL = process.env.ESPN_BASE_URL || 'https://site.web.api.espn.co
 const ODDS_BASE_URL = process.env.ODDS_BASE_URL || 'https://api.the-odds-api.com/v4';
 const ESPN_API_KEY = process.env.ESPN_API_KEY;
 const ODDS_API_KEY = process.env.ODDS_API_KEY;
-const SCORE_REFRESH_FILES = process.env.NFL_SCORE_REFRESH_FILES
-    ? process.env.NFL_SCORE_REFRESH_FILES.split(',').map(file => file.trim()).filter(Boolean)
-    : null;
+async function main(mode = getMode()) {
+    if (mode === 'refresh') return refreshScores();
+    if (mode === 'restore-viewport') return restoreViewport();
+    if (mode === 'recover-rotation') return recoverRotation();
+    if (mode !== 'rotate') throw new Error(`Unsupported mode: ${mode}`);
 
-async function main() {
+    const { state, issuePath } = loadAndValidateRotationState(ROOT_DIR, Number(SEASON));
     const events = (await fetchEvents(SEASON, 2)).filter(event => {
         return new Date(event.date) >= new Date(`${SEASON}-07-01T00:00:00Z`);
     });
     const completedEvents = events.filter(event => event.status?.type?.completed === true);
-    const currentWeek = completedEvents.reduce(
-        (highest, event) => Math.max(highest, Number(event.week?.number || 0)),
-        0
-    );
-    const upcomingWeeks = events
-        .filter(event => event.status?.type?.state === 'pre')
-        .map(event => Number(event.week?.number))
-        .filter(Number.isFinite);
-    const targetWeek = selectTargetWeek(currentWeek, upcomingWeeks);
+    const targetWeek = resolveTargetWeek({
+        now: process.env.NFL_NOW_OVERRIDE || new Date(),
+        events,
+        activeWeek: state.active_week,
+        override: process.env.NFL_TARGET_WEEK,
+        leadDays: Number(process.env.NFL_WEEK_LEAD_DAYS || 3),
+        graceHours: Number(process.env.NFL_WEEK_GRACE_HOURS || 12)
+    });
+    enforceSequentialTarget(state.active_week, targetWeek, process.env.NFL_ALLOW_NONSEQUENTIAL_RECOVERY === 'true');
     const teamStats = calculateRollingStats(completedEvents);
     let matchups = events
         .filter(event => Number(event.week?.number) === targetWeek && event.status?.type?.state === 'pre')
         .map(toMatchup);
+
+    const canonicalHtml = fs.readFileSync(issuePath, 'utf8');
+    const finalizedHtml = annotateHtml(canonicalHtml, completedEvents);
+    if (targetWeek === state.active_week || !isCompleteCanonical(finalizedHtml)) {
+        writeViewportFromCanonical(canonicalHtml, completedEvents);
+        throw new Error(`Active Week ${state.active_week} is not complete; no archive or next-week generation was performed.`);
+    }
+    writeAtomic(issuePath, finalizedHtml);
+    const finalizedState = {
+        ...state,
+        active_issue_sha256: sha256File(issuePath),
+        generated_at: new Date().toISOString(),
+        generated_by: 'finalize'
+    };
+    writeJsonAtomic(path.join(ROOT_DIR, 'nfl_rotation_state.json'), finalizedState);
 
     if (targetWeek === 1) {
         const [previousSeasonEvents, preseasonEvents] = await Promise.all([
@@ -40,29 +69,110 @@ async function main() {
         matchups = await mergeOdds(matchups);
         const handoff = {
             season: Number(SEASON),
-            current_week: currentWeek,
+            active_week: state.active_week,
             target_week: targetWeek,
+            target_week_source: process.env.NFL_TARGET_WEEK ? 'override' : 'date',
+            generated_at: new Date().toISOString(),
+            mode: 'rotate',
             model: 'week1-five-game-variant',
             matchups,
             team_stats: historicalGames
         };
-        fs.writeFileSync(HANDOFF_FILE, `${JSON.stringify(handoff, null, 2)}\n`, 'utf8');
-        injectCompletedScores(events);
+        writeJsonAtomic(HANDOFF_FILE, handoff);
         console.log(`NFL Week 1 data ready: ${matchups.length} matchups, ${Object.keys(historicalGames).length} teams with five-game samples`);
         return;
     }
 
     const handoff = {
         season: Number(SEASON),
-        current_week: currentWeek,
+        active_week: state.active_week,
         target_week: targetWeek,
+        target_week_source: process.env.NFL_TARGET_WEEK ? 'override' : 'date',
+        generated_at: new Date().toISOString(),
+        mode: 'rotate',
+        resolver: {
+            now: new Date(process.env.NFL_NOW_OVERRIDE || Date.now()).toISOString(),
+            lead_days: Number(process.env.NFL_WEEK_LEAD_DAYS || 3),
+            grace_hours: Number(process.env.NFL_WEEK_GRACE_HOURS || 12)
+        },
         matchups,
         team_stats: teamStats
     };
 
-    fs.writeFileSync(HANDOFF_FILE, `${JSON.stringify(handoff, null, 2)}\n`, 'utf8');
-    injectCompletedScores(events);
+    writeJsonAtomic(HANDOFF_FILE, handoff);
     console.log(`NFL data ready: week ${targetWeek}, ${matchups.length} matchups, ${Object.keys(teamStats).length} teams`);
+}
+
+function getMode() {
+    const modeArgument = process.argv.find(argument => argument.startsWith('--mode='));
+    return modeArgument ? modeArgument.slice('--mode='.length) : 'rotate';
+}
+
+async function refreshScores() {
+    const viewportPath = path.join(ROOT_DIR, 'nfleTMP.htm');
+    if (!fs.existsSync(viewportPath)) throw new Error('Refresh failed: nfleTMP.htm is missing. Run npm run restore:viewport.');
+    const original = fs.readFileSync(viewportPath, 'utf8');
+    parseWeekHeading(original, 'nfleTMP.htm');
+    if (!/<article\b[^>]*class=["'][^"']*\bgame-card\b/i.test(original)) {
+        throw new Error('Refresh failed: nfleTMP.htm is malformed or contains no game cards. Run npm run restore:viewport.');
+    }
+    const events = await fetchEvents(SEASON, 2);
+    writeAtomic(viewportPath, annotateHtml(original, events.filter(isCompleted)));
+    console.log('NFL viewport refreshed: nfleTMP.htm only');
+}
+
+async function restoreViewport() {
+    const { issuePath } = loadAndValidateRotationState(ROOT_DIR, Number(SEASON));
+    copyAtomic(issuePath, path.join(ROOT_DIR, 'nfleTMP.htm'));
+    console.log('NFL viewport restored from the validated canonical issue');
+}
+
+function recoverRotation() {
+    const weekArgument = process.argv.find(argument => argument.startsWith('--week='));
+    const week = Number(weekArgument?.slice('--week='.length));
+    if (!/^\d+$/.test(weekArgument?.slice('--week='.length) || '') || week < 1 || week > 18) {
+        throw new Error('Recovery requires an explicit --week=NN argument from 1 through 18.');
+    }
+    if (process.env.NFL_CONFIRM_ROTATION_RECOVERY !== 'yes') {
+        throw new Error('Recovery requires NFL_CONFIRM_ROTATION_RECOVERY=yes.');
+    }
+    const issuePath = path.join(ROOT_DIR, `nfle26-${String(week).padStart(2, '0')}.htm`);
+    if (!fs.existsSync(issuePath)) throw new Error(`Recovery failed: ${path.basename(issuePath)} does not exist.`);
+    parseWeekHeading(fs.readFileSync(issuePath, 'utf8'), path.basename(issuePath));
+    writeRotationState(ROOT_DIR, week, 'recovery');
+    console.log(`Rotation state recovered for Week ${week}`);
+}
+
+function writeAtomic(filePath, content) {
+    const temporaryPath = `${filePath}.${process.pid}.tmp`;
+    fs.writeFileSync(temporaryPath, content, 'utf8');
+    fs.renameSync(temporaryPath, filePath);
+}
+
+function writeViewportFromCanonical(canonicalHtml, events) {
+    writeAtomic(path.join(ROOT_DIR, 'nfleTMP.htm'), annotateHtml(canonicalHtml, events));
+}
+
+function annotateHtml(html, events) {
+    const results = new Map();
+    for (const event of events) {
+        const { home, away } = getTeams(event);
+        const scoreString = `${away.team.abbreviation.toUpperCase()} ${Number(away.score)} - ${home.team.abbreviation.toUpperCase()} ${Number(home.score)}`;
+        results.set(`${away.team.abbreviation}_${home.team.abbreviation}`.toUpperCase(), {
+            scoreString,
+            awayScore: Number(away.score),
+            homeScore: Number(home.score)
+        });
+    }
+    return html.replace(
+        /<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi,
+        block => annotateCompletedCard(block, results)
+    );
+}
+
+function isCompleteCanonical(html) {
+    const cards = html.match(/<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi) || [];
+    return cards.length > 0 && cards.every(card => !/FINAL-SCORE-[A-Z0-9]+-[A-Z0-9]+/i.test(card));
 }
 
 async function fetchEvents(season, seasonType) {
@@ -218,34 +328,6 @@ function addGame(histories, teamName, pointsFor, pointsAgainst) {
     histories[team].push({ pf: pointsFor, pa: pointsAgainst, win: pointsFor > pointsAgainst ? 1 : 0 });
 }
 
-function injectCompletedScores(events) {
-    const results = new Map();
-    for (const event of events) {
-        if (event.status?.type?.completed !== true) continue;
-        const { home, away } = getTeams(event);
-        const result = `${away.team.abbreviation.toUpperCase()} ${Number(away.score)} - ${home.team.abbreviation.toUpperCase()} ${Number(home.score)}`;
-        results.set(`${away.team.abbreviation}_${home.team.abbreviation}`.toUpperCase(), {
-            scoreString: result,
-            awayScore: Number(away.score),
-            homeScore: Number(home.score)
-        });
-    }
-
-    const files = fs.readdirSync(ROOT_DIR).filter(file => {
-        if (SCORE_REFRESH_FILES) return SCORE_REFRESH_FILES.includes(file);
-        return /^nfle(?:TMP|26-\d+)\.htm$/i.test(file);
-    });
-    for (const file of files) {
-        const filePath = path.join(ROOT_DIR, file);
-        const html = fs.readFileSync(filePath, 'utf8');
-        const updated = html.replace(
-            /<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi,
-            block => annotateCompletedCard(block, results)
-        );
-        if (updated !== html) fs.writeFileSync(filePath, updated, 'utf8');
-    }
-}
-
 function annotateCompletedCard(block, results) {
     const matchupMatch = /data-game=["']([A-Z0-9]+)-([A-Z0-9]+)["']/i.exec(block);
     if (!matchupMatch) return block;
@@ -305,9 +387,11 @@ if (require.main === module) {
     });
 }
 
-module.exports = { annotateCompletedCard, selectTargetWeek };
-
-function selectTargetWeek(currentWeek, upcomingWeeks) {
-    const nextUpcomingWeeks = upcomingWeeks.filter(week => week > currentWeek);
-    return nextUpcomingWeeks.length ? Math.min(...nextUpcomingWeeks) : currentWeek + 1;
-}
+module.exports = {
+    annotateCompletedCard,
+    enforceSequentialTarget,
+    loadAndValidateRotationState,
+    parseTargetOverride,
+    resolveTargetWeek,
+    scheduleWindows
+};
