@@ -1,4 +1,6 @@
 import importlib.util
+import hashlib
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +15,19 @@ SPEC.loader.exec_module(ARCHIVER)
 
 
 class NflArchiverTests(unittest.TestCase):
+    @staticmethod
+    def write_state(path, issue_name, issue_path):
+        path.write_text(json.dumps({
+            "schema_version": 1,
+            "season": 2026,
+            "active_week": 1,
+            "active_issue": issue_name,
+            "active_issue_sha256": hashlib.sha256(issue_path.read_bytes()).hexdigest(),
+            "generated_at": "2026-09-16T03:30:00Z",
+            "generated_by": "rotation",
+            "viewport": "nfleTMP.htm"
+        }), encoding="utf-8")
+
     def test_summary_handles_home_and_away_spreads(self):
         html = """
         <section>
@@ -77,17 +92,21 @@ class NflArchiverTests(unittest.TestCase):
             weekly_path.write_text(weekly_html, encoding="utf-8")
             archive_dir.mkdir(parents=True)
             archive_path.write_text('<table id="weekly-results"></table>', encoding="utf-8")
+            state_path = root / "nfl_rotation_state.json"
+            self.write_state(state_path, "nfle26-01.htm", weekly_path)
 
-            original_values = (ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE)
+            original_values = (ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE, ARCHIVER.STATE_FILE)
             ARCHIVER.ACTIVE_FILE = active_path
             ARCHIVER.ARCHIVE_DIR = archive_dir
             ARCHIVER.ARCHIVE_FILE = archive_path
+            ARCHIVER.STATE_FILE = state_path
             try:
+              with self.assertRaises(RuntimeError):
                 ARCHIVER.main()
                 self.assertFalse((archive_dir / "nfle26-01F.htm").exists())
                 self.assertNotIn('data-week="1"', archive_path.read_text(encoding="utf-8"))
             finally:
-                ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE = original_values
+              ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE, ARCHIVER.STATE_FILE = original_values
 
     def test_annotations_are_ignored_when_tabulating_final_scores(self):
         html = """
@@ -169,11 +188,14 @@ class NflArchiverTests(unittest.TestCase):
             weekly_path.write_text(weekly_html, encoding="utf-8")
             archive_dir.mkdir(parents=True)
             archive_path.write_text(archive_html, encoding="utf-8")
+            state_path = root / "nfl_rotation_state.json"
+            self.write_state(state_path, "nfle26-01.htm", weekly_path)
 
-            original_values = (ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE)
+            original_values = (ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE, ARCHIVER.STATE_FILE)
             ARCHIVER.ACTIVE_FILE = active_path
             ARCHIVER.ARCHIVE_DIR = archive_dir
             ARCHIVER.ARCHIVE_FILE = archive_path
+            ARCHIVER.STATE_FILE = state_path
             try:
                 ARCHIVER.main()
                 final_path = archive_dir / "nfle26-01F.htm"
@@ -181,7 +203,7 @@ class NflArchiverTests(unittest.TestCase):
                 self.assertFalse(weekly_path.exists())
                 self.assertIn('data-week="1"', archive_path.read_text(encoding="utf-8"))
             finally:
-                ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE = original_values
+                ARCHIVER.ACTIVE_FILE, ARCHIVER.ARCHIVE_DIR, ARCHIVER.ARCHIVE_FILE, ARCHIVER.STATE_FILE = original_values
 
 
 if __name__ == "__main__":

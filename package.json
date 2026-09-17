@@ -4,8 +4,10 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "fetch:nfl": "node nfl-fetch.js",
-    "refresh:scores": "npm run fetch:nfl",
+    "fetch:nfl": "node nfl-fetch.js --mode=rotate",
+    "refresh:scores": "node nfl-fetch.js --mode=refresh",
+    "restore:viewport": "node nfl-fetch.js --mode=restore-viewport",
+    "recover:rotation": "node nfl-fetch.js --mode=recover-rotation",
     "generate:projections": "python nfl-projection.py",
     "archive:nfl": "python nfl-archiver.py",
     "rotate:nfl": "npm run fetch:nfl && npm run archive:nfl && npm run generate:projections",

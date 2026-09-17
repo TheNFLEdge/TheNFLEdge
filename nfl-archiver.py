@@ -1,3 +1,6 @@
+import hashlib
+import json
+import os
 import re
 import tempfile
 from pathlib import Path
@@ -8,6 +11,7 @@ ROOT = Path(__file__).resolve().parent
 ARCHIVE_DIR = ROOT / "archives" / "2026"
 ARCHIVE_FILE = ARCHIVE_DIR / "26_NFLEArch.htm"
 ACTIVE_FILE = ROOT / "nfleTMP.htm"
+STATE_FILE = ROOT / "nfl_rotation_state.json"
 WEEKLY_FILE_PATTERN = re.compile(r"nfle26-(\d{1,2})\.htm$", re.IGNORECASE)
 SCORE_PATTERN = re.compile(r"\b[A-Z0-9]{2,4}\s+(-?\d+)\s*-\s*[A-Z0-9]{2,4}\s+(-?\d+)\b")
 LINE_PATTERN = re.compile(r"\b([A-Z0-9]{2,4})\s+([+-]\d+(?:\.\d+)?)\b")
@@ -94,17 +98,23 @@ def summarize(soup):
 
 
 def week_is_complete(soup):
+    return not incomplete_game_diagnostics(soup)
+
+
+def incomplete_game_diagnostics(soup):
     cards = soup.select("article.game-card")
     if not cards:
-        return False
-    for card in cards:
+        return ["no article.game-card elements found"]
+    diagnostics = []
+    for index, card in enumerate(cards, start=1):
         final_cell = card.find(string=re.compile(r"Final Score", re.IGNORECASE))
         if not final_cell:
-            return False
+            diagnostics.append(f"Game {index}: missing Final Score row")
+            continue
         score_cell = final_cell.find_parent("td").find_next_sibling("td")
         if not score_cell or parse_score(score_cell) is None:
-            return False
-    return True
+            diagnostics.append(f"Game {index}: final score is not populated")
+    return diagnostics
 
 
 def percentage(wins, losses):
@@ -186,19 +196,36 @@ def move_atomic(source, destination):
 
 
 def active_week_file():
-    week, _ = parse_week(ACTIVE_FILE)
-    weekly_file = ACTIVE_FILE.parent / f"nfle26-{week:02d}.htm"
+    if not STATE_FILE.exists():
+        raise RuntimeError("Rotation state validation failed: nfl_rotation_state.json is missing")
+    try:
+        state = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        raise RuntimeError(f"Rotation state validation failed: invalid JSON ({error})") from error
+    week = state.get("active_week")
+    issue = state.get("active_issue")
+    if state.get("schema_version") != 1 or state.get("season") != int(os.getenv("NFL_SEASON", "2026")):
+        raise RuntimeError("Rotation state validation failed: unsupported schema or season mismatch")
+    if not isinstance(week, int) or not 1 <= week <= 18 or not isinstance(issue, str) or issue != f"nfle26-{week:02d}.htm" or "/" in issue or "\\" in issue:
+        raise RuntimeError("Rotation state validation failed: unsafe or inconsistent canonical issue")
+    weekly_file = STATE_FILE.parent / issue
     if not weekly_file.exists():
-        raise FileNotFoundError(f"Expected generated weekly file: {weekly_file}")
+        raise FileNotFoundError(f"Expected canonical weekly file: {weekly_file}")
+    actual_hash = hashlib.sha256(weekly_file.read_bytes()).hexdigest()
+    if actual_hash != state.get("active_issue_sha256"):
+        raise RuntimeError("Rotation state validation failed: canonical issue checksum mismatch")
+    heading_week, _ = parse_week(weekly_file)
+    if heading_week != week:
+        raise RuntimeError(f"Rotation state validation failed: canonical heading is Week {heading_week}, expected Week {week}")
     return week, weekly_file
 
 
 def main():
     week, weekly_file = active_week_file()
     _, soup = parse_week(weekly_file)
-    if not week_is_complete(soup):
-        print(f"Week {week} is not complete; skipping archive")
-        return
+    diagnostics = incomplete_game_diagnostics(soup)
+    if diagnostics:
+        raise RuntimeError(f"Week {week} is not complete ({'; '.join(diagnostics)}); archive and generation stopped")
     summary = summarize(soup)
     final_file = ARCHIVE_DIR / f"nfle26-{week:02d}F.htm"
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)

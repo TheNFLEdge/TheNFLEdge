@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "season": 2026,
+  "active_week": 1,
+  "active_issue": "nfle26-01.htm",
+  "active_issue_sha256": "4fdeda56aa636c71d1574618f4a9d6ed672a23b3c52b3b4eefa9017d057cb092",
+  "generated_at": "2026-09-16T00:00:00Z",
+  "generated_by": "recovery",
+  "viewport": "nfleTMP.htm"
+}
