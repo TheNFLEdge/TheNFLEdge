@@ -4,7 +4,7 @@ import os
 import re
 import tempfile
 from pathlib import Path
-
+from nfl_team_resolver import normalize_team
 from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent
@@ -51,17 +51,28 @@ def classify_card(card, index):
 
     projected = parse_score(projected_cell.find_parent("td").find_next_sibling("td"))
     final = parse_score(final_cell.find_parent("td").find_next_sibling("td"))
+    
+    # --- GRACEFUL ERROR HANDLING PATCH START ---
     if not projected or not final:
-        raise ValueError(f"Game {index}: final score is not populated")
+        print(f" -> Game {index}: Final score text cell is blank or unpopulated in HTML. Skipping recording counters.")
+        return None, None
+    # --- GRACEFUL ERROR HANDLING PATCH END ---
 
     matchup = card.get("data-game", "").upper().split("-", 1)
     if len(matchup) != 2:
         raise ValueError(f"Game {index}: invalid matchup identifier")
-    away, home = matchup
+    
+    # Apply your new nfl_team_resolver normalization directly to the HTML attributes
+    raw_away, raw_home = matchup
+    away = normalize_team(raw_away, raw_home)
+    home = normalize_team(raw_home, raw_away)
+    
     line = parse_line(card)
     if not line:
         raise ValueError(f"Game {index}: missing point spread")
-    line_team, spread = line
+    line_team_raw, spread = line
+    line_team = normalize_team(line_team_raw)
+    
     if line_team not in (away, home):
         raise ValueError(f"Game {index}: spread team {line_team} is not in {away}-{home}")
 
@@ -91,6 +102,10 @@ def summarize(soup):
     summary = {"winner_win": 0, "winner_loss": 0, "winner_push": 0, "ats_win": 0, "ats_loss": 0, "ats_push": 0}
     for index, card in enumerate(cards, start=1):
         winner, ats = classify_card(card, index)
+        # --- SAFETY CHECK ---
+        if winner is None:
+            continue
+        # -------------------------------
         summary[f"winner_{winner}"] += 1
         summary[f"ats_{ats}"] += 1
     summary["games"] = len(cards)
