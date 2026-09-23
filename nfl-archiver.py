@@ -223,16 +223,27 @@ def active_week_file():
         raise RuntimeError("Rotation state validation failed: unsupported schema or season mismatch")
     if not isinstance(week, int) or not 1 <= week <= 18 or not isinstance(issue, str) or issue != f"nfle26-{week:02d}.htm" or "/" in issue or "\\" in issue:
         raise RuntimeError("Rotation state validation failed: unsafe or inconsistent canonical issue")
-    weekly_file = STATE_FILE.parent / issue
+
+    active_issue = STATE_FILE.parent / issue
+    archived_issue = ARCHIVE_DIR / f"nfle26-{week:02d}F.htm"
+    # fall back to the archived copy if a prior run archived this week but never advanced rotation state
+    weekly_file = active_issue if active_issue.exists() else archived_issue
+
     if not weekly_file.exists():
-        raise FileNotFoundError(f"Expected canonical weekly file: {weekly_file}")
+        raise FileNotFoundError(
+            f"Expected canonical weekly file at {active_issue} or archived copy at {archived_issue}"
+        )
     actual_hash = canonical_sha256(weekly_file)
     if actual_hash != state.get("active_issue_sha256"):
         raise RuntimeError("Rotation state validation failed: canonical issue checksum mismatch")
     heading_week, _ = parse_week(weekly_file)
     if heading_week != week:
         raise RuntimeError(f"Rotation state validation failed: canonical heading is Week {heading_week}, expected Week {week}")
-    return week, weekly_file
+
+    already_archived = weekly_file == archived_issue
+    if already_archived:
+        print(f"Notice: Week {week} was already archived to {archived_issue} in a prior run; skipping re-archive.")
+    return week, weekly_file, already_archived
 
 
 def canonical_sha256(path):
@@ -241,18 +252,23 @@ def canonical_sha256(path):
 
 
 def main():
-    week, weekly_file = active_week_file()
+    week, weekly_file, already_archived = active_week_file()
+
+    if already_archived:
+        print(f"Week {week} archive already complete ({weekly_file.name} found in archives/2026). Nothing further to do.")
+        return
+
     _, soup = parse_week(weekly_file)
     diagnostics = incomplete_game_diagnostics(soup)
-    
+
     if diagnostics:
         print("\n" + "="*80)
-        print(f"WARNING: Week {week} has unpopulated scores ({'; '.join(diagnostics)}).")
-        print("Bypassing failure: Leaving final score markers in place and continuing execution.")
+        print(f"ERROR: Week {week} has unpopulated scores ({'; '.join(diagnostics)}).")
+        print("Refusing to archive an incomplete week. Re-run after all games are final.")
         print("="*80 + "\n")
-    else:
-        print(f"Success: All game scores for Week {week} are fully populated.")
-        
+        raise RuntimeError(f"Week {week} archive blocked: {len(diagnostics)} incomplete game(s)")
+
+    print(f"Success: All game scores for Week {week} are fully populated.")
     summary = summarize(soup)
     final_file = ARCHIVE_DIR / f"nfle26-{week:02d}F.htm"
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)

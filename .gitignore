@@ -6,4 +6,7 @@ __pycache__/
 *$py.class
 node_modules/
 
+# local-only holding area for stray/experimental files, never committed
+archives/2026/safe/
+
 
