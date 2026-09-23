@@ -128,7 +128,9 @@ def incomplete_game_diagnostics(soup):
             continue
         score_cell = final_cell.find_parent("td").find_next_sibling("td")
         if not score_cell or parse_score(score_cell) is None:
-            diagnostics.append(f"Game {index}: final score is not populated")
+            matchup = card.get("data-game", "?")
+            raw_cell = str(score_cell) if score_cell else "<no sibling td found>"
+            diagnostics.append(f"Game {index} ({matchup}): final score is not populated -- raw cell: {raw_cell}")
     return diagnostics
 
 
