@@ -20,7 +20,8 @@ LINE_PATTERN = re.compile(r"\b([A-Z0-9]{2,4})\s+([+-]\d+(?:\.\d+)?)\b")
 def parse_score(cell):
     text = cell.get_text(" ", strip=True)
     marker = str(cell)
-    if not text or "FINAL-SCORE-" in marker.upper() or "TBD" in text.upper():
+    # match only the literal placeholder comment, not "final-score-cover" class names
+    if not text or "<!--FINAL-SCORE-" in marker.upper() or "TBD" in text.upper():
         return None
     match = SCORE_PATTERN.search(text)
     return (int(match.group(1)), int(match.group(2))) if match else None
