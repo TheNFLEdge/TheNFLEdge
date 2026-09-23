@@ -11,7 +11,7 @@ TEAM_MAP = {
     'DAL': 'Dallas Cowboys', 'DALLAS': 'Dallas Cowboys', 'COWBOYS': 'Dallas Cowboys',
     'NYG': 'New York Giants', 'GIANTS': 'New York Giants',
     'PHI': 'Philadelphia Eagles', 'PHILADELPHIA': 'Philadelphia Eagles', 'EAGLES': 'Philadelphia Eagles',
-    'WAS': 'Washington Commanders', 'WASHINGTON': 'Washington Commanders', 'COMMANDERS': 'Washington Commanders',
+    'WAS': 'Washington Commanders', 'WSH': 'Washington Commanders', 'WASHINGTON': 'Washington Commanders', 'COMMANDERS': 'Washington Commanders',
     # NFC North
     'CHI': 'Chicago Bears', 'CHICAGO': 'Chicago Bears', 'BEARS': 'Chicago Bears',
     'DET': 'Detroit Lions', 'DETROIT': 'Detroit Lions', 'LIONS': 'Detroit Lions',
