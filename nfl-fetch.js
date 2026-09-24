@@ -52,11 +52,17 @@ async function main(mode = getMode()) {
 
     const canonicalHtml = fs.readFileSync(issuePath, 'utf8');
     let scoreResults = scoreResultsFromEvents(completedEvents);
+    console.log(`Diagnostics: ${completedEvents.length} completed ESPN events, ${scoreResults.size} score results built`);
     let finalizedHtml = annotateHtml(canonicalHtml, scoreResults);
     if (!isCompleteCanonical(finalizedHtml)) {
+        const missingBeforeFallback = missingMatchups(finalizedHtml);
+        console.log(`Diagnostics: missing after ESPN pass (${missingBeforeFallback.length}): ${missingBeforeFallback.join(', ')}`);
         const fallbackResults = await fetchFallbackScores(finalizedHtml);
+        console.log(`Diagnostics: fallback providers returned ${fallbackResults.size} matched result(s)`);
         scoreResults = mergeScoreResults(scoreResults, fallbackResults);
         finalizedHtml = annotateHtml(canonicalHtml, scoreResults);
+        const missingAfterFallback = missingMatchups(finalizedHtml);
+        console.log(`Diagnostics: missing after fallback pass (${missingAfterFallback.length}): ${missingAfterFallback.join(', ')}`);
     }
     if (targetWeek === state.active_week || !isCompleteCanonical(finalizedHtml)) {
         writeViewportFromCanonical(canonicalHtml, completedEvents);
@@ -343,7 +349,12 @@ function normalizeProviderScore(away, home, awayScore, homeScore, source, comple
 
 function isCompleteCanonical(html) {
     const cards = html.match(/<article\b[^>]*class=["'][^"']*\bgame-card\b[^"']*["'][\s\S]*?<\/article>/gi) || [];
-    return cards.length > 0 && cards.every(card => !/FINAL-SCORE-[A-Z0-9]+-[A-Z0-9]+/i.test(card));
+    // require an actual parseable score in the Final Score cell, not just the absence of the placeholder text
+    return cards.length > 0 && cards.every(card => {
+        if (/FINAL-SCORE-[A-Z0-9]+-[A-Z0-9]+/i.test(card)) return false;
+        const finalScoreCell = /<td><b>Final Score:<\/b><\/td>\s*<td[^>]*>([\s\S]*?)<\/td>/i.exec(card);
+        return !!finalScoreCell && /[A-Z0-9]{2,4}\s+-?\d+\s*-\s*[A-Z0-9]{2,4}\s+-?\d+/i.test(finalScoreCell[1]);
+    });
 }
 
 async function fetchEvents(season, seasonType) {

@@ -3,8 +3,8 @@
   "season": 2026,
   "active_week": 2,
   "active_issue": "nfle26-02.htm",
-  "active_issue_sha256": "828f6905ed6adbb8dbc1682b6a4ac79c26c62f459dd691dc1b73d52078a856f8",
-  "generated_at": "2026-09-17T05:09:39.729431Z",
-  "generated_by": "rotation",
+  "active_issue_sha256": "511780971a04f19cea269d283f10d5ee0f7897d4ff696b626ed6b56195baa0e3",
+  "generated_at": "2026-09-23T00:00:00Z",
+  "generated_by": "manual-repair",
   "viewport": "nfleTMP.htm"
 }
