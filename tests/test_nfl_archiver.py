@@ -57,7 +57,7 @@ class NflArchiverTests(unittest.TestCase):
         self.assertEqual(summary["ats_win"], 1)
         self.assertEqual(summary["ats_loss"], 1)
 
-    def test_incomplete_final_score_is_rejected(self):
+    def test_incomplete_final_score_is_skipped_in_summary(self):
         html = """
         <article class="game-card" data-game="NE-SEA">
           <p class="line">Line: SEA -3</p>
@@ -68,8 +68,12 @@ class NflArchiverTests(unittest.TestCase):
         </article>
         """
         soup = BeautifulSoup(html, "html.parser")
-        with self.assertRaises(ValueError):
-            ARCHIVER.summarize(soup)
+        summary = ARCHIVER.summarize(soup)
+        self.assertEqual(summary["games"], 1)
+        self.assertEqual(summary["winner_win"], 0)
+        self.assertEqual(summary["winner_loss"], 0)
+        self.assertEqual(summary["ats_win"], 0)
+        self.assertEqual(summary["ats_loss"], 0)
 
     def test_main_skips_incomplete_week(self):
         weekly_html = """

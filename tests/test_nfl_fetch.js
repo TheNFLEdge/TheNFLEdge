@@ -9,11 +9,13 @@ const {
     loadAndValidateRotationState,
     mergeProviderResults,
     normalizeApiSportsGame,
+    normalizeApiSportsEvent,
     normalizeHighlightlyMatch,
     normalizeOddsApiScore,
     normalizeProviderScore,
     parseTargetOverride,
-    resolveTargetWeek
+    resolveTargetWeek,
+    requestJson
 } = require('../nfl-fetch');
 
 function event(week, date, completed = false) {
@@ -80,6 +82,20 @@ assert.deepStrictEqual(normalizeHighlightlyMatch({
 assert.strictEqual(normalizeApiSportsGame({
     game: { status: { short: 'Q3' }, teams: { away: { name: 'New England Patriots' }, home: { name: 'Seattle Seahawks' } }, scores: { away: { total: 10 }, home: { total: 13 } } }
 }), null);
+const normalizedScheduleEvent = normalizeApiSportsEvent({
+    game: {
+        id: 123,
+        date: '2026-09-20T17:00:00Z',
+        week: 'Week 3',
+        teams: { away: { name: 'New England Patriots' }, home: { name: 'Seattle Seahawks' } },
+        scores: { away: { total: 10 }, home: { total: 13 } },
+        status: { short: 'FT' }
+    }
+});
+assert.strictEqual(normalizedScheduleEvent.id, '123');
+assert.strictEqual(normalizedScheduleEvent.week.number, 3);
+assert.strictEqual(normalizedScheduleEvent.status.type.completed, true);
+assert.strictEqual(normalizedScheduleEvent.competitions[0].competitors[0].team.abbreviation, 'NE');
 assert.strictEqual(mergeProviderResults([
     { source: 'api-sports', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13' },
     { source: 'highlightly', away: 'NE', home: 'SEA', awayScore: 10, homeScore: 13, scoreString: 'NE 10 - SEA 13' }
@@ -132,3 +148,39 @@ assert.throws(() => loadAndValidateRotationState(temporaryRoot, 2026), /SHA-256/
 fs.rmSync(temporaryRoot, { recursive: true, force: true });
 
 console.log('NFL rotation and score annotation tests passed');
+
+async function verifyRequestIsolation() {
+    const originalFetch = global.fetch;
+    let attempts = 0;
+    let countedSuccesses = 0;
+    global.fetch = async (_url, options) => {
+        attempts += 1;
+        assert.ok(options.signal instanceof AbortSignal);
+        assert.strictEqual(options.signal.aborted, false);
+        if (attempts === 1) throw new Error('temporary network failure');
+        return { ok: true, json: async () => ({ events: [] }) };
+    };
+    try {
+        const payload = await requestJson('https://example.test/data', {}, 'test API', {
+            recordSuccess: () => { countedSuccesses += 1; }
+        });
+        assert.deepStrictEqual(payload, { events: [] });
+        assert.strictEqual(attempts, 2);
+        assert.strictEqual(countedSuccesses, 1);
+
+        attempts = 0;
+        global.fetch = async () => {
+            attempts += 1;
+            throw new Error('persistent network failure');
+        };
+        await assert.rejects(requestJson('https://example.test/data', {}, 'test API'), /persistent network failure/);
+        assert.strictEqual(attempts, 2);
+    } finally {
+        global.fetch = originalFetch;
+    }
+}
+
+verifyRequestIsolation().catch(error => {
+    console.error(error);
+    process.exitCode = 1;
+});

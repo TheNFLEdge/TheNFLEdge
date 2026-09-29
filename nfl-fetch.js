@@ -25,14 +25,34 @@ const API_SPORTS_BASE_URL = process.env.API_SPORTS_BASE_URL || 'https://v1.ameri
 const HIGHLIGHTLY_API_KEY = process.env.HIGHLIGHTLY_API_KEY;
 const HIGHLIGHTLY_BASE_URL = process.env.HIGHLIGHTLY_BASE_URL;
 const HIGHLIGHTLY_HOST = process.env.HIGHLIGHTLY_HOST || 'nfl-ncaa-highlights-api.p.rapidapi.com';
+const configuredTimeout = Number(process.env.NFL_API_TIMEOUT_MS || 12000);
+const API_TIMEOUT_MS = Number.isFinite(configuredTimeout) && configuredTimeout > 0 ? configuredTimeout : 12000;
+const configuredRetries = Number(process.env.NFL_API_RETRIES || 1);
+const API_RETRIES = Number.isInteger(configuredRetries) && configuredRetries >= 0 ? Math.min(configuredRetries, 3) : 1;
 async function main(mode = getMode()) {
-    if (mode === 'refresh') return refreshScores();
-    if (mode === 'restore-viewport') return restoreViewport();
-    if (mode === 'recover-rotation') return recoverRotation();
-    if (mode !== 'rotate') throw new Error(`Unsupported mode: ${mode}`);
+    let successCount = 0;
+    const runContext = { recordSuccess: () => { successCount += 1; } };
+    let result;
+    if (mode === 'refresh') result = await refreshScores(runContext);
+    else if (mode === 'restore-viewport') result = restoreViewport();
+    else if (mode === 'recover-rotation') result = recoverRotation();
+    else if (mode === 'rotate') result = await rotate(runContext);
+    else throw new Error(`Unsupported mode: ${mode}`);
+
+    if (successCount === 0 && (mode === 'rotate' || mode === 'refresh')) {
+        throw new Error('Critical failure: every configured NFL data API failed to return valid data.');
+    }
+    if (mode === 'rotate' || mode === 'refresh') {
+        console.log(`API diagnostics: ${successCount} successful data response(s)`);
+        process.exitCode = 0;
+    }
+    return result;
+}
+
+async function rotate(runContext) {
 
     const { state, issuePath } = loadAndValidateRotationState(ROOT_DIR, Number(SEASON));
-    const events = (await fetchEvents(SEASON, 2)).filter(event => {
+    const events = (await fetchEvents(SEASON, 2, runContext)).filter(event => {
         return new Date(event.date) >= new Date(`${SEASON}-07-01T00:00:00Z`);
     });
     const completedEvents = events.filter(event => event.status?.type?.completed === true);
@@ -57,7 +77,7 @@ async function main(mode = getMode()) {
     if (!isCompleteCanonical(finalizedHtml)) {
         const missingBeforeFallback = missingMatchups(finalizedHtml);
         console.log(`Diagnostics: missing after ESPN pass (${missingBeforeFallback.length}): ${missingBeforeFallback.join(', ')}`);
-        const fallbackResults = await fetchFallbackScores(finalizedHtml);
+        const fallbackResults = await fetchFallbackScores(finalizedHtml, runContext);
         console.log(`Diagnostics: fallback providers returned ${fallbackResults.size} matched result(s)`);
         scoreResults = mergeScoreResults(scoreResults, fallbackResults);
         finalizedHtml = annotateHtml(canonicalHtml, scoreResults);
@@ -79,11 +99,11 @@ async function main(mode = getMode()) {
 
     if (targetWeek === 1) {
         const [previousSeasonEvents, preseasonEvents] = await Promise.all([
-            fetchEvents(Number(SEASON) - 1, 2),
-            fetchEvents(SEASON, 1)
+            fetchEvents(Number(SEASON) - 1, 2, runContext),
+            fetchEvents(SEASON, 1, runContext)
         ]);
         const historicalGames = buildWeekOneHistory(previousSeasonEvents, preseasonEvents);
-        matchups = await mergeOdds(matchups);
+        matchups = await mergeOdds(matchups, runContext);
         const handoff = {
             season: Number(SEASON),
             active_week: state.active_week,
@@ -125,7 +145,7 @@ function getMode() {
     return modeArgument ? modeArgument.slice('--mode='.length) : 'rotate';
 }
 
-async function refreshScores() {
+async function refreshScores(runContext) {
     const viewportPath = path.join(ROOT_DIR, 'nfleTMP.htm');
     if (!fs.existsSync(viewportPath)) throw new Error('Refresh failed: nfleTMP.htm is missing. Run npm run restore:viewport.');
     const original = fs.readFileSync(viewportPath, 'utf8');
@@ -133,11 +153,11 @@ async function refreshScores() {
     if (!/<article\b[^>]*class=["'][^"']*\bgame-card\b/i.test(original)) {
         throw new Error('Refresh failed: nfleTMP.htm is malformed or contains no game cards. Run npm run restore:viewport.');
     }
-    const events = await fetchEvents(SEASON, 2);
+    const events = await fetchEvents(SEASON, 2, runContext);
     let scoreResults = scoreResultsFromEvents(events.filter(isCompleted));
     let updated = annotateHtml(original, scoreResults);
     if (!isCompleteCanonical(updated)) {
-        const fallbackResults = await fetchFallbackScores(updated);
+        const fallbackResults = await fetchFallbackScores(updated, runContext);
         scoreResults = mergeScoreResults(scoreResults, fallbackResults);
         updated = annotateHtml(original, scoreResults);
     }
@@ -204,13 +224,13 @@ function scoreResultsFromEvents(events) {
     return results;
 }
 
-async function fetchFallbackScores(html) {
+async function fetchFallbackScores(html, runContext) {
     const missing = missingMatchups(html);
     if (!missing.length) return new Map();
     const providerResults = [];
-    if (ODDS_API_KEY) providerResults.push(fetchOddsApiScores());
-    if (API_SPORTS_KEY) providerResults.push(fetchApiSportsScores());
-    if (HIGHLIGHTLY_API_KEY && HIGHLIGHTLY_BASE_URL) providerResults.push(fetchHighlightlyScores());
+    if (ODDS_API_KEY) providerResults.push(fetchOddsApiScores(runContext));
+    if (API_SPORTS_KEY) providerResults.push(fetchApiSportsScores(runContext));
+    if (HIGHLIGHTLY_API_KEY && HIGHLIGHTLY_BASE_URL) providerResults.push(fetchHighlightlyScores(runContext));
     if (!providerResults.length) return new Map();
     const responses = await Promise.allSettled(providerResults);
     const successfulResults = responses
@@ -256,27 +276,33 @@ function mergeProviderResults(providerResults, missingKeys) {
     return merged;
 }
 
-async function fetchApiSportsScores() {
+async function fetchApiSportsScores(runContext) {
     const url = new URL(`${API_SPORTS_BASE_URL.replace(/\/$/, '')}/games`);
     url.searchParams.set('league', '1');
     url.searchParams.set('season', SEASON);
-    const response = await fetch(url, { headers: { 'x-apisports-key': API_SPORTS_KEY } });
-    if (!response.ok) throw new Error(`API-Sports score request failed with HTTP ${response.status}`);
-    const payload = await response.json();
-    return (payload.response || []).map(normalizeApiSportsGame).filter(Boolean);
+    try {
+        const payload = await requestJson(url, { headers: { 'x-apisports-key': API_SPORTS_KEY } }, 'API-Sports scores', runContext);
+        return (payload?.response || []).map(normalizeApiSportsGame).filter(Boolean);
+    } catch (error) {
+        console.error(`API-Sports scores unavailable: ${error.message}`);
+        return [];
+    }
 }
 
-async function fetchOddsApiScores() {
+async function fetchOddsApiScores(runContext) {
     const url = new URL(`${ODDS_BASE_URL.replace(/\/$/, '')}/sports/americanfootball_nfl/scores`);
     url.searchParams.set('daysFrom', '3');
     url.searchParams.set('apiKey', ODDS_API_KEY);
-    const response = await fetch(url, { headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' } });
-    if (!response.ok) throw new Error(`Odds API score request failed with HTTP ${response.status}`);
-    const payload = await response.json();
-    return (Array.isArray(payload) ? payload : []).map(normalizeOddsApiScore).filter(Boolean);
+    try {
+        const payload = await requestJson(url, { headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' } }, 'Odds API scores', runContext);
+        return (Array.isArray(payload) ? payload : []).map(normalizeOddsApiScore).filter(Boolean);
+    } catch (error) {
+        console.error(`Odds API scores unavailable: ${error.message}`);
+        return [];
+    }
 }
 
-async function fetchHighlightlyScores() {
+async function fetchHighlightlyScores(runContext) {
     const dates = Array.from({ length: 4 }, (_, index) => {
         const date = new Date();
         date.setUTCDate(date.getUTCDate() - index);
@@ -285,11 +311,14 @@ async function fetchHighlightlyScores() {
     const responses = await Promise.all(dates.map(async date => {
         const url = new URL(`${HIGHLIGHTLY_BASE_URL.replace(/\/$/, '')}/matches`);
         url.searchParams.set('date', date);
-        const response = await fetch(url, { headers: { 'x-rapidapi-key': HIGHLIGHTLY_API_KEY, 'x-rapidapi-host': HIGHLIGHTLY_HOST } });
-        if (!response.ok) throw new Error(`Highlightly score request failed with HTTP ${response.status}`);
-        return response.json();
+        try {
+            return await requestJson(url, { headers: { 'x-rapidapi-key': HIGHLIGHTLY_API_KEY, 'x-rapidapi-host': HIGHLIGHTLY_HOST } }, `Highlightly scores for ${date}`, runContext);
+        } catch (error) {
+            console.error(`Highlightly scores for ${date} unavailable: ${error.message}`);
+            return null;
+        }
     }));
-    return responses.flatMap(payload => (payload.data || payload.matches || payload.response || []).map(normalizeHighlightlyMatch).filter(Boolean));
+    return responses.filter(Boolean).flatMap(payload => (payload.data || payload.matches || payload.response || []).map(normalizeHighlightlyMatch).filter(Boolean));
 }
 
 function normalizeApiSportsGame(game) {
@@ -357,19 +386,86 @@ function isCompleteCanonical(html) {
     });
 }
 
-async function fetchEvents(season, seasonType) {
+async function fetchEvents(season, seasonType, runContext) {
     const url = new URL(ESPN_BASE_URL);
     url.searchParams.set('dates', season);
     url.searchParams.set('seasontype', seasonType);
     url.searchParams.set('limit', '1000');
     if (ESPN_API_KEY) url.searchParams.set('apikey', ESPN_API_KEY);
-    const response = await fetch(url, {
-        headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' }
-    });
-    if (!response.ok) throw new Error(`ESPN request failed with HTTP ${response.status}`);
-    const payload = await response.json();
-    if (!Array.isArray(payload.events)) throw new Error('ESPN response did not contain an events array');
-    return payload.events;
+    try {
+        const payload = await requestJson(url, {
+            headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' }
+        }, `ESPN schedule season ${season}, type ${seasonType}`, runContext);
+        if (!Array.isArray(payload?.events)) throw new Error('response did not contain an events array');
+        return payload.events;
+    } catch (error) {
+        console.error(`ESPN schedule unavailable for season ${season}, type ${seasonType}: ${error.message}`);
+        if (!API_SPORTS_KEY) throw error;
+        const fallback = await fetchApiSportsSchedule(season, runContext);
+        if (!fallback.length) throw error;
+        console.warn(`Using ${fallback.length} API-Sports schedule events after ESPN failure.`);
+        return fallback;
+    }
+}
+
+async function fetchApiSportsSchedule(season, runContext) {
+    const url = new URL(`${API_SPORTS_BASE_URL.replace(/\/$/, '')}/games`);
+    url.searchParams.set('league', '1');
+    url.searchParams.set('season', String(season));
+    try {
+        const payload = await requestJson(url, { headers: { 'x-apisports-key': API_SPORTS_KEY } }, `API-Sports schedule season ${season}`, runContext);
+        return (payload?.response || []).map(game => normalizeApiSportsEvent(game, season)).filter(Boolean);
+    } catch (error) {
+        console.error(`API-Sports schedule unavailable for season ${season}: ${error.message}`);
+        return [];
+    }
+}
+
+function normalizeApiSportsEvent(game, season = Number(SEASON)) {
+    if (!game || typeof game !== 'object') return null;
+    const record = game.game || game;
+    const awayTeam = record.teams?.away;
+    const homeTeam = record.teams?.home;
+    const week = Number(String(record.week || record.stage || '').match(/\d+/)?.[0]);
+    const date = record.date?.date || record.date || record.game?.date;
+    if (!awayTeam?.name || !homeTeam?.name || !Number.isInteger(week) || !date) return null;
+    const eventDate = new Date(date);
+    if (Number.isNaN(eventDate.valueOf())) return null;
+    const status = record.status?.short || record.status?.long || '';
+    const completed = isFinalProviderStatus(status);
+    const abbreviation = name => normalizeTeam(name);
+    return {
+        id: String(record.id || record.game?.id || `${week}-${date}-${awayTeam.name}-${homeTeam.name}`),
+        date: eventDate.toISOString(),
+        week: { number: week },
+        season: { year: Number(record.season?.year || season) },
+        status: { type: { completed, state: completed ? 'post' : 'pre' } },
+        competitions: [{
+            odds: [],
+            competitors: [
+                { homeAway: 'away', team: { name: awayTeam.name, abbreviation: abbreviation(awayTeam.name) }, score: record.scores?.away?.total },
+                { homeAway: 'home', team: { name: homeTeam.name, abbreviation: abbreviation(homeTeam.name) }, score: record.scores?.home?.total }
+            ]
+        }]
+    };
+}
+
+async function requestJson(url, options, label, runContext) {
+    let lastError;
+    const attempts = Math.max(1, API_RETRIES + 1);
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            const response = await fetch(url, { ...options, signal: AbortSignal.timeout(API_TIMEOUT_MS) });
+            if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+            const payload = await response.json();
+            runContext?.recordSuccess();
+            return payload;
+        } catch (error) {
+            lastError = error;
+            console.error(`${label} request attempt ${attempt}/${attempts} failed: ${error.message}`);
+        }
+    }
+    throw lastError;
 }
 
 function buildWeekOneHistory(previousSeasonEvents, preseasonEvents) {
@@ -427,20 +523,23 @@ function addHistoricalGame(histories, teamName, pointsFor, pointsAgainst, source
     });
 }
 
-async function mergeOdds(matchups) {
+async function mergeOdds(matchups, runContext) {
     if (!ODDS_API_KEY) return matchups;
     const url = new URL(`${ODDS_BASE_URL.replace(/\/$/, '')}/sports/americanfootball_nfl/odds/`);
     url.searchParams.set('regions', 'us');
     url.searchParams.set('markets', 'spreads,totals');
     url.searchParams.set('oddsFormat', 'american');
     url.searchParams.set('apiKey', ODDS_API_KEY);
-    const response = await fetch(url, { headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' } });
-    if (!response.ok) throw new Error(`Odds API request failed with HTTP ${response.status}`);
-    const oddsEvents = await response.json();
-    return matchups.map(matchup => {
-        const oddsEvent = oddsEvents.find(event => sameMatchup(event, matchup));
-        return oddsEvent ? applyOdds(matchup, oddsEvent) : matchup;
-    });
+    try {
+        const oddsEvents = await requestJson(url, { headers: { 'User-Agent': 'TheNFLEdge/2026 (+https://thenfledge.com)' } }, 'Odds API odds', runContext);
+        return matchups.map(matchup => {
+            const oddsEvent = oddsEvents.find(event => sameMatchup(event, matchup));
+            return oddsEvent ? applyOdds(matchup, oddsEvent) : matchup;
+        });
+    } catch (error) {
+        console.error(`Odds enrichment skipped: ${error.message}`);
+        return matchups;
+    }
 }
 
 function sameMatchup(oddsEvent, matchup) {
@@ -575,10 +674,12 @@ module.exports = {
     loadAndValidateRotationState,
     mergeProviderResults,
     normalizeApiSportsGame,
+    normalizeApiSportsEvent,
     normalizeHighlightlyMatch,
     normalizeOddsApiScore,
     normalizeProviderScore,
     parseTargetOverride,
+    requestJson,
     resolveTargetWeek,
     scheduleWindows
 };
