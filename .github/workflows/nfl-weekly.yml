@@ -11,6 +11,7 @@ permissions:
 jobs:
   weekly-update:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,6 +30,7 @@ jobs:
         run: python -m pip install -r requirements.txt
 
       - name: Fetch scores and prepare next-week handoff
+        id: fetch
         env:
           NFL_SEASON: '2026'
           ESPN_API_KEY: ${{ secrets.ESPN_API_KEY }}
@@ -52,6 +54,8 @@ jobs:
         run: npm run archive:nfl
 
       - name: Generate next NFL week
+        id: projection
+        if: ${{ always() && steps.fetch.outcome == 'success' }}
         env:
           PG_PI_X: ${{ secrets.PG_PI_X }}
           PG_PI7: ${{ secrets.PG_PI7 }}
@@ -63,6 +67,7 @@ jobs:
 
       - name: Commit and push updates
         uses: stefanzweifel/git-auto-commit-action@v7
+        if: ${{ always() && steps.fetch.outcome == 'success' && steps.projection.outcome == 'success' }}
         with:
           commit_message: 'Automated NFL weekly update'
           file_pattern: 'nfleTMP.htm nfle26-*.htm nfl_data_handoff.json nfl_rotation_state.json archives/2026'
