@@ -20,7 +20,6 @@ P_MULTIPLIERS = {
     "0.0": float(os.getenv("PG_PI_X", "1.5")),
 }
 MARGIN_ADJUSTMENT = float(os.getenv("PG_MD", "2.0"))
-WEEK_TWO_SCORE_ADJUSTMENT = 2
 
 
 def confidence_bucket(wins, games):
@@ -36,26 +35,50 @@ def confidence_bucket(wins, games):
     return "0.0"
 
 
-def project_score(team, opponent, stats):
+def project_raw_score(team, opponent, stats):
     team_stats = stats[team]
     opponent_stats = stats[opponent]
-    team_games = team_stats["gp"]
-    opponent_games = opponent_stats["gp"]
-    base_score = ((team_stats["pf_sum"] / team_games) + (opponent_stats["pa_sum"] / opponent_games)) / 2
-    bucket = confidence_bucket(team_stats["wins"], team_games)
+    # Points per quarter over the trailing window (4 games = 16 quarters).
+    team_ppqf = team_stats["pf_sum"] / (team_stats["gp"] * 4)
+    opponent_ppqa = opponent_stats["pa_sum"] / (opponent_stats["gp"] * 4)
+    base_score = team_ppqf + opponent_ppqa
+    bucket = confidence_bucket(team_stats["wins"], team_stats["gp"])
     score = base_score * P_MULTIPLIERS[bucket]
     if float(bucket) >= 0.75:
-        return math.ceil(score + MARGIN_ADJUSTMENT)
+        return score + MARGIN_ADJUSTMENT, math.ceil
     if float(bucket) <= 0.25:
-        return max(0, math.floor(score - MARGIN_ADJUSTMENT))
-    return max(0, round(score))
+        return score - MARGIN_ADJUSTMENT, math.floor
+    return score, round
 
 
-def project_week_two_score(team, opponent, stats):
-    return max(0, project_score(team, opponent, stats) - WEEK_TWO_SCORE_ADJUSTMENT)
+def project_score(team, opponent, stats):
+    raw, rounder = project_raw_score(team, opponent, stats)
+    return max(0, rounder(raw))
 
 
-def render_card(index, matchup, stats, projection_function=project_score):
+def fix_impossible_score(score):
+    if score in (1, 2):
+        return 3
+    if score in (4, 5):
+        return 6
+    return score
+
+
+def project_matchup(away, home, stats):
+    away_raw, away_round = project_raw_score(away, home, stats)
+    home_raw, home_round = project_raw_score(home, away, stats)
+    away_score = fix_impossible_score(max(0, away_round(away_raw)))
+    home_score = fix_impossible_score(max(0, home_round(home_raw)))
+    if away_score == home_score:
+        # Higher unrounded projection gets the extra point; home team wins an exact raw tie.
+        if away_raw > home_raw:
+            away_score = fix_impossible_score(away_score + 1)
+        else:
+            home_score = fix_impossible_score(home_score + 1)
+    return away_score, home_score
+
+
+def render_card(index, matchup, stats):
     away = matchup["away"]
     home = matchup["home"]
     line = matchup["line"]
@@ -63,8 +86,7 @@ def render_card(index, matchup, stats, projection_function=project_score):
     if away not in stats or home not in stats or not stats[away]["gp"] or not stats[home]["gp"]:
         content = f'<p class="pending">Projection pending for {away} @ {home}; season data is not available yet.</p>'
     else:
-        away_score = projection_function(away, home, stats)
-        home_score = projection_function(home, away, stats)
+        away_score, home_score = project_matchup(away, home, stats)
         content = (
             f'<table><tr><td><b>Projected Score:</b></td>'
             f'<td>{away} {away_score} - {home} {home_score}</td></tr>'
@@ -88,12 +110,12 @@ def render_advertisement():
 </section>"""
 
 
-def render_week(matchups, stats, projection_function=project_score):
+def render_week(matchups, stats):
     sections = []
     for group_start in range(0, 16, 4):
         group = matchups[group_start:group_start + 4]
         sections.extend(
-            render_card(group_start + index, matchup, stats, projection_function)
+            render_card(group_start + index, matchup, stats)
             for index, matchup in enumerate(group, 1)
         )
         sections.append(render_advertisement())
@@ -107,8 +129,7 @@ def main():
     template = TEMPLATE_FILE.read_text(encoding="utf-8")
     week = int(data["target_week"])
     load_generation_state(week)
-    projection_function = project_week_two_score if week == 2 else project_score
-    weekly_content = render_week(data["matchups"], data["team_stats"], projection_function)
+    weekly_content = render_week(data["matchups"], data["team_stats"])
     final_html = template.replace("{{WEEK}}", str(week)).replace("<!-- GAME-CARDS -->\n            <!--ADVERTISEMENT-->", weekly_content)
     canonical_path = ROOT / f"nfle26-{week:02d}.htm"
     viewport_path = ROOT / "nfleTMP.htm"
