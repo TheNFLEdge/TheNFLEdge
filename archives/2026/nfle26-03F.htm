@@ -28,6 +28,39 @@
         .ad-box a { color: #ffd700; }
         .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
         .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
+        /* DEV BANNER NEW STYLE */
+        .dev-banner {
+            background: #fff;
+            border-top: 5px solid #000;
+            border-bottom: 5px solid #000;
+            padding: 0;
+        }
+        .dev-flex {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+        }
+        .dev-flex img {
+            width: 20%;
+            height: auto;
+            display: block;
+        }
+        .dev-textbox {
+            background: #000;
+            color: #fff;
+            padding: 6px 8px;
+            flex: 1;
+        }
+        .dev-textbox h2 {
+            margin: 0 0 10px;
+            font: 700 21px/1.2 Arial, sans-serif;
+            color: #fff;
+        }
+        .dev-textbox p {
+            margin: 0 0 12px;
+            font: 16px/1.45 Arial, sans-serif;
+        }
 
         @media (max-width: 560px) {
             .page { width: 100%; padding: 24px 12px 48px; overflow-x: hidden; }
@@ -70,13 +103,17 @@
 <article class="game-card" data-game="KC-MIA"><h2>Game 6: KC @ MIA</h2><p class="line">Line: KC -10 O/U 45.5</p><table><tr><td><b>Projected Score:</b></td><td>KC 22 - MIA 8</td></tr><tr><td><b>Final Score:</b></td><td><span class="final-score final-score-cover" style="color: green; font-weight: 700">KC 24 - MIA 10 W&nbsp;(U)</span></td></tr></table></article>
 <article class="game-card" data-game="TEN-NYG"><h2>Game 7: TEN @ NYG</h2><p class="line">Line: NYG -2.5 O/U 37.5</p><table><tr><td><b>Projected Score:</b></td><td>TEN 9 - NYG 27</td></tr><tr><td><b>Final Score:</b></td><td><span class="final-score final-score-cover" style="color: green; font-weight: 700">TEN 7 - NYG 12 W&nbsp;(U)</span></td></tr></table></article>
 <article class="game-card" data-game="CIN-PIT"><h2>Game 8: CIN @ PIT</h2><p class="line">Line: CIN -3.5 O/U 42.5</p><table><tr><td><b>Projected Score:</b></td><td>CIN 33 - PIT 12</td></tr><tr><td><b>Final Score:</b></td><td><span class="final-score">CIN 27 - PIT 30&nbsp;(O)</span></td></tr></table></article>
-<!--ADVERTISEMENT-->
-<section class="ad-box" aria-label="Advertisement">
-    <h2>Save on insurance with Liberty Mutual</h2>
-    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
-    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
-    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
-</section>
+<!-- DEV BANNER MOVED DOWN -->
+            <section class="dev-banner">
+                <div class="dev-flex">
+                    <img src="https://github.com/TheNFLEdge/TheNFLEdge/blob/main/images/jackhanmer-construction-worker.gif?raw=true" alt="Under Development">
+                    <div class="dev-textbox">
+                        <h2>PARDON OUR DUST!</h2>
+                        <p>This season we are rolling out our fully automated NFL score‑projection system for the first time this season, and a small programming glitch caused inflated projected scores in Weeks 2, 3, and 4. The bug didn’t change a single projected winner — only the margins — and Week 4 ended up being our best week yet, so maybe we should’ve left it in!</p>
+                        <p>The issue is now fixed, but this week’s page was generated before the correction. A quick course‑adjustment was needed — but that hasn’t stopped us from delivering <strong>MORE FREE WINNERS</strong>.</p>
+                    </div>
+                </div>
+            </section>
 <article class="game-card" data-game="SEA-WSH"><h2>Game 9: SEA @ WSH</h2><p class="line">Line: SEA -8.5 O/U 40.5</p><table><tr><td><b>Projected Score:</b></td><td>SEA 26 - WSH 5</td></tr><tr><td><b>Final Score:</b></td><td><span class="final-score">SEA 31 - WSH 33</span></td></tr></table></article>
 <article class="game-card" data-game="NE-JAX"><h2>Game 10: NE @ JAX</h2><p class="line">Line: JAX -3 O/U 46.5</p><table><tr><td><b>Projected Score:</b></td><td>NE 6 - JAX 27</td></tr><tr><td><b>Final Score:</b></td><td><span class="final-score final-score-cover" style="color: green; font-weight: 700">NE 6 - JAX 35 W&nbsp;(U)</span></td></tr></table></article>
 <article class="game-card" data-game="ARI-SF"><h2>Game 11: ARI @ SF</h2><p class="line">Line: SF -7.5 O/U 48.5</p><table><tr><td><b>Projected Score:</b></td><td>ARI 13 - SF 37</td></tr><tr><td><b>Final Score:</b></td><td><span class="final-score">ARI 30 - SF 36 W&nbsp;(O)</span></td></tr></table></article>
