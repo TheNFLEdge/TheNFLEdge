@@ -22,12 +22,47 @@
         td { padding: 8px 0; border-top: 1px solid rgba(16, 24, 32, .18); }
         td:first-child { width: 42%; }
         .pending { color: var(--red); }
+
         .ad-box { padding: 18px; color: var(--white); background: #111; border-color: #444; }
         .ad-box h2 { margin: 0 0 10px; color: var(--white); font: 700 21px/1.2 Arial, sans-serif; }
         .ad-box p { margin: 0 0 14px; font: 16px/1.45 Arial, sans-serif; }
         .ad-box a { color: #ffd700; }
         .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
         .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
+
+        /* DEV BANNER NEW STYLE */
+        .dev-banner {
+            background: #fff;
+            border-top: 5px solid #000;
+            border-bottom: 5px solid #000;
+            padding: 0;
+        }
+        .dev-flex {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+        }
+        .dev-flex img {
+            width: 20%;
+            height: auto;
+            display: block;
+        }
+        .dev-textbox {
+            background: #000;
+            color: #fff;
+            padding: 6px 8px;
+            flex: 1;
+        }
+        .dev-textbox h2 {
+            margin: 0 0 10px;
+            font: 700 21px/1.2 Arial, sans-serif;
+            color: #fff;
+        }
+        .dev-textbox p {
+            margin: 0 0 12px;
+            font: 16px/1.45 Arial, sans-serif;
+        }
 
         @media (max-width: 560px) {
             .page { width: 100%; padding: 24px 12px 48px; overflow-x: hidden; }
@@ -44,6 +79,8 @@
             .ad-box { min-width: 0; padding: 16px; }
             .ad-box h2 { font-size: 19px; }
             .ad-box p { font-size: 15px; }
+            .dev-flex { flex-direction: column; }
+            .dev-flex img { width: 80%; }
         }
     </style>
 </head>
@@ -55,49 +92,216 @@
             <p class="intro">Computer-generated score projections from Greggy the Greek's PanaGeoTech formula.</p>
         </header>
         <section class="game-list" aria-label="NFL weekly projections">
-            <article class="game-card" data-game="TB-DAL"><h2>Game 1: TB @ DAL</h2><p class="line">Line: DAL -8.5 O/U 47.5</p><table><tr><td><b>Projected Score:</b></td><td>TB 31 - DAL 55</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-TB-DAL--></td></tr></table></article>
-<article class="game-card" data-game="PHI-JAX"><h2>Game 2: PHI @ JAX</h2><p class="line">Line: JAX -6.5 O/U 42.5</p><table><tr><td><b>Projected Score:</b></td><td>PHI 33 - JAX 54</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-PHI-JAX--></td></tr></table></article>
-<article class="game-card" data-game="CHI-GB"><h2>Game 3: CHI @ GB</h2><p class="line">Line: CHI -3 O/U 45.5</p><table><tr><td><b>Projected Score:</b></td><td>CHI 59 - GB 35</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CHI-GB--></td></tr></table></article>
-<article class="game-card" data-game="HOU-TEN"><h2>Game 4: HOU @ TEN</h2><p class="line">Line: HOU -7 O/U 38.5</p><table><tr><td><b>Projected Score:</b></td><td>HOU 27 - TEN 27</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-HOU-TEN--></td></tr></table></article>
-<!--ADVERTISEMENT-->
-<section class="ad-box" aria-label="Advertisement">
-    <h2>Save on insurance with Liberty Mutual</h2>
-    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
-    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
-    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
-</section>
-<article class="game-card" data-game="CIN-MIA"><h2>Game 5: CIN @ MIA</h2><p class="line">Line: CIN -7 O/U 42.5</p><table><tr><td><b>Projected Score:</b></td><td>CIN 50 - MIA 21</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CIN-MIA--></td></tr></table></article>
-<article class="game-card" data-game="LV-NE"><h2>Game 6: LV @ NE</h2><p class="line">Line: NE -3.5 O/U 45.5</p><table><tr><td><b>Projected Score:</b></td><td>LV 52 - NE 38</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-LV-NE--></td></tr></table></article>
-<article class="game-card" data-game="MIN-NO"><h2>Game 7: MIN @ NO</h2><p class="line">Line: MIN -1.5 O/U 42.5</p><table><tr><td><b>Projected Score:</b></td><td>MIN 65 - NO 33</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-MIN-NO--></td></tr></table></article>
-<article class="game-card" data-game="CLE-NYJ"><h2>Game 8: CLE @ NYJ</h2><p class="line">Line: NYJ -2.5 O/U 39.5</p><table><tr><td><b>Projected Score:</b></td><td>CLE 45 - NYJ 36</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CLE-NYJ--></td></tr></table></article>
-<!--ADVERTISEMENT-->
-<section class="ad-box" aria-label="Advertisement">
-    <h2>Save on insurance with Liberty Mutual</h2>
-    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
-    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
-    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
-</section>
-<article class="game-card" data-game="IND-PIT"><h2>Game 9: IND @ PIT</h2><p class="line">Line: PIT -2.5 O/U 44.5</p><table><tr><td><b>Projected Score:</b></td><td>IND 48 - PIT 46</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-IND-PIT--></td></tr></table></article>
-<article class="game-card" data-game="NYG-WSH"><h2>Game 10: NYG @ WSH</h2><p class="line">Line: WSH -3 O/U 43.5</p><table><tr><td><b>Projected Score:</b></td><td>NYG 56 - WSH 35</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NYG-WSH--></td></tr></table></article>
-<article class="game-card" data-game="DEN-LAC"><h2>Game 11: DEN @ LAC</h2><p class="line">Line: DEN -3.5 O/U 42.5</p><table><tr><td><b>Projected Score:</b></td><td>DEN 46 - LAC 26</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-DEN-LAC--></td></tr></table></article>
-<article class="game-card" data-game="DET-ARI"><h2>Game 12: DET @ ARI</h2><p class="line">Line: DET -4.5 O/U 54.5</p><table><tr><td><b>Projected Score:</b></td><td>DET 60 - ARI 45</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-DET-ARI--></td></tr></table></article>
-<!--ADVERTISEMENT-->
-<section class="ad-box" aria-label="Advertisement">
-    <h2>Save on insurance with Liberty Mutual</h2>
-    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
-    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
-    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
-</section>
-<article class="game-card" data-game="SF-SEA"><h2>Game 13: SF @ SEA</h2><p class="line">Line: SEA -3 O/U 47.5</p><table><tr><td><b>Projected Score:</b></td><td>SF 59 - SEA 46</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-SF-SEA--></td></tr></table></article>
-<article class="game-card" data-game="BAL-ATL"><h2>Game 14: BAL @ ATL</h2><p class="line">Line: ATL -3 O/U 43.5</p><table><tr><td><b>Projected Score:</b></td><td>BAL 57 - ATL 49</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-BAL-ATL--></td></tr></table></article>
-<article class="game-card" data-game="BUF-LAR"><h2>Game 15: BUF @ LAR</h2><p class="line">Line: LAR -2.5 O/U 54.5</p><table><tr><td><b>Projected Score:</b></td><td>BUF 57 - LAR 49</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-BUF-LAR--></td></tr></table></article>
-<!--ADVERTISEMENT-->
-<section class="ad-box" aria-label="Advertisement">
-    <h2>Save on insurance with Liberty Mutual</h2>
-    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
-    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
-    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
-</section>
+
+            <!-- LIBERTY AD MOVED UP -->
+            <section class="ad-box" aria-label="Advertisement">
+                <h2>Save on insurance with Liberty Mutual</h2>
+                <p>Stop worrying and start saving with Liberty Mutual.
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <strong>Click here</strong>
+                    </a> for customized coverage that fits your budget.
+                </p>
+                <p class="ad-image">
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy">
+                    </a>
+                </p>
+                <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+            </section>
+
+            <article class="game-card" data-game="TB-DAL">
+                <h2>Game 1: TB @ DAL</h2>
+                <p class="line">Line: DAL -8.5 O/U 47.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>TB 15 - DAL 27</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-TB-DAL--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="PHI-JAX">
+                <h2>Game 2: PHI @ JAX</h2>
+                <p class="line">Line: JAX -7 O/U 42.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>PHI 16 - JAX 30</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-PHI-JAX--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="CHI-GB">
+                <h2>Game 3: CHI @ GB</h2>
+                <p class="line">Line: CHI -3 O/U 45.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>CHI 32 - GB 17</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CHI-GB--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="HOU-TEN">
+                <h2>Game 4: HOU @ TEN</h2>
+                <p class="line">Line: HOU -7.5 O/U 37.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>HOU 14 - TEN 13</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-HOU-TEN--></td></tr>
+                </table>
+            </article>
+
+            <!-- DEV BANNER MOVED DOWN -->
+            <section class="dev-banner">
+                <div class="dev-flex">
+                    <img src="https://github.com/TheNFLEdge/TheNFLEdge/blob/main/images/jackhanmer-construction-worker.gif?raw=true" alt="Under Development">
+                    <div class="dev-textbox">
+                        <h2>PARDON OUR DUST!</h2>
+                        <p>This season we are rolling out our fully automated NFL score‑projection system for the first time this season, and a small programming glitch caused inflated projected scores in Weeks 2, 3, and 4. The bug didn’t change a single projected winner — only the margins — and Week 4 ended up being our best week yet, so maybe we should’ve left it in!</p>
+                        <p>The issue is now fixed, but this week’s page was generated before the correction. A quick course‑adjustment was needed — but that hasn’t stopped us from delivering <strong>MORE FREE WINNERS</strong>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <article class="game-card" data-game="CIN-MIA">
+                <h2>Game 5: CIN @ MIA</h2>
+                <p class="line">Line: CIN -7 O/U 42.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>CIN 25 - MIA 10</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CIN-MIA--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="LV-NE">
+                <h2>Game 6: LV @ NE</h2>
+                <p class="line">Line: NE -3.5 O/U 45.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>LV 29 - NE 19</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-LV-NE--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="MIN-NO">
+                <h2>Game 7: MIN @ NO</h2>
+                <p class="line">Line: MIN -1.5 O/U 42.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>MIN 35 - NO 14</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-MIN-NO--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="CLE-NYJ">
+                <h2>Game 8: CLE @ NYJ</h2>
+                <p class="line">Line: NYJ -2.5 O/U 39.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>CLE 25 - NYJ 15</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CLE-NYJ--></td></tr>
+                </table>
+            </article>
+
+            <!-- Remaining Liberty ads unchanged -->
+            <section class="ad-box" aria-label="Advertisement">
+                <h2>Save on insurance with Liberty Mutual</h2>
+                <p>Stop worrying and start saving with Liberty Mutual.
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <strong>Click here</strong>
+                    </a> for customized coverage that fits your budget.
+                </p>
+                <p class="ad-image">
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy">
+                    </a>
+                </p>
+                <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+            </section>
+
+            <article class="game-card" data-game="IND-PIT">
+                <h2>Game 9: IND @ PIT</h2>
+                <p class="line">Line: PIT -2.5 O/U 44.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>IND 24 - PIT 23</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-IND-PIT--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="NYG-WSH">
+                <h2>Game 10: NYG @ WSH</h2>
+                <p class="line">Line: WSH -3.5 O/U 43.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>NYG 31 - WSH 15</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NYG-WSH--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="DEN-LAC">
+                <h2>Game 11: DEN @ LAC</h2>
+                <p class="line">Line: DEN -3.5 O/U 42.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>DEN 22 - LAC 13</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-DEN-LAC--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="DET-ARI">
+                <h2>Game 12: DET @ ARI</h2>
+                <p class="line">Line: DET -4.5 O/U 54.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>DET 30 - ARI 20</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-DET-ARI--></td></tr>
+                </table>
+            </article>
+
+            <section class="ad-box" aria-label="Advertisement">
+                <h2>Save on insurance with Liberty Mutual</h2>
+                <p>Stop worrying and start saving with Liberty Mutual.
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <strong>Click here</strong>
+                    </a> for customized coverage that fits your budget.
+                </p>
+                <p class="ad-image">
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy">
+                    </a>
+                </p>
+                <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+            </section>
+
+            <article class="game-card" data-game="SF-SEA">
+                <h2>Game 13: SF @ SEA</h2>
+                <p class="line">Line: SEA -2.5 O/U 46.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>SF 32 - SEA 26</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-SF-SEA--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="BAL-ATL">
+                <h2>Game 14: BAL @ ATL</h2>
+                <p class="line">Line: ATL -3.5 O/U 43.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>BAL 31 - ATL 24</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-BAL-ATL--></td></tr>
+                </table>
+            </article>
+
+            <article class="game-card" data-game="BUF-LAR">
+                <h2>Game 15: BUF @ LAR</h2>
+                <p class="line">Line: LAR -3 O/U 54.5</p>
+                <table>
+                    <tr><td><b>Projected Score:</b></td><td>BUF 31 - LAR 24</td></tr>
+                    <tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-BUF-LAR--></td></tr>
+                </table>
+            </article>
+
+            <section class="ad-box" aria-label="Advertisement">
+                <h2>Save on insurance with Liberty Mutual</h2>
+                <p>Stop worrying and start saving with Liberty Mutual.
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <strong>Click here</strong>
+                    </a> for customized coverage that fits your budget.
+                </p>
+                <p class="ad-image">
+                    <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy">
+                    </a>
+                </p>
+                <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+            </section>
+
         </section>
     </main>
 </body>
