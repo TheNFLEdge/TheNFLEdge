@@ -110,6 +110,21 @@ def render_advertisement():
 </section>"""
 
 
+def render_feeshvertisement():
+    return """<!--FEESHVERTISEMENT-->
+<section class="ad-box" aria-label="Advertisement">
+    <a href="https://open.spotify.com/artist/6fa6DV6wh6WscR3R7fWAyI" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit;">
+        <div style="position:relative; display:inline-block; width:100%;">
+            <img src="images/gfish-promo-ad.jpg" alt="Greggy Feesh Promo Banner" loading="lazy" style="width:100%; height:auto; display:block;">
+            <div style="position:absolute; bottom:8%; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.55); padding:14px 22px; border-radius:10px; color:#fff; font-size:1.35rem; font-weight:bold; text-align:center; font-family:Arial, sans-serif; max-width:90%;">
+                Tired of the same old lame old songs?<br>
+                Check out the latest <strong>FRESH FEESH</strong> music &mdash;<br>
+                from your new favorite artist Greggy Feesh and the Phlops.
+            </div>
+        </div>
+    </a>
+</section>"""
+
 def render_week(matchups, stats):
     sections = []
     for group_start in range(0, 16, 4):
@@ -118,7 +133,8 @@ def render_week(matchups, stats):
             render_card(group_start + index, matchup, stats)
             for index, matchup in enumerate(group, 1)
         )
-        sections.append(render_advertisement())
+        last_group = group_start + 4 >= 16
+        sections.append(render_feeshvertisement() if last_group else render_advertisement())
     return "\n".join(sections)
 
 
