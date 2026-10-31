@@ -43,57 +43,157 @@
             align-items: center;
         }
 
-        .kicker {
-            margin: 0 0 14px;
+        .hero {
+            margin: 0 0 28px;
+            text-align: center;
+        }
+
+        .presents {
+            display: block;
+            margin: 0 0 10px;
             color: var(--red);
             font: 700 13px/1.2 Arial, sans-serif;
             letter-spacing: 2.5px;
+            text-align: left;
             text-transform: uppercase;
         }
 
-        h1 {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-width: 760px;
-            margin: 0;
-            color: var(--navy);
-            line-height: .9;
+        /* Marquee: bulb rows drawn as repeating dots on the four edges */
+        .marquee {
+            --bulb: radial-gradient(circle, #ffe9a8 0 3px, #ffb81c 4px 5px, transparent 6px);
+            padding: 16px;
+            background:
+                var(--bulb) top left / 24px 16px repeat-x,
+                var(--bulb) bottom left / 24px 16px repeat-x,
+                var(--bulb) top left / 16px 24px repeat-y,
+                var(--bulb) top right / 16px 24px repeat-y,
+                #1a1a1a;
+            border: 2px solid #000;
+            box-shadow: 0 10px 0 rgba(0, 0, 0, .18), 0 0 0 4px var(--red);
+        }
+
+        .marquee-face {
+            padding: clamp(14px, 3vw, 30px) clamp(8px, 2vw, 24px);
+            background: radial-gradient(ellipse at center, #14284f 0%, #050b1d 75%);
+            border: 2px solid #000;
+        }
+
+        h1 { margin: 0; }
+
+        .logo {
+            display: block;
+            color: #fff7e0;
+            font: 900 clamp(32px, 9.4vw, 112px)/1 "Arial Black", Impact, "Helvetica Neue", Arial, sans-serif;
             letter-spacing: -1px;
+            text-shadow: 0 0 6px #fff, 0 0 18px #ffb81c, 0 0 38px #ff3b3b;
+            animation: neon 4s ease-in-out infinite;
         }
 
-        .headline-sub {
+        .logo .tld {
+            color: #ff4d5e;
+            font-size: .28em;
+            letter-spacing: 0;
+            text-shadow: 0 0 8px #ff4d5e;
+        }
+
+        .logo-sub {
             display: block;
-            color: var(--navy);
-            font-size: clamp(22px, 3vw, 38px);
-            font-weight: 700;
-            letter-spacing: -.5px;
+            margin-top: 10px;
+            color: #9fb4e6;
+            font: 700 clamp(10px, 1.6vw, 14px)/1.2 Arial, sans-serif;
+            letter-spacing: clamp(2px, .8vw, 6px);
+            text-transform: uppercase;
         }
 
-        .headline-main {
+        @keyframes neon {
+            0%, 100% { opacity: 1; }
+            46% { opacity: 1; }
+            48% { opacity: .82; }
+            50% { opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .logo { animation: none; }
+        }
+
+        .slogan {
+            max-width: 760px;
+            margin: 24px auto 0;
+            color: #33ff66;
+            font: 400 clamp(15px, 2.4vw, 22px)/1.45 "Courier New", Courier, monospace;
+            letter-spacing: .5px;
+            text-shadow: 0 0 6px rgba(51, 255, 102, .75);
+            background: #04110a;
+            border: 1px solid #0f5a2a;
+            padding: 14px 18px;
+            text-align: left;
+        }
+
+        .slogan::before { content: "> "; }
+
+        .slogan::after {
+            content: "\2588";
+            margin-left: 4px;
+            animation: blink 1.1s steps(1) infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .slogan::after { animation: none; }
+        }
+
+        .portal {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 0 0 clamp(36px, 6vw, 64px);
+            padding: clamp(16px, 2.5vw, 26px) clamp(16px, 3vw, 34px);
+            color: var(--white);
+            background: linear-gradient(90deg, var(--red) 0%, #8d0a24 100%);
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--red), 8px 8px 0 var(--navy);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .portal:hover,
+        .portal:focus-visible {
+            background: linear-gradient(90deg, var(--navy) 0%, #0b3a8a 100%);
+            box-shadow: 0 0 0 3px var(--navy), 8px 8px 0 var(--red);
+        }
+
+        .portal-kicker {
             display: block;
-            color: var(--red);
-            font-size: clamp(50px, 8vw, 92px);
-            font-weight: 800;
-            letter-spacing: -2px;
+            margin-bottom: 6px;
+            color: #ffd700;
+            font: 700 11px/1 Arial, sans-serif;
+            letter-spacing: 3px;
         }
 
-        .headline-third {
+        .portal-title {
+            display: block;
+            font: 800 clamp(20px, 3.6vw, 38px)/1.05 Georgia, "Times New Roman", serif;
+            letter-spacing: .5px;
+        }
+
+        .portal-sub {
             display: block;
             margin-top: 6px;
-            color: var(--navy);
-            font-size: clamp(26px, 3.2vw, 42px);
-            font-weight: 700;
-            letter-spacing: -0.6px;
+            font: 700 clamp(11px, 1.6vw, 14px)/1.3 Arial, sans-serif;
+            letter-spacing: 1.5px;
+            opacity: .9;
         }
 
-        .subhead {
-            max-width: 700px;
-            margin: 18px 0 0;
+        .portal-go {
+            flex: none;
+            padding: 12px 18px;
             color: var(--red);
-            font: 700 16px/1.2 Arial, sans-serif;
-            letter-spacing: 1.8px;
-            text-transform: uppercase;
+            background: var(--white);
+            font: 900 clamp(14px, 2vw, 20px)/1 Arial, sans-serif;
+            letter-spacing: 2px;
+            white-space: nowrap;
         }
 
         .dek {
@@ -241,61 +341,6 @@
             text-decoration: none;
         }
 
-        .button.primary-picks {
-            min-width: min(100%, 430px);
-            padding: 12px 24px 16px;
-            color: var(--white);
-            background: var(--red);
-            border: 3px solid var(--white);
-            box-shadow: 0 0 0 3px var(--red), 8px 8px 0 var(--navy);
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .primary-picks .button-kicker {
-            display: block;
-            margin-bottom: 5px;
-            font: 700 10px/1 Arial, sans-serif;
-            letter-spacing: 2px;
-        }
-
-        .primary-picks .button-title {
-            display: block;
-            font: 700 clamp(16px, 2vw, 21px)/1.05 Georgia, "Times New Roman", serif;
-            letter-spacing: .5px;
-        }
-
-        .primary-picks .button-title strong {
-            display: block;
-            margin: 3px 0;
-            color: #ffd700;
-            font-size: 1.18em;
-            letter-spacing: 1px;
-        }
-
-        .primary-picks:hover,
-        .primary-picks:focus-visible {
-            color: var(--white);
-            background: var(--navy);
-            box-shadow: 0 0 0 3px var(--navy), 8px 8px 0 var(--red);
-        }
-
-        .button.secondary {
-            color: var(--navy);
-            background: transparent;
-            border: 2px solid var(--navy);
-        }
-
-        .button:hover,
-        .button:focus-visible {
-            background: var(--navy);
-        }
-
-        .button.secondary:hover,
-        .button.secondary:focus-visible {
-            color: var(--white);
-        }
-
         footer {
             margin-top: 64px;
             padding-top: 16px;
@@ -307,8 +352,12 @@
         @media (max-width: 700px) {
             .intro,
             .facts {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
             }
+
+            .marquee { padding: 14px; }
+            .portal { flex-direction: column; align-items: stretch; text-align: center; }
+            .portal-go { text-align: center; }
 
             .promise {
                 margin: 8px 9px 0 0;
@@ -328,31 +377,25 @@
 <body>
     <div class="page">
         <main class="content">
-            <section class="intro" aria-labelledby="welcome-heading">
-                <div>
-                    <p class="kicker">A new season is taking shape</p>
-                    <h1 id="welcome-heading">
-                        <span class="headline-sub">Greggy the Greek's</span>
-                        <a class="headline-main" href="https://thenfledge.com" target="_blank" rel="noopener noreferrer">TheNFLEdge.com</a>
-                        <span class="headline-third">Welcome back for the 2026 season</span>
-                    </h1>
-                    <p class="subhead">Handing out FREE WINNERS since 1998</p>
-                    <p class="dek">Greggy the Greek's The NFL Edge is the original totally FREE internet analytics picks and projection website. Utilizing Greggy's proprietary computer algorithm, we celebrate our 43rd season of projecting NFL regular-season game scores, building on the success of our most successful season ever when our computer correctly identified the winner in 88.9% of the 2025 regular-season contests.</p>
-
-                    <div class="actions">
-                        <a class="button primary-picks" href="nfleTMP.htm">
-                            <span class="button-kicker">Click here</span>
-                            <span class="button-title">Get this week's<br><strong>PanaGeo-computer generated</strong><br>NFL score projection!</span>
-                        </a>
-                        <a class="button secondary" href="archives/index.html">the NFL Edge Archives</a>
+            <section class="hero" aria-labelledby="welcome-heading">
+                <span class="presents">Greggy the Greek's</span>
+                <div class="marquee">
+                    <div class="marquee-face">
+                        <h1 id="welcome-heading" class="logo">TheNFLEdge<span class="tld">.com</span></h1>
+                        <span class="logo-sub">Computer-Generated NFL Score Projections</span>
                     </div>
                 </div>
-
-                <aside class="promise">
-                    <h2>Get the Winners$... get the Edge</h2>
-                    <p>Fully automated, AI-algorithm-driven, computer-generated score projections for every NFL regular-season game, right here at <b>theNFLedge.com</b>.</p>
-                </aside>
+                <p class="slogan">Built on 40 years of handicapping experience. Driven by data. Proven across decades of NFL projections.</p>
             </section>
+
+            <a class="portal" href="nfleTMP.htm">
+                <span>
+                    <span class="portal-kicker">This week's computer picks</span>
+                    <span class="portal-title">See the Computer's Picks &amp; Projected Scores</span>
+                    <span class="portal-sub">Every game &bull; Computer-generated picks &bull; 100% free, no sign-up</span>
+                </span>
+                <span class="portal-go">ENTER &#9654;</span>
+            </a>
 
             <hr class="rule">
 
@@ -386,7 +429,7 @@
 
             <section class="construction" aria-label="Site status">
                 <img src="images/jackhanmer-construction-worker.gif" alt="Construction worker">
-                <p><b>Under construction:</b> We are getting the 2026 engine and pages ready. There may be a few speed bumps or hiccups along the way, but the goal is simple: welcome you to a smarter, fully automated NFL season.</p>
+                <p>2026 marks our first fully automated season. As expected, the transition from four decades of handicapping expertise to a fully automated platform produced a few early-season speed bumps, including a calculation issue within the automation process. Those issues have been identified and corrected, helping us build the most powerful version of The NFL Edge yet.</p>
             </section>
 
             <footer>
