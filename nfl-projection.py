@@ -116,14 +116,38 @@ def render_feeshvertisement():
     <a href="https://open.spotify.com/artist/6fa6DV6wh6WscR3R7fWAyI" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit;">
         <div style="position:relative; display:inline-block; width:100%;">
             <img src="images/gfish-promo-ad.jpg" alt="Greggy Feesh Promo Banner" loading="lazy" style="width:100%; height:auto; display:block;">
-            <div style="position:absolute; bottom:8%; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.55); padding:14px 22px; border-radius:10px; color:#fff; font-size:1.35rem; font-weight:bold; text-align:center; font-family:Arial, sans-serif; max-width:90%;">
-                Tired of the same old lame old songs?<br>
-                Check out the latest <strong>FRESH FEESH</strong> music &mdash;<br>
-                from your new favorite artist Greggy Feesh and the Phlops.
+            <div style="position:absolute; left:0; right:0; bottom:0; background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.88) 55%); padding:34px 14px 10px; color:#fff; font-size:clamp(.85rem, 2.6vw, 1.1rem); font-weight:bold; line-height:1.3; text-align:center; font-family:Arial, sans-serif; text-shadow:0 1px 3px #000;">
+                Tired of the same old lame old songs? Check out the latest <strong style="color:#ffd700;">FRESH FEESH</strong> music from your new favorite artist <strong style="color:#c15cff;">Greggy Feesh and the Phlops</strong>.
             </div>
         </div>
     </a>
 </section>"""
+
+CHW_URL = "https://propropertylist.com/chw/"
+CHW_HERO_URL = "https://propropertylist.com/chw/images/chw_hero.jpg"
+CHW_LOGO_URL = "https://propropertylist.com/chw/images/PROProps.jpg"
+
+
+def render_chw_advertisement():
+    return f"""<!--CHWVERTISEMENT-->
+<section class="ad-box" aria-label="Advertisement" style="padding:0; background:#0F2C59; border:1px solid #0F2C59; overflow:hidden;">
+    <a href="{CHW_URL}" target="_blank" rel="noopener noreferrer" style="display:block; text-decoration:none; color:#fff;">
+        <div style="background:linear-gradient(90deg, rgba(15,44,89,.97) 0%, rgba(15,44,89,.90) 55%, rgba(15,44,89,.55) 100%), url('{CHW_HERO_URL}') center/cover no-repeat, #0F2C59; padding:26px 28px; text-align:left; font-family:Arial, sans-serif;">
+            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:16px;">
+                <div style="background:#fff; padding:6px 12px; border-radius:8px; flex:0 0 auto;">
+                    <img src="{CHW_LOGO_URL}" alt="PRO Properties Group" loading="lazy" style="display:block; width:auto; height:56px; max-width:100%; margin:0;">
+                </div>
+                <div style="flex:1 1 220px;">
+                    <div style="font-size:clamp(24px, 5vw, 34px); font-weight:800; line-height:1.1; color:#fff;">Own the Property.</div>
+                    <div style="font-size:clamp(20px, 4vw, 28px); font-weight:700; font-style:italic; line-height:1.2; color:#8EC5FF;">Not the Headaches.</div>
+                </div>
+            </div>
+            <div style="font-size:16px; line-height:1.45; color:#fff; margin-bottom:18px;">Property management done right, done simply &mdash; leave the hassles to the pros at <strong style="color:#8EC5FF;">PRO Properties Group</strong>.</div>
+            <div style="display:block; background:#FF6B35; color:#fff; font-weight:800; font-size:17px; padding:14px 22px; border-radius:8px; text-align:center;">Get My Free Property Review &rarr;</div>
+        </div>
+    </a>
+</section>"""
+
 
 def render_week(matchups, stats):
     sections = []
@@ -133,8 +157,12 @@ def render_week(matchups, stats):
             render_card(group_start + index, matchup, stats)
             for index, matchup in enumerate(group, 1)
         )
-        last_group = group_start + 4 >= 16
-        sections.append(render_feeshvertisement() if last_group else render_advertisement())
+        if group_start + 4 >= 16:
+            sections.append(render_feeshvertisement())
+        elif group_start == 4:
+            sections.append(render_chw_advertisement())
+        else:
+            sections.append(render_advertisement())
     return "\n".join(sections)
 
 
