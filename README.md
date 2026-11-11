@@ -3,6 +3,12 @@ home of G.T.G. NFL Score projection algorithm and historical records
 
 The NFL projection site and historical archive for G.T.G.'s PanaGeoTech formula.
 
+## Site navigation
+
+`index.html` is the redesigned homepage. Its projection links open `nfleTMP.htm` directly, the same automatically maintained viewport used by the weekly rotation. The existing `nfle26-C00.htm` landing page remains available; archives are at `archives/index.html`. Homepage changes do not generate or modify projections.
+
+The weekly page's navigation and banner are defined in `nfle26-template.htm`, so newly generated issues retain them. Their URLs use the GitHub Pages site address so they also work after an issue is moved into the archive. Updating the template does not update the existing viewport or archived issues; `nfleTMP.htm` can receive presentation-only updates without changing the canonical issue.
+
 ## Weekly rotation design
 
 `nfl_rotation_state.json` is the authoritative pointer to the active canonical issue. The numbered file, such as `nfle26-02.htm`, is the source of truth; `nfleTMP.htm` is a disposable viewport copy. The viewport may be annotated during the week, but it never selects a week, changes the handoff, or controls archiving.
