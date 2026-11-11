@@ -29,7 +29,25 @@
         .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
         .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
 
+        .site-bar { background: #080808; border-bottom: 2px solid var(--red); color: #fff; font-family: Arial, sans-serif; }
+        .site-bar-inner { max-width: 1030px; margin: 0 auto; padding: 8px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .site-brand { display: inline-flex; align-items: center; gap: 12px; color: #fff; font-size: 17px; font-weight: 900; text-decoration: none; white-space: nowrap; }
+        .site-brand .brand-accent { color: #f05b6a; }
+        .brand-mark { display: grid; place-items: center; width: 43px; height: 43px; border: 1px solid #858585; border-radius: 9px; }
+        .brand-mark img { display: block; width: 40px; height: 40px; object-fit: contain; animation: helmet-turn 8s linear infinite; }
+        @keyframes helmet-turn { to { transform: rotateY(360deg); } }
+        .site-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+        .site-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: #eee; font-size: 13px; font-weight: 700; text-decoration: none; }
+        .site-nav a:hover { color: #ff9aa6; }
+        .site-bar a:focus-visible { outline: 3px solid #e8a43c; outline-offset: 2px; }
+        .site-banner-link { display: block; width: min(1120px, 100%); margin: 0 auto; }
+        .site-banner { display: block; width: 100%; height: auto; }
+        @media (prefers-reduced-motion: reduce) { .brand-mark img { animation: none; } }
+
         @media (max-width: 560px) {
+            .site-bar-inner { flex-direction: column; align-items: flex-start; gap: 0; padding: 12px 12px 4px; }
+            .site-nav { width: 100%; justify-content: space-between; }
+            .site-nav a { padding: 0 6px; }
             .page { width: 100%; padding: 24px 12px 48px; overflow-x: hidden; }
             .header { padding: 22px 16px; box-shadow: 5px 5px 0 var(--red); }
             h1 { font-size: clamp(34px, 12vw, 52px); overflow-wrap: anywhere; }
@@ -38,7 +56,7 @@
             .game-card { min-width: 0; padding: 16px; }
             .game-card h2 { font-size: 20px; overflow-wrap: anywhere; }
             .line, .pending { font-size: 13px; overflow-wrap: anywhere; }
-            table { table-layout: auto; font-size: 15px; }
+            table { font-size: 15px; }
             td { display: block; width: 100% !important; padding: 8px 0 2px; overflow-wrap: anywhere; }
             td + td { padding-top: 0; padding-bottom: 8px; color: var(--navy); font-size: 18px; line-height: 1.25; }
             .ad-box { min-width: 0; padding: 16px; }
@@ -48,6 +66,23 @@
     </style>
 </head>
 <body>
+    <header class="site-bar">
+        <div class="site-bar-inner">
+            <a class="site-brand" href="https://thenfledge.github.io/TheNFLEdge/" aria-label="The NFL Edge home">
+                <span class="brand-mark"><img src="https://thenfledge.github.io/TheNFLEdge/images/Hat3.png" alt=""></span>
+                <span>THE NFL <span class="brand-accent">EDGE</span></span>
+            </a>
+            <nav class="site-nav" aria-label="Main navigation">
+                <a href="https://thenfledge.github.io/TheNFLEdge/">Home</a>
+                <a href="https://thenfledge.github.io/TheNFLEdge/archives/index.html">Archives</a>
+                <a href="https://thenfledge.github.io/TheNFLEdge/about-greggy.htm">About</a>
+                <a href="https://thenfledge.github.io/TheNFLEdge/disclaimer.html">Disclaimer</a>
+            </nav>
+        </div>
+        <a class="site-banner-link" href="https://thenfledge.github.io/TheNFLEdge/" aria-label="The NFL Edge home">
+            <img class="site-banner" src="https://thenfledge.github.io/TheNFLEdge/images/NFLBAN26.jpg" alt="">
+        </a>
+    </header>
     <main class="page">
         <header class="header">
             <p class="eyebrow">The NFL Edge 2026</p>

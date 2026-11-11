@@ -2,178 +2,244 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name='impact-site-verification' value='2b9a6ed2-369b-4f1f-a8a6-925b5825bc73'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE NFL EDGE | PanaGeoTech Algorithmic NFL Projections</title>
+    <meta name="impact-site-verification" value="2b9a6ed2-369b-4f1f-a8a6-925b5825bc73">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Free NFL picks and computer-generated score projections from Greggy the Greek. Explore weekly matchups, point spreads, over/unders and historical archives.">
+    <title>The NFL Edge | Free NFL Picks &amp; Score Projections</title>
     <style>
         :root {
-            --nfl-navy: #00205B;
-            --nfl-red: #BF0A30;
-            --bg-dark: #050505;
-            --sidebar-width: 80px;
-            --header-height: 100px;
-            --footer-height: 40px;
+            color-scheme: light;
+            --navy: #171717;
+            --navy-deep: #080808;
+            --red: #bf0a30;
+            --text: #222222;
+            --muted: #595959;
+            --border: #dddddd;
+            --paper: #f4f4f4;
         }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            overflow: hidden; /* Essential for the dashboard feel */
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; color: var(--text); background: var(--paper); font-family: Arial, Helvetica, sans-serif; line-height: 1.5; }
+        a { color: inherit; }
+        a:focus-visible { outline: 3px solid #e8a43c; outline-offset: 3px; }
+        .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+        .skip-link { position: absolute; z-index: 5; top: -60px; left: 16px; padding: 10px 15px; color: #fff; background: var(--navy); }
+        .skip-link:focus { top: 10px; }
+        .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+        .site-header { color: #fff; background: var(--navy-deep); border-bottom: 2px solid var(--red); }
+        .header-inner { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+        .brand-mark { display: grid; place-items: center; width: 43px; height: 43px; border: 1px solid #858585; border-radius: 9px; }
+        .brand-mark img { display: block; width: 100%; max-width: 40px; height: auto; object-fit: contain; animation: helmet-turn 8s linear infinite; }
+        @keyframes helmet-turn { to { transform: rotateY(360deg); } }
+        .site-banner-link { display: block; width: min(1120px, 100%); margin: 0 auto; }
+        .site-banner { display: block; width: 100%; height: auto; }
+        .brand-name { display: block; font-size: 19px; font-weight: 900; letter-spacing: -.5px; line-height: 1.1; }
+        .brand-name span { color: #f05b6a; }
+        .brand-sub { display: block; margin-top: 3px; color: #c3c3c3; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+        .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; color: #e4e4e4; font-size: 13px; font-weight: 700; text-decoration: none; }
+        .nav a:hover { color: #fff; }
+        .nav .nav-cta { margin-left: 8px; padding: 0 17px; color: #fff; background: var(--red); border-radius: 5px; }
+        .nav .nav-cta:hover, .button-primary:hover { background: #9c1932; }
+        .hero { overflow: hidden; color: #fff; background: linear-gradient(120deg, #090909 0%, #242020 100%); }
+        .hero-inner { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); align-items: center; gap: 72px; padding-top: 74px; padding-bottom: 76px; }
+        .eyebrow { margin: 0 0 15px; color: #ef7683; font-size: 12px; font-weight: 800; letter-spacing: 1.7px; text-transform: uppercase; }
+        h1 { max-width: 700px; margin: 0; font-size: clamp(40px, 5.2vw, 65px); line-height: 1.06; letter-spacing: -2px; }
+        .hero-copy { max-width: 570px; margin: 23px 0 0; color: #d2d2d2; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.65; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+        .button { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 12px 20px; border: 1px solid transparent; border-radius: 5px; font-size: 14px; font-weight: 700; text-decoration: none; }
+        .button-primary { background: var(--red); color: #fff; }
+        .button-secondary { border-color: #909090; color: #fff; }
+        .button-secondary:hover { background: rgba(255,255,255,.08); }
+        .access-note { margin: 18px 0 0; color: #c9c9c9; font-size: 13px; }
+        .board-preview { padding: 25px; background: #fff; border-radius: 8px; box-shadow: 0 18px 48px rgba(0,0,0,.2); color: var(--text); }
+        .preview-label { margin: 0 0 4px; color: var(--red); font-size: 11px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; }
+        .board-preview h2 { margin: 0; font-size: 22px; letter-spacing: -.5px; }
+        .preview-description { margin: 8px 0 20px; color: var(--muted); font-size: 14px; }
+        .preview-note { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+        .preview-row { display: flex; justify-content: space-between; gap: 20px; padding: 13px 0; border-top: 1px solid var(--border); font-size: 13px; }
+        .preview-row span { color: var(--muted); }
+        .preview-row strong { text-align: right; }
+        .preview-link, .text-link { display: inline-block; color: #a71935; font-size: 14px; font-weight: 700; text-decoration: none; }
+        .preview-link { margin-top: 15px; }
+        .preview-link:hover, .text-link:hover { text-decoration: underline; }
+        .section { padding: 70px 0; }
+        .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
+        .section-kicker { margin: 0 0 8px; color: #a71935; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+        .section h2 { margin: 0; color: var(--navy); font-size: clamp(27px, 3vw, 35px); letter-spacing: -.8px; line-height: 1.2; }
+        .section-intro { max-width: 520px; margin: 0; color: var(--muted); font-size: 15px; }
+        .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        .card { padding: 25px; background: #fff; border: 1px solid var(--border); border-radius: 7px; }
+        .card-number { color: #a71935; font-size: 12px; font-weight: 800; letter-spacing: 1px; }
+        .card h3 { margin: 16px 0 9px; color: var(--navy); font-size: 19px; }
+        .card p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+        .text-link { margin-top: 20px; }
+        .about-band { background: #e9e9e9; border-block: 1px solid var(--border); }
+        .about-inner { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 50px; padding-top: 56px; padding-bottom: 56px; }
+        .about-inner p:not(.section-kicker) { margin: 0 0 14px; color: #4a4a4a; font-size: 16px; line-height: 1.7; }
+        .sponsor-stack { display: grid; gap: 16px; }
+        .sponsor { padding: clamp(22px, 4vw, 32px); border-radius: 18px; }
+        .sponsor-row { display: flex; align-items: center; gap: 24px; }
+        .sponsor-copy { min-width: 0; }
+        .sponsor-logo { flex: 0 0 140px; width: 140px; }
+        .sponsor-logo img { display: block; width: 100%; height: auto; }
+        .sponsor h2 { color: #fff; font-size: 22px; }
+        .sponsor p:not(.section-kicker) { margin: 10px 0 0; color: #f0f0f0; font-size: 15px; }
+        .sponsor-liberty { color: #fff; background: linear-gradient(90deg, rgba(0,0,0,.92), rgba(0,0,0,.74)), url("https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc") center / cover no-repeat, #111; border: 1px solid #444; }
+        .sponsor-liberty a { color: #ffd700; }
+        .sponsor-liberty .sponsor-logo { display: grid; place-items: center; width: 110px; height: 110px; flex-basis: 110px; padding: 10px; background: #fff; border-radius: 50%; overflow: hidden; }
+        .sponsor-property { color: #102d54; background: #fff; border: 2px solid #31527a; }
+        .sponsor-property h2 { color: #102d54; }
+        .sponsor-property p:not(.section-kicker) { color: #33475e; }
+        .sponsor-property .property-subtitle { color: #31527a; font-style: italic; }
+        .sponsor-property a { display: inline-flex; align-items: center; min-height: 44px; margin-top: 18px; padding: 10px 16px; color: #171717; background: #ff6b35; border-radius: 5px; font-size: 14px; font-weight: 700; text-decoration: none; }
+        .sponsor-property a:hover { background: #e85a24; }
+        .site-footer { color: #c8c8c8; background: var(--navy-deep); border-top: 2px solid var(--red); }
+        .footer-inner { display: flex; justify-content: space-between; gap: 24px; padding-top: 28px; padding-bottom: 28px; font-size: 12px; }
+        .footer-inner p { margin: 0; }
+        .footer-inner a { color: #e8e8e8; }
+        @media (max-width: 760px) {
+            .container { width: min(100% - 32px, 1120px); }
+            .header-inner { align-items: flex-start; flex-direction: column; gap: 8px; padding-top: 15px; padding-bottom: 9px; }
+            .brand-mark { width: 38px; height: 38px; }
+            .nav { width: 100%; gap: 0; justify-content: space-between; }
+            .nav a { padding: 0 7px; font-size: 12px; }
+            .nav .nav-cta { margin-left: 0; padding: 0 10px; }
+            .hero-inner { grid-template-columns: 1fr; gap: 32px; padding-top: 48px; padding-bottom: 48px; }
+            h1 { letter-spacing: -1.3px; }
+            .section { padding: 48px 0; }
+            .section-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+            .cards { grid-template-columns: 1fr; gap: 12px; }
+            .card { padding: 22px; }
+            .about-inner { grid-template-columns: 1fr; gap: 18px; padding-top: 44px; padding-bottom: 44px; }
+            .sponsor { padding: 22px; }
+            .sponsor-row { gap: 16px; }
+            .sponsor-logo { flex-basis: 100px; width: 100px; }
+            .sponsor-liberty .sponsor-logo { flex-basis: 80px; width: 80px; height: 80px; padding: 7px; }
+            .footer-inner { flex-direction: column; gap: 10px; }
         }
-
-        /* DASHBOARD LAYOUT */
-        .dashboard-container {
-            display: flex;
-            height: 100vh;
+        @media (max-width: 370px) {
+            .nav a { padding: 0 4px; font-size: 11px; }
+            .nav .nav-cta { padding: 0 7px; }
+            .hero-actions .button { width: 100%; }
+            .sponsor-row { flex-direction: column; align-items: flex-start; }
+            .sponsor-logo, .sponsor-liberty .sponsor-logo { flex-basis: auto; }
         }
-
-        /* SIDEBAR (NAV) */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: #000;
-            border-right: 1px solid #222;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-            z-index: 100;
-        }
-
-        .helmet-logo {
-            width: 60px;
-            height: 60px;
-            animation: spin 2.5s linear infinite; /* Keeps the helm spinning */
-            cursor: pointer;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* MAIN CONTENT AREA */
-        .main-pane {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* TOP HEADER */
-        .top-header {
-            height: var(--header-height);
-            background: linear-gradient(90deg, #000 0%, var(--nfl-navy) 100%);
-            border-bottom: 2px solid var(--nfl-red);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-        }
-
-        .nfl-banner {
-            height: 60px;
-        }
-
-        /* IFRAME VIEWPORT */
-        .projection-frame {
-            flex-grow: 1;
-            width: 100%;
-            border: none;
-            background-color: #000;
-            /* Leaves room for the footer */
-            margin-bottom: var(--footer-height);
-        }
-
-        /* FLOATING FOOTER */
-        .floating-footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: var(--footer-height);
-            background-color: #000;
-            border-top: 2px solid var(--nfl-red); /* Your signature divider */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 110;
-        }
-
-        .footer-text {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #777;
-        }
-
-        .footer-text span {
-            color: var(--nfl-red);
-            font-weight: bold;
-        }
-
-        /* NAV BUTTONS */
-        .nav-group { margin-top: 30px; display: flex; flex-direction: column; gap: 15px; }
-        .nav-btn {
-            color: #fff; text-decoration: none; font-size: 10px; font-weight: bold;
-            padding: 8px 0; width: 60px; text-align: center; border: 1px solid #333;
-            background: #111; transition: 0.3s;
-        }
-        .nav-btn:hover { background: var(--nfl-red); border-color: #fff; }
-
-        /* PHONES / NARROW SCREENS: top nav bar, compact header, iframe fills the rest */
-        @media (max-width: 700px) {
-            :root { --footer-height: 28px; }
-            .dashboard-container { flex-direction: column; height: 100vh; height: 100dvh; }
-            .sidebar {
-                width: 100%; height: 48px; flex-direction: row; align-items: center;
-                padding: 0 10px; box-sizing: border-box; gap: 10px;
-                border-right: none; border-bottom: 1px solid #222;
-            }
-            .helmet-logo { width: 34px; height: 34px; flex: none; }
-            .nav-group { margin: 0; flex: 1; flex-direction: row; gap: 8px; }
-            .nav-btn { flex: 1; width: auto; min-height: 36px; padding: 0; font-size: 13px; line-height: 36px; box-sizing: border-box; }
-            .top-header { height: auto; padding: 6px 10px; justify-content: center; }
-            .nfl-banner { height: auto; max-height: 40px; max-width: 100%; }
-            .main-pane { min-height: 0; }
-            .projection-frame { min-height: 0; -webkit-overflow-scrolling: touch; }
-            .footer-text { font-size: 9px; letter-spacing: 1px; }
-        }
-
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .brand-mark img { animation: none; } }
     </style>
 </head>
 <body>
-
-    <div class="dashboard-container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <img src="images/Hat3.png" class="helmet-logo" alt="PanaGeo Logo">
-            <div class="nav-group">
-                <a href="nfle26-C00.htm" target="data_viewport" class="nav-btn">NFL</a>
-                <a href="https://thenfledge.github.io/TheUFLEdge/" target="_blank" rel="noopener noreferrer" class="nav-btn">UFL</a>
-                <a href="https://thenfledge.github.io/TheNFLEdge/archives/index.html" target="data_viewport" class="nav-btn">HISTORY</a>
-            </div>
-        </aside>
-
-        <!-- MAIN VIEW -->
-        <main class="main-pane">
-            <header class="top-header">
-                <img src="images/NFLBAN26.jpg" class="nfl-banner" alt="The NFL Edge">
-            </header>
-
-            <!-- THE-MAIN-FRAME -->
-            <iframe src="nfle26-C00.htm" name="data_viewport" class="projection-frame"></iframe>
-
-            <!-- FLOATING FOOTER -->
-            <footer class="floating-footer">
-                <div class="footer-text">
-                    The NFL Edge : powered by <span>PanaGeoTech</span> (c) 2026
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html" aria-label="The NFL Edge home">
+                <span class="brand-mark"><img src="images/Hat3.png" alt=""></span>
+                <span><span class="brand-name">THE NFL <span>EDGE</span></span><span class="brand-sub">Powered by PanaGeoTech</span></span>
+            </a>
+            <nav class="nav" aria-label="Main navigation">
+                <a href="archives/index.html">Archives</a>
+                <a href="about-greggy.htm">About</a>
+                <a class="nav-cta" href="nfleTMP.htm">NFL picks</a>
+            </nav>
+        </div>
+        <a class="site-banner-link" href="index.html" aria-label="The NFL Edge home">
+            <img class="site-banner" src="images/NFLBAN26.jpg" alt="">
+        </a>
+    </header>
+    <main id="main">
+        <section class="hero" aria-labelledby="hero-heading">
+            <div class="container hero-inner">
+                <div>
+                    <p class="eyebrow">NFL data analytics since 1984</p>
+                    <h1 id="hero-heading">Free NFL picks &amp; computer-generated score projections.</h1>
+                    <p class="hero-copy">Computer-generated NFL score projections built on Greggy the Greek's formula, combining decades of handicapping experience, computer programming, and data analytics.</p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="nfleTMP.htm">Get This Week's NFL Game Projections <span aria-hidden="true">&nbsp; &rarr;</span></a>
+                        <a class="button button-secondary" href="archives/index.html">Explore the archives</a>
+                    </div>
+                    <p class="access-note">Free picks. No sign-up, no app, no hassle.</p>
                 </div>
-            </footer>
-        </main>
-    </div>
-
+                <aside class="board-preview" aria-label="The NFL Edge experience">
+                    <p class="preview-label">The NFL Edge</p>
+                    <h2>Experience behind the picks.</h2>
+                    <p class="preview-description">Handicapping, programming and data analytics brought together for NFL score projections.</p>
+                    <div class="preview-row"><span>Experience</span><strong>Since 1984</strong></div>
+                    <div class="preview-row"><span>Past issues</span><strong>Archives back to 2000</strong></div>
+                    <div class="preview-row"><span>2025 record</span><strong>88.9%</strong></div>
+                    <div class="preview-row"><span>Access</span><strong>Free, no sign-up</strong></div>
+                    <p class="preview-note">The 2025 season recorded 242–30 straight-up winners. The 2025 season issues were not published. This is not an against-the-spread record.</p>
+                    <a class="preview-link" href="nfleTMP.htm">NFL Score Projections &rarr;</a>
+                </aside>
+            </div>
+        </section>
+        <section class="section" aria-labelledby="resources-heading">
+            <div class="container">
+                <div class="section-heading">
+                    <div><p class="section-kicker">Finding winners starts here</p><h2 id="resources-heading">A data-driven approach to NFL handicapping.</h2></div>
+                    <p class="section-intro">Greggy the Greek's handicapping experience and computer programming power an algorithmic approach to NFL score projections.</p>
+                </div>
+                <div class="cards">
+                    <article class="card">
+                        <span class="card-number">01 / PROJECTIONS</span>
+                        <h3>Get the NFL picks</h3>
+                        <p>Explore projected scores, matchups, point spreads and over/under lines. Check the issue's week and season before using the projections.</p>
+                        <a class="text-link" href="nfleTMP.htm">Get the picks &rarr;</a>
+                    </article>
+                    <article class="card">
+                        <span class="card-number">02 / HISTORY</span>
+                        <h3>Explore the archives</h3>
+                        <p>Don't just take our word for it. Explore past issues and results, with NFL Edge archives going back to 2000.</p>
+                        <a class="text-link" href="archives/index.html">Browse the archives &rarr;</a>
+                    </article>
+                    <article class="card">
+                        <span class="card-number">03 / THE FORMULA</span>
+                        <h3>Meet Greggy the Greek</h3>
+                        <p>Learn about the football and handicapping experience that informs the PanaGeoTech formula.</p>
+                        <a class="text-link" href="about-greggy.htm">Read Greggy's story &rarr;</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <section class="about-band section" aria-labelledby="approach-heading">
+            <div class="container about-inner">
+                <div><p class="section-kicker">The NFL Edge approach</p><h2 id="approach-heading">Experience meets computer analysis.</h2></div>
+                <div>
+                    <p>Since 1984, Greggy the Greek has brought a numbers-driven perspective to NFL handicapping. Today, the PanaGeoTech formula generates score projections for the board.</p>
+                    <p>Projections are estimates, not guarantees. Use them as one input in your own research.</p>
+                </div>
+            </div>
+        </section>
+        <section class="section" aria-label="Advertisements">
+            <div class="container sponsor-stack">
+                <article class="sponsor sponsor-liberty" aria-label="Liberty Mutual advertisement">
+                    <div class="sponsor-row">
+                        <div class="sponsor-logo"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></div>
+                        <div class="sponsor-copy">
+                            <h2>Save on insurance with Liberty Mutual</h2>
+                            <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer">Explore customized coverage<span class="visually-hidden"> (opens in a new tab)</span></a> that fits your budget.</p>
+                            <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="sponsor sponsor-property" aria-label="PRO Properties Group advertisement">
+                    <div class="sponsor-row">
+                        <div class="sponsor-logo"><img src="https://propropertylist.com/chw/images/PROProps.jpg" alt="PRO Properties Group" loading="lazy"></div>
+                        <div class="sponsor-copy">
+                            <h2>Own the Property. <span class="property-subtitle">Not the Headaches.</span></h2>
+                            <p>Property management done right, done simply. Leave the hassles to the pros at PRO Properties Group.</p>
+                        </div>
+                    </div>
+                    <a href="https://propropertylist.com/chw/" target="_blank" rel="noopener noreferrer">Get My Free Property Review &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
+                </article>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p><strong>The NFL Edge</strong> &nbsp;|&nbsp; Powered by PanaGeoTech</p>
+            <p><a href="archives/index.html">Archives</a> &nbsp;&middot;&nbsp; <a href="about-greggy.htm">About Greggy</a> &nbsp;&middot;&nbsp; <a href="disclaimer.html">Disclaimer</a></p>
+        </div>
+    </footer>
 </body>
 </html>
