@@ -1,335 +1,319 @@
 {
   "season": 2026,
-  "active_week": 1,
-  "target_week": 2,
+  "active_week": 9,
+  "target_week": 10,
   "target_week_source": "date",
-  "generated_at": "2026-09-17T05:09:39.336Z",
+  "generated_at": "2026-11-10T16:31:35.980Z",
   "mode": "rotate",
   "resolver": {
-    "now": "2026-09-17T05:09:39.336Z",
+    "now": "2026-11-10T16:31:35.980Z",
     "lead_days": 3,
     "grace_hours": 12
   },
   "matchups": [
     {
-      "event_id": "401872932",
-      "date": "2026-09-18T00:15Z",
-      "away": "DET",
-      "home": "BUF",
-      "line": "BUF -4.5",
-      "ou": 54.5
+      "event_id": "401873052",
+      "date": "2026-11-13T01:15Z",
+      "away": "WSH",
+      "home": "NYG",
+      "line": "NYG -2.5",
+      "ou": 41.5
     },
     {
-      "event_id": "401872933",
-      "date": "2026-09-20T17:00Z",
-      "away": "CAR",
+      "event_id": "401873053",
+      "date": "2026-11-15T14:30Z",
+      "away": "NE",
+      "home": "DET",
+      "line": "DET -2.5",
+      "ou": 51.5
+    },
+    {
+      "event_id": "401873058",
+      "date": "2026-11-15T18:00Z",
+      "away": "KC",
       "home": "ATL",
-      "line": "CAR -2.5",
-      "ou": 43.5
-    },
-    {
-      "event_id": "401872937",
-      "date": "2026-09-20T17:00Z",
-      "away": "MIN",
-      "home": "CHI",
-      "line": "CHI -4.5",
-      "ou": 48.5
-    },
-    {
-      "event_id": "401872939",
-      "date": "2026-09-20T17:00Z",
-      "away": "PHI",
-      "home": "TEN",
-      "line": "PHI -7",
-      "ou": 39.5
-    },
-    {
-      "event_id": "401872946",
-      "date": "2026-09-20T17:00Z",
-      "away": "PIT",
-      "home": "NE",
-      "line": "NE -5.5",
-      "ou": 41.5
-    },
-    {
-      "event_id": "401872936",
-      "date": "2026-09-20T17:00Z",
-      "away": "GB",
-      "home": "NYJ",
-      "line": "GB -3.5",
-      "ou": 44.5
-    },
-    {
-      "event_id": "401872935",
-      "date": "2026-09-20T17:00Z",
-      "away": "CLE",
-      "home": "TB",
-      "line": "TB -8.5",
-      "ou": 41.5
-    },
-    {
-      "event_id": "401872938",
-      "date": "2026-09-20T17:00Z",
-      "away": "NO",
-      "home": "BAL",
-      "line": "BAL -8.5",
-      "ou": 46.5
-    },
-    {
-      "event_id": "401872934",
-      "date": "2026-09-20T17:00Z",
-      "away": "CIN",
-      "home": "HOU",
-      "line": "HOU -2.5",
-      "ou": 46.5
-    },
-    {
-      "event_id": "401872940",
-      "date": "2026-09-20T20:05Z",
-      "away": "JAX",
-      "home": "DEN",
-      "line": "DEN -2.5",
+      "line": "KC -3.5",
       "ou": 45.5
     },
     {
-      "event_id": "401872941",
-      "date": "2026-09-20T20:05Z",
-      "away": "LV",
-      "home": "LAC",
-      "line": "LAC -6.5",
-      "ou": 43.5
+      "event_id": "401873056",
+      "date": "2026-11-15T18:00Z",
+      "away": "HOU",
+      "home": "CLE",
+      "line": "HOU -4.5",
+      "ou": 39.5
     },
     {
-      "event_id": "401872944",
-      "date": "2026-09-20T20:25Z",
-      "away": "WSH",
-      "home": "DAL",
-      "line": "DAL -4.5",
-      "ou": 50.5
-    },
-    {
-      "event_id": "401872943",
-      "date": "2026-09-20T20:25Z",
-      "away": "SEA",
-      "home": "ARI",
-      "line": "SEA -3.5",
+      "event_id": "401873060",
+      "date": "2026-11-15T18:00Z",
+      "away": "MIN",
+      "home": "GB",
+      "line": "GB -4.5",
       "ou": 41.5
     },
     {
-      "event_id": "401872942",
-      "date": "2026-09-20T20:25Z",
-      "away": "MIA",
-      "home": "SF",
-      "line": "SF -13.5",
-      "ou": 44.5
-    },
-    {
-      "event_id": "401872945",
-      "date": "2026-09-21T00:20Z",
-      "away": "IND",
-      "home": "KC",
-      "line": "KC -6.5",
+      "event_id": "401873057",
+      "date": "2026-11-15T18:00Z",
+      "away": "JAX",
+      "home": "TEN",
+      "line": "JAX -10.5",
       "ou": 46.5
     },
     {
-      "event_id": "401872947",
-      "date": "2026-09-22T00:15Z",
-      "away": "NYG",
-      "home": "LAR",
-      "line": "LAR -7",
-      "ou": 47.5
+      "event_id": "401873059",
+      "date": "2026-11-15T18:00Z",
+      "away": "MIA",
+      "home": "IND",
+      "line": "IND -2.5",
+      "ou": 40.5
+    },
+    {
+      "event_id": "401873055",
+      "date": "2026-11-15T18:00Z",
+      "away": "CAR",
+      "home": "NO",
+      "line": "NO -1.5",
+      "ou": 48.5
+    },
+    {
+      "event_id": "401873054",
+      "date": "2026-11-15T18:00Z",
+      "away": "BUF",
+      "home": "NYJ",
+      "line": "BUF -8.5",
+      "ou": 50.5
+    },
+    {
+      "event_id": "401873062",
+      "date": "2026-11-15T21:05Z",
+      "away": "SEA",
+      "home": "LV",
+      "line": "SEA -3.5",
+      "ou": 43.5
+    },
+    {
+      "event_id": "401873061",
+      "date": "2026-11-15T21:05Z",
+      "away": "LAR",
+      "home": "ARI",
+      "line": "LAR -9.5",
+      "ou": 40.5
+    },
+    {
+      "event_id": "401873063",
+      "date": "2026-11-15T21:25Z",
+      "away": "SF",
+      "home": "DAL",
+      "line": "SF -4.5",
+      "ou": 55.5
+    },
+    {
+      "event_id": "401873064",
+      "date": "2026-11-16T01:20Z",
+      "away": "PIT",
+      "home": "CIN",
+      "line": "CIN -3.5",
+      "ou": 48.5
+    },
+    {
+      "event_id": "401873065",
+      "date": "2026-11-17T01:15Z",
+      "away": "LAC",
+      "home": "BAL",
+      "line": "BAL -5.5",
+      "ou": 38.5
     }
   ],
   "team_stats": {
     "ARI": {
-      "pf_sum": 104,
-      "pa_sum": 104,
+      "pf_sum": 70,
+      "pa_sum": 93,
       "wins": 2,
       "gp": 4
     },
     "CAR": {
-      "pf_sum": 101,
-      "pa_sum": 118,
-      "wins": 2,
+      "pf_sum": 78,
+      "pa_sum": 110,
+      "wins": 1,
       "gp": 4
     },
     "CIN": {
-      "pf_sum": 106,
-      "pa_sum": 63,
+      "pf_sum": 143,
+      "pa_sum": 90,
       "wins": 4,
       "gp": 4
     },
     "DET": {
-      "pf_sum": 87,
-      "pa_sum": 75,
-      "wins": 3,
+      "pf_sum": 103,
+      "pa_sum": 62,
+      "wins": 4,
       "gp": 4
     },
     "PIT": {
-      "pf_sum": 75,
-      "pa_sum": 67,
-      "wins": 2,
+      "pf_sum": 103,
+      "pa_sum": 57,
+      "wins": 4,
       "gp": 4
     },
     "GB": {
-      "pf_sum": 106,
-      "pa_sum": 118,
-      "wins": 2,
+      "pf_sum": 112,
+      "pa_sum": 79,
+      "wins": 3,
       "gp": 4
     },
     "NE": {
-      "pf_sum": 60,
-      "pa_sum": 84,
-      "wins": 1,
+      "pf_sum": 101,
+      "pa_sum": 113,
+      "wins": 2,
       "gp": 4
     },
     "IND": {
-      "pf_sum": 58,
-      "pa_sum": 113,
+      "pf_sum": 60,
+      "pa_sum": 111,
       "wins": 0,
       "gp": 4
     },
     "LV": {
-      "pf_sum": 75,
-      "pa_sum": 78,
-      "wins": 2,
-      "gp": 4
-    },
-    "HOU": {
-      "pf_sum": 71,
-      "pa_sum": 101,
-      "wins": 0,
-      "gp": 4
-    },
-    "LAC": {
-      "pf_sum": 76,
-      "pa_sum": 94,
+      "pf_sum": 106,
+      "pa_sum": 139,
       "wins": 1,
       "gp": 4
     },
+    "HOU": {
+      "pf_sum": 125,
+      "pa_sum": 83,
+      "wins": 3,
+      "gp": 4
+    },
+    "LAC": {
+      "pf_sum": 54,
+      "pa_sum": 113,
+      "wins": 0,
+      "gp": 4
+    },
     "SF": {
-      "pf_sum": 99,
-      "pa_sum": 55,
+      "pf_sum": 113,
+      "pa_sum": 92,
       "wins": 3,
       "gp": 4
     },
     "TEN": {
-      "pf_sum": 63,
-      "pa_sum": 76,
-      "wins": 2,
+      "pf_sum": 89,
+      "pa_sum": 116,
+      "wins": 1,
       "gp": 4
     },
     "ATL": {
-      "pf_sum": 71,
-      "pa_sum": 65,
-      "wins": 2,
+      "pf_sum": 69,
+      "pa_sum": 101,
+      "wins": 1,
       "gp": 4
     },
     "DEN": {
-      "pf_sum": 84,
-      "pa_sum": 77,
-      "wins": 2,
+      "pf_sum": 101,
+      "pa_sum": 75,
+      "wins": 4,
       "gp": 4
     },
     "NYJ": {
-      "pf_sum": 62,
-      "pa_sum": 57,
-      "wins": 2,
+      "pf_sum": 89,
+      "pa_sum": 127,
+      "wins": 0,
       "gp": 4
     },
     "TB": {
-      "pf_sum": 67,
-      "pa_sum": 83,
+      "pf_sum": 102,
+      "pa_sum": 66,
       "wins": 2,
       "gp": 4
     },
     "WSH": {
-      "pf_sum": 58,
-      "pa_sum": 89,
+      "pf_sum": 84,
+      "pa_sum": 80,
       "wins": 1,
       "gp": 4
     },
     "MIA": {
-      "pf_sum": 35,
-      "pa_sum": 90,
-      "wins": 0,
+      "pf_sum": 80,
+      "pa_sum": 99,
+      "wins": 1,
       "gp": 4
     },
     "BUF": {
-      "pf_sum": 124,
-      "pa_sum": 79,
+      "pf_sum": 129,
+      "pa_sum": 80,
       "wins": 4,
       "gp": 4
     },
     "CHI": {
-      "pf_sum": 126,
-      "pa_sum": 89,
-      "wins": 3,
+      "pf_sum": 122,
+      "pa_sum": 88,
+      "wins": 4,
       "gp": 4
     },
     "CLE": {
-      "pf_sum": 64,
-      "pa_sum": 112,
-      "wins": 1,
+      "pf_sum": 68,
+      "pa_sum": 84,
+      "wins": 2,
       "gp": 4
     },
     "NYG": {
-      "pf_sum": 87,
-      "pa_sum": 42,
-      "wins": 3,
+      "pf_sum": 100,
+      "pa_sum": 93,
+      "wins": 2,
       "gp": 4
     },
     "MIN": {
-      "pf_sum": 61,
-      "pa_sum": 79,
+      "pf_sum": 60,
+      "pa_sum": 65,
       "wins": 2,
       "gp": 4
     },
     "KC": {
-      "pf_sum": 67,
-      "pa_sum": 55,
-      "wins": 1,
+      "pf_sum": 84,
+      "pa_sum": 66,
+      "wins": 2,
       "gp": 4
     },
     "LAR": {
-      "pf_sum": 81,
-      "pa_sum": 57,
+      "pf_sum": 95,
+      "pa_sum": 61,
       "wins": 3,
       "gp": 4
     },
     "NO": {
-      "pf_sum": 77,
-      "pa_sum": 113,
-      "wins": 1,
+      "pf_sum": 80,
+      "pa_sum": 88,
+      "wins": 2,
       "gp": 4
     },
     "JAX": {
-      "pf_sum": 94,
-      "pa_sum": 64,
+      "pf_sum": 125,
+      "pa_sum": 68,
       "wins": 3,
       "gp": 4
     },
     "BAL": {
-      "pf_sum": 119,
-      "pa_sum": 36,
-      "wins": 4,
+      "pf_sum": 43,
+      "pa_sum": 117,
+      "wins": 0,
       "gp": 4
     },
     "PHI": {
-      "pf_sum": 65,
-      "pa_sum": 100,
-      "wins": 1,
+      "pf_sum": 56,
+      "pa_sum": 109,
+      "wins": 0,
       "gp": 4
     },
     "SEA": {
-      "pf_sum": 45,
-      "pa_sum": 55,
-      "wins": 1,
+      "pf_sum": 68,
+      "pa_sum": 57,
+      "wins": 2,
       "gp": 4
     },
     "DAL": {
-      "pf_sum": 95,
-      "pa_sum": 75,
+      "pf_sum": 108,
+      "pa_sum": 100,
       "wins": 2,
       "gp": 4
     }

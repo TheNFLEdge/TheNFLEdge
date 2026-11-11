@@ -23,12 +23,13 @@ class NflProjectionTests(unittest.TestCase):
         self.addCleanup(self.multiplier_patch.stop)
         self.addCleanup(self.margin_patch.stop)
 
-    def test_projection_adds_points_per_quarter_before_multiplier(self):
+    def test_projection_adds_ppqf_and_ppqa_before_multiplier(self):
         stats = {
             "NE": {"pf_sum": 80, "pa_sum": 60, "wins": 4, "gp": 4},
             "SEA": {"pf_sum": 72, "pa_sum": 64, "wins": 2, "gp": 4},
         }
 
+        # (80/16 + 64/16) = 9.0; 9.0 * 2.4 = 21.6; ceil(21.6 + 2) = 24
         self.assertEqual(PROJECTION.project_score("NE", "SEA", stats), 24)
 
     def test_projection_never_goes_below_zero(self):
@@ -45,14 +46,15 @@ class NflProjectionTests(unittest.TestCase):
             "SEA": {"pf_sum": 32, "pa_sum": 32, "wins": 2, "gp": 4},
         }
 
-        self.assertEqual(PROJECTION.project_matchup("NE", "SEA", stats), (9, 8))
+        away, home = PROJECTION.project_matchup("NE", "SEA", stats)
+        self.assertEqual((away, home), (9, 8))
+        self.assertGreater(away, home)
 
     def test_exact_tie_goes_to_home_team(self):
         stats = {
             "NE": {"pf_sum": 32, "pa_sum": 32, "wins": 2, "gp": 4},
             "SEA": {"pf_sum": 32, "pa_sum": 32, "wins": 2, "gp": 4},
         }
-
         self.assertEqual(PROJECTION.project_matchup("NE", "SEA", stats), (8, 9))
 
     def test_impossible_scores_are_adjusted(self):
