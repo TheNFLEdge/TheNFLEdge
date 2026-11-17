@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The NFL Edge | Week 11 Picks</title>
+    <style>
+        :root { --ink: #101820; --navy: #00205b; --red: #bf0a30; --gray: #c7c9cb; --white: #fff; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--gray); color: var(--ink); font-family: Georgia, "Times New Roman", serif; }
+        .page { max-width: 980px; margin: 0 auto; padding: 48px 24px 72px; }
+        .header, .game-card, .ad-box { background: var(--white); border: 1px solid rgba(16, 24, 32, .25); }
+        .header { padding: clamp(28px, 5vw, 52px); box-shadow: 9px 9px 0 var(--red); }
+        .eyebrow { margin: 0 0 12px; color: var(--red); font: 700 13px Arial, sans-serif; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { margin: 0; color: var(--navy); font-size: clamp(38px, 7vw, 70px); line-height: 1; }
+        .intro { font-size: 20px; line-height: 1.45; }
+        .game-list { display: grid; gap: 16px; margin-top: 48px; }
+        .game-card { padding: 22px; }
+        .game-card h2 { margin: 0 0 6px; color: var(--navy); font-size: 24px; }
+        .line, .pending { margin: 0 0 16px; font: 700 14px/1.4 Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; font-size: 17px; }
+        td { padding: 8px 0; border-top: 1px solid rgba(16, 24, 32, .18); }
+        td:first-child { width: 42%; }
+        .pending { color: var(--red); }
+        .ad-box { padding: 18px; color: var(--white); background: #111; border-color: #444; }
+        .ad-box h2 { margin: 0 0 10px; color: var(--white); font: 700 21px/1.2 Arial, sans-serif; }
+        .ad-box p { margin: 0 0 14px; font: 16px/1.45 Arial, sans-serif; }
+        .ad-box a { color: #ffd700; }
+        .ad-box .ad-image { margin-bottom: 14px; text-align: center; }
+        .ad-box img { display: block; width: min(320px, 100%); height: auto; margin: 0 auto; }
+
+        .site-bar { background: #080808; border-bottom: 2px solid var(--red); color: #fff; font-family: Arial, sans-serif; }
+        .site-bar-inner { max-width: 1030px; margin: 0 auto; padding: 8px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .site-brand { display: inline-flex; align-items: center; gap: 12px; color: #fff; font-size: 17px; font-weight: 900; text-decoration: none; white-space: nowrap; }
+        .site-brand .brand-accent { color: #f05b6a; }
+        .brand-mark { display: grid; place-items: center; width: 43px; height: 43px; border: 1px solid #858585; border-radius: 9px; }
+        .brand-mark img { display: block; width: 40px; height: 40px; object-fit: contain; animation: helmet-turn 8s linear infinite; }
+        @keyframes helmet-turn { to { transform: rotateY(360deg); } }
+        .site-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+        .site-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: #eee; font-size: 13px; font-weight: 700; text-decoration: none; }
+        .site-nav a:hover { color: #ff9aa6; }
+        .site-bar a:focus-visible { outline: 3px solid #e8a43c; outline-offset: 2px; }
+        .site-banner-link { display: block; width: min(1120px, 100%); margin: 0 auto; }
+        .site-banner { display: block; width: 100%; height: auto; }
+        @media (prefers-reduced-motion: reduce) { .brand-mark img { animation: none; } }
+
+        @media (max-width: 560px) {
+            .site-bar-inner { flex-direction: column; align-items: flex-start; gap: 0; padding: 12px 12px 4px; }
+            .site-nav { width: 100%; justify-content: space-between; }
+            .site-nav a { padding: 0 6px; }
+            .page { width: 100%; padding: 24px 12px 48px; overflow-x: hidden; }
+            .header { padding: 22px 16px; box-shadow: 5px 5px 0 var(--red); }
+            h1 { font-size: clamp(34px, 12vw, 52px); overflow-wrap: anywhere; }
+            .intro { font-size: 17px; line-height: 1.4; }
+            .game-list { gap: 12px; margin-top: 28px; }
+            .game-card { min-width: 0; padding: 16px; }
+            .game-card h2 { font-size: 20px; overflow-wrap: anywhere; }
+            .line, .pending { font-size: 13px; overflow-wrap: anywhere; }
+            table { font-size: 15px; }
+            td { display: block; width: 100% !important; padding: 8px 0 2px; overflow-wrap: anywhere; }
+            td + td { padding-top: 0; padding-bottom: 8px; color: var(--navy); font-size: 18px; line-height: 1.25; }
+            .ad-box { min-width: 0; padding: 16px; }
+            .ad-box h2 { font-size: 19px; }
+            .ad-box p { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-bar">
+        <div class="site-bar-inner">
+            <a class="site-brand" href="https://thenfledge.github.io/TheNFLEdge/" aria-label="The NFL Edge home">
+                <span class="brand-mark"><img src="https://thenfledge.github.io/TheNFLEdge/images/Hat3.png" alt=""></span>
+                <span>THE NFL <span class="brand-accent">EDGE</span></span>
+            </a>
+            <nav class="site-nav" aria-label="Main navigation">
+                <a href="https://thenfledge.github.io/TheNFLEdge/">Home</a>
+                <a href="https://thenfledge.github.io/TheNFLEdge/archives/index.html">Archives</a>
+                <a href="https://thenfledge.github.io/TheNFLEdge/about-greggy.htm">About</a>
+                <a href="https://thenfledge.github.io/TheNFLEdge/disclaimer.html">Disclaimer</a>
+            </nav>
+        </div>
+        <a class="site-banner-link" href="https://thenfledge.github.io/TheNFLEdge/" aria-label="The NFL Edge home">
+            <img class="site-banner" src="https://thenfledge.github.io/TheNFLEdge/images/NFLBAN26.jpg" alt="">
+        </a>
+    </header>
+    <main class="page">
+        <header class="header">
+            <p class="eyebrow">The NFL Edge 2026</p>
+            <h1>Week 11 Picks</h1>
+            <p class="intro">Computer-generated score projections from Greggy the Greek's PanaGeoTech formula.</p>
+        </header>
+        <section class="game-list" aria-label="NFL weekly projections">
+            <article class="game-card" data-game="IND-HOU"><h2>Game 1: IND @ HOU</h2><p class="line">Line: HOU -12.5 O/U 44.5</p><table><tr><td><b>Projected Score:</b></td><td>IND 17 - HOU 29</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-IND-HOU--></td></tr></table></article>
+<article class="game-card" data-game="MIA-BUF"><h2>Game 2: MIA @ BUF</h2><p class="line">Line: BUF -16.5 O/U 45.5</p><table><tr><td><b>Projected Score:</b></td><td>MIA 13 - BUF 33</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-MIA-BUF--></td></tr></table></article>
+<article class="game-card" data-game="NO-CHI"><h2>Game 3: NO @ CHI</h2><p class="line">Line: CHI -11.5 O/U 48.5</p><table><tr><td><b>Projected Score:</b></td><td>NO 22 - CHI 32</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NO-CHI--></td></tr></table></article>
+<article class="game-card" data-game="TEN-DAL"><h2>Game 4: TEN @ DAL</h2><p class="line">Line: DAL -8.5 O/U 54.5</p><table><tr><td><b>Projected Score:</b></td><td>TEN 24 - DAL 34</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-TEN-DAL--></td></tr></table></article>
+<!--ADVERTISEMENT-->
+<section class="ad-box" aria-label="Advertisement">
+    <h2>Save on insurance with Liberty Mutual</h2>
+    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
+    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
+    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+</section>
+<article class="game-card" data-game="TB-DET"><h2>Game 5: TB @ DET</h2><p class="line">Line: DET -6.5 O/U 45.5</p><table><tr><td><b>Projected Score:</b></td><td>TB 19 - DET 25</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-TB-DET--></td></tr></table></article>
+<article class="game-card" data-game="ARI-KC"><h2>Game 6: ARI @ KC</h2><p class="line">Line: KC -16.5 O/U 41.5</p><table><tr><td><b>Projected Score:</b></td><td>ARI 13 - KC 26</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-ARI-KC--></td></tr></table></article>
+<article class="game-card" data-game="PIT-PHI"><h2>Game 7: PIT @ PHI</h2><p class="line">Line: PIT -4.5 O/U 38.5</p><table><tr><td><b>Projected Score:</b></td><td>PIT 27 - PHI 10</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-PIT-PHI--></td></tr></table></article>
+<article class="game-card" data-game="BAL-CAR"><h2>Game 8: BAL @ CAR</h2><p class="line">Line: CAR -2.5 O/U 43.5</p><table><tr><td><b>Projected Score:</b></td><td>BAL 13 - CAR 20</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-BAL-CAR--></td></tr></table></article>
+<!--CHWVERTISEMENT-->
+<section class="ad-box" aria-label="Advertisement" style="padding:0; background:#0F2C59; border:1px solid #0F2C59; overflow:hidden;">
+    <a href="https://propropertylist.com/chw/" target="_blank" rel="noopener noreferrer" style="display:block; text-decoration:none; color:#fff;">
+        <div style="background:linear-gradient(90deg, rgba(15,44,89,.97) 0%, rgba(15,44,89,.90) 55%, rgba(15,44,89,.55) 100%), url('https://propropertylist.com/chw/images/chw_hero.jpg') center/cover no-repeat, #0F2C59; padding:26px 28px; text-align:left; font-family:Arial, sans-serif;">
+            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:16px;">
+                <div style="background:#fff; padding:6px 12px; border-radius:8px; flex:0 0 auto;">
+                    <img src="https://propropertylist.com/chw/images/PROProps.jpg" alt="PRO Properties Group" loading="lazy" style="display:block; width:auto; height:56px; max-width:100%; margin:0;">
+                </div>
+                <div style="flex:1 1 220px;">
+                    <div style="font-size:clamp(24px, 5vw, 34px); font-weight:800; line-height:1.1; color:#fff;">Own the Property.</div>
+                    <div style="font-size:clamp(20px, 4vw, 28px); font-weight:700; font-style:italic; line-height:1.2; color:#8EC5FF;">Not the Headaches.</div>
+                </div>
+            </div>
+            <div style="font-size:16px; line-height:1.45; color:#fff; margin-bottom:18px;">Property management done right, done simply &mdash; leave the hassles to the pros at <strong style="color:#8EC5FF;">PRO Properties Group</strong>.</div>
+            <div style="display:block; background:#FF6B35; color:#fff; font-weight:800; font-size:17px; padding:14px 22px; border-radius:8px; text-align:center;">Get My Free Property Review &rarr;</div>
+        </div>
+    </a>
+</section>
+<article class="game-card" data-game="NYJ-LAC"><h2>Game 9: NYJ @ LAC</h2><p class="line">Line: LAC -3.5 O/U 40.5</p><table><tr><td><b>Projected Score:</b></td><td>NYJ 15 - LAC 20</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-NYJ-LAC--></td></tr></table></article>
+<article class="game-card" data-game="LV-DEN"><h2>Game 10: LV @ DEN</h2><p class="line">Line: DEN -10 O/U 40.5</p><table><tr><td><b>Projected Score:</b></td><td>LV 17 - DEN 35</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-LV-DEN--></td></tr></table></article>
+<article class="game-card" data-game="JAX-NYG"><h2>Game 11: JAX @ NYG</h2><p class="line">Line: JAX -6 O/U 46.5</p><table><tr><td><b>Projected Score:</b></td><td>JAX 33 - NYG 21</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-JAX-NYG--></td></tr></table></article>
+<article class="game-card" data-game="MIN-SF"><h2>Game 12: MIN @ SF</h2><p class="line">Line: SF -3 O/U 46.5</p><table><tr><td><b>Projected Score:</b></td><td>MIN 22 - SF 26</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-MIN-SF--></td></tr></table></article>
+<!--ADVERTISEMENT-->
+<section class="ad-box" aria-label="Advertisement">
+    <h2>Save on insurance with Liberty Mutual</h2>
+    <p>Stop worrying and start saving with Liberty Mutual. <a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><strong>Click here</strong></a> for customized coverage that fits your budget.</p>
+    <p class="ad-image"><a href="https://www.libertymutual.com/gregpanagiotatos-fl-445190?selectedOpt=auto_home" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEhJW-A8S78eGMtpVFkeRci_bw-7VWlCoeciRZcJUMWjB5DtjShq5VkTHQlfviT-NDUGojGsGqKbT8zLU4t3oS4JQoMVNmz-APnV0M1wqcPtuF2iaM8FstJqH6miChLR22EFbW1-SqAQ4n79OK1KSedBJ4Xi4AKF46QX8cfArNfGwKf5aMUxoKuOYG68SYc" alt="Liberty Mutual" loading="lazy"></a></p>
+    <p>Call a licensed insurance agent at <strong>800-266-0644</strong> and mention client number <strong>445190</strong>.</p>
+</section>
+<article class="game-card" data-game="CIN-WSH"><h2>Game 13: CIN @ WSH</h2><p class="line">Line: CIN -6.5 O/U 52.5</p><table><tr><td><b>Projected Score:</b></td><td>CIN 34 - WSH 21</td></tr><tr><td><b>Final Score:</b></td><td><!--FINAL-SCORE-CIN-WSH--></td></tr></table></article>
+<!--FEESHVERTISEMENT-->
+<section class="ad-box" aria-label="Advertisement">
+    <a href="https://open.spotify.com/artist/6fa6DV6wh6WscR3R7fWAyI" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit;">
+        <div style="position:relative; display:inline-block; width:100%;">
+            <img src="images/gfish-promo-ad.jpg" alt="Greggy Feesh Promo Banner" loading="lazy" style="width:100%; height:auto; display:block;">
+            <div style="position:absolute; left:0; right:0; bottom:0; background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.88) 55%); padding:34px 14px 10px; color:#fff; font-size:clamp(.85rem, 2.6vw, 1.1rem); font-weight:bold; line-height:1.3; text-align:center; font-family:Arial, sans-serif; text-shadow:0 1px 3px #000;">
+                Tired of the same old lame old songs? Check out the latest <strong style="color:#ffd700;">FRESH FEESH</strong> music from your new favorite artist <strong style="color:#c15cff;">Greggy Feesh and the Phlops</strong>.
+            </div>
+        </div>
+    </a>
+</section>
+        </section>
+    </main>
+</body>
+</html>
