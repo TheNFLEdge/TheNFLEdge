@@ -3,7 +3,10 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from urllib.parse import urljoin
 from unittest.mock import patch
+
+from bs4 import BeautifulSoup
 
 
 MODULE_PATH = Path(__file__).parents[1] / "nfl-projection.py"
@@ -72,6 +75,20 @@ class NflProjectionTests(unittest.TestCase):
                     scores = PROJECTION.project_matchup("A", "B", stats)
                     self.assertNotEqual(*scores)
                     self.assertTrue(all(score not in (1, 2, 4, 5) for score in scores))
+
+    def test_feesh_banner_resolves_in_root_and_archived_issues(self):
+        site = "https://thenfledge.github.io/TheNFLEdge/"
+        expected = urljoin(site, "images/gfish-promo-ad.jpg")
+        for html in (
+            PROJECTION.render_feeshvertisement(),
+            (PROJECTION.ROOT / "archives" / "2026" / "nfle26-09F.htm").read_text(encoding="utf-8"),
+            (PROJECTION.ROOT / "archives" / "2026" / "nfle26-10F.htm").read_text(encoding="utf-8"),
+        ):
+            image = BeautifulSoup(html, "html.parser").find("img", alt="Greggy Feesh Promo Banner")
+            self.assertIsNotNone(image)
+            for page in ("nfleTMP.htm", "archives/2026/nfle26-10F.htm"):
+                with self.subTest(page=page):
+                    self.assertEqual(urljoin(urljoin(site, page), image["src"]), expected)
 
     def test_weekly_template_generates_navigable_viewport_and_canonical_issue(self):
         stats = {
