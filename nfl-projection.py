@@ -132,9 +132,11 @@ def render_feeshvertisement():
 <section class="ad-box" aria-label="Advertisement">
     <a href="https://open.spotify.com/artist/6fa6DV6wh6WscR3R7fWAyI" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit;">
         <div style="position:relative; display:inline-block; width:100%;">
-            <img src="https://thenfledge.github.io/TheNFLEdge/images/gfish-promo-ad.jpg" alt="Greggy Feesh Promo Banner" loading="lazy" style="width:100%; height:auto; display:block;">
-            <div style="position:absolute; left:0; right:0; bottom:0; background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.88) 55%); padding:34px 14px 10px; color:#fff; font-size:clamp(.85rem, 2.6vw, 1.1rem); font-weight:bold; line-height:1.3; text-align:center; font-family:Arial, sans-serif; text-shadow:0 1px 3px #000;">
-                Tired of the same old lame old songs? Check out the latest <strong style="color:#ffd700;">FRESH FEESH</strong> music from your new favorite artist <strong style="color:#c15cff;">Greggy Feesh and the Phlops</strong>.
+            <img src="https://thenfledge.github.io/TheNFLEdge/images/gfeesh-promo-ad.jpg" alt="Greggy Feesh Promo Banner" loading="lazy" style="width:100%; height:auto; display:block;">
+            <div style="position:absolute; left:0; right:0; bottom:0; box-sizing:border-box; background:rgba(0,0,0,0.78); padding:12px 14px; color:#fff; font-size:clamp(.68rem, 2vw, 1.2rem); font-weight:bold; line-height:1.25; text-align:center; font-family:Arial, sans-serif; text-shadow:0 1px 3px #000;">
+                Tired of the same old lame old songs?<br>
+                Catch the latest <strong style="color:#7fff00;">FRESH FEESH</strong> music from your<br>
+                new favorite artist Greggy <strong style="color:#c15cff;">FEESH</strong> and the Phlops.
             </div>
         </div>
     </a>
