@@ -123,6 +123,24 @@ class NflProjectionTests(unittest.TestCase):
         for asset in ("nbaedge-banner.jpg", "gfeesh-thanksgiving-ad.jpg"):
             self.assertTrue((PROJECTION.ROOT / "images" / asset).is_file())
 
+    def test_banner_ads_have_readable_overlay_and_caption_structure(self):
+        nba = BeautifulSoup(PROJECTION.render_nbaedge_advertisement(), "html.parser")
+        nba_link = nba.find("a")
+        self.assertIn("position:relative", nba_link["style"])
+        self.assertIn("object-fit:cover", nba_link.find("img")["style"])
+        self.assertIn("Explore The NBA Edge", nba_link.get_text())
+
+        feesh = BeautifulSoup(PROJECTION.render_thanksgiving_feeshvertisement(), "html.parser")
+        image = feesh.find("img")
+        artwork = image.parent
+        self.assertIn("object-fit:cover", image["style"])
+        self.assertEqual(
+            {link["href"] for link in artwork.find_all("a")},
+            {PROJECTION.PUMPKIN_PIE_RELEASE_URL, PROJECTION.THANKSGIVING_RELEASE_URL},
+        )
+        self.assertIn("position:absolute", artwork.find("a").parent["style"])
+        self.assertIn("What's better than Thanksgiving", artwork.find_next_sibling("div").get_text())
+
     def test_weekly_template_generates_navigable_viewport_and_canonical_issue(self):
         stats = {
             "NE": {"pf_sum": 33, "pa_sum": 32, "wins": 2, "gp": 4},

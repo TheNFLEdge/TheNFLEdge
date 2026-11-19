@@ -116,12 +116,12 @@ def render_advertisement():
 def render_nbaedge_advertisement():
     return """<!--NBAEDGEADVERTISEMENT-->
 <section class="ad-box" data-ad-asset="nba-edge" aria-label="The NBA Edge advertisement" style="padding:0; overflow:hidden; background:#080808; border-color:#333;">
-    <a href="https://thenfledge.github.io/TheNBAEdge/index.html" target="_blank" rel="noopener noreferrer" style="display:block; color:#fff; text-align:center; text-decoration:none; font-family:Arial, sans-serif;">
-        <img src="https://thenfledge.github.io/TheNFLEdge/images/nbaedge-banner.jpg" alt="The NBA Edge basketball projections banner" loading="lazy" style="width:100%; height:auto; display:block;">
-        <div style="padding:20px 18px 22px;">
-            <h2 style="color:#ffd700;">Can't get enough winners?</h2>
+    <a href="https://thenfledge.github.io/TheNBAEdge/index.html" target="_blank" rel="noopener noreferrer" style="position:relative; display:flex; align-items:center; justify-content:center; min-height:250px; color:#fff; text-align:center; text-decoration:none; font-family:Arial, sans-serif;">
+        <img src="https://thenfledge.github.io/TheNFLEdge/images/nbaedge-banner.jpg" alt="" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; max-width:none; object-fit:cover; object-position:center; opacity:.45;">
+        <div style="position:relative; width:100%; padding:24px 20px; background:linear-gradient(90deg, rgba(0,0,0,.76), rgba(0,0,0,.48), rgba(0,0,0,.76));">
+            <h2 style="color:#7bc8ff;">Can't get enough winners?</h2>
             <p><strong style="color:#fff;">Get the edge every night.</strong> The NBA Edge is back with Greggy the Greek's NBA Edge 2.0&mdash;a computer-generated projection engine serving up score projections for every NBA game, every night.</p>
-            <span style="display:inline-block; padding:12px 20px; border-radius:5px; background:#ffd700; color:#080808; font-weight:700;">Explore The NBA Edge &rarr;</span>
+            <span style="display:inline-block; padding:12px 20px; border-radius:5px; background:#187bc7; color:#fff; font-weight:700;">Explore The NBA Edge &rarr;</span>
         </div>
     </a>
 </section>"""
@@ -144,16 +144,16 @@ def render_feeshvertisement():
 def render_thanksgiving_feeshvertisement():
     return f"""<!--FEESHVERTISEMENT-->
 <section class="ad-box" data-ad-asset="5" aria-label="Greggy FEESH and the Phlops Thanksgiving releases" style="padding:0; overflow:hidden; background:#21172a; border-color:#694b28;">
-    <img src="https://thenfledge.github.io/TheNFLEdge/images/gfeesh-thanksgiving-ad.jpg" alt="Greggy FEESH and the Phlops celebrate Thanksgiving with a turkey and a Giving Thanks sign" loading="lazy" style="width:100%; height:auto; display:block;">
-    <div style="padding:22px 18px; text-align:center; font-family:Arial, sans-serif;">
-        <h2 style="color:#ffd700;">What's better than Thanksgiving, turkey &amp; football?</h2>
-        <p><strong style="color:#8cff00;">FRESH FEESH&mdash;with a slice of Pumpkin Pie!</strong><br>
-        The latest and greatest from your new favorite band, <strong style="color:#e46aff;">Greggy FEESH and the Phlops</strong>.</p>
-        <p style="margin-bottom:18px;">Pre-order the new releases:</p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
-            <a href="{PUMPKIN_PIE_RELEASE_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 18px; border-radius:6px; background:#ffd700; color:#21172a; font-weight:700; text-decoration:none;">Pumpkin Pie (feat. G Pan)</a>
-            <a href="{THANKSGIVING_RELEASE_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 18px; border-radius:6px; background:#e46aff; color:#21172a; font-weight:700; text-decoration:none;">The Thanksgiving</a>
+    <div style="position:relative; padding-bottom:55px; background:linear-gradient(rgba(33,23,42,.72), rgba(33,23,42,.72)), url('https://thenfledge.github.io/TheNFLEdge/images/gfeesh-thanksgiving-ad.jpg') center 40% / cover;">
+        <img src="https://thenfledge.github.io/TheNFLEdge/images/gfeesh-thanksgiving-ad.jpg" alt="Greggy FEESH and the Phlops celebrate Thanksgiving" loading="lazy" style="width:min(100%, 490px); height:clamp(210px, 27vw, 250px); max-width:none; object-fit:cover; object-position:center 40%; display:block;">
+        <div style="position:absolute; bottom:0; left:0; right:0; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; padding:22px 12px 12px; background:linear-gradient(transparent, rgba(33,23,42,.95)); font-family:Arial, sans-serif;">
+            <a href="{PUMPKIN_PIE_RELEASE_URL}" target="_blank" rel="noopener noreferrer" style="flex:0 1 auto; min-width:0; padding:12px; border-radius:6px; background:#f28b21; color:#21172a; font-size:clamp(12px, 3vw, 16px); font-weight:700; text-align:center; text-decoration:none;">Pumpkin Pie (feat. G Pan)</a>
+            <a href="{THANKSGIVING_RELEASE_URL}" target="_blank" rel="noopener noreferrer" style="flex:0 1 auto; min-width:0; padding:12px; border-radius:6px; background:#e46aff; color:#21172a; font-size:clamp(12px, 3vw, 16px); font-weight:700; text-align:center; text-decoration:none;">The Thanksgiving</a>
         </div>
+    </div>
+    <div style="padding:14px 18px; text-align:center; font-family:Arial, sans-serif;">
+        <h2 style="color:#ffd700;">What's better than Thanksgiving, turkey &amp; football?</h2>
+        <p style="margin:0;"><strong style="color:#8cff00;">FRESH FEESH&mdash;with a slice of Pumpkin Pie!</strong> Pre-order the latest releases from <strong style="color:#e46aff;">Greggy FEESH and the Phlops</strong>.</p>
     </div>
 </section>"""
 
