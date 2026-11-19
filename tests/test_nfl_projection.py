@@ -78,12 +78,15 @@ class NflProjectionTests(unittest.TestCase):
 
     def test_feesh_banner_resolves_in_root_and_archived_issues(self):
         site = "https://thenfledge.github.io/TheNFLEdge/"
-        expected = urljoin(site, "images/gfish-promo-ad.jpg")
-        for html in (
-            PROJECTION.render_feeshvertisement(),
-            (PROJECTION.ROOT / "archives" / "2026" / "nfle26-09F.htm").read_text(encoding="utf-8"),
-            (PROJECTION.ROOT / "archives" / "2026" / "nfle26-10F.htm").read_text(encoding="utf-8"),
-        ):
+        pages = (
+            (PROJECTION.render_feeshvertisement(), "images/gfeesh-promo-ad.jpg"),
+            ((PROJECTION.ROOT / "archives" / "2026" / "nfle26-09F.htm").read_text(encoding="utf-8"),
+             "images/gfish-promo-ad.jpg"),
+            ((PROJECTION.ROOT / "archives" / "2026" / "nfle26-10F.htm").read_text(encoding="utf-8"),
+             "images/gfish-promo-ad.jpg"),
+        )
+        for html, asset in pages:
+            expected = urljoin(site, asset)
             image = BeautifulSoup(html, "html.parser").find("img", alt="Greggy Feesh Promo Banner")
             self.assertIsNotNone(image)
             for page in ("nfleTMP.htm", "archives/2026/nfle26-10F.htm"):
@@ -114,13 +117,17 @@ class NflProjectionTests(unittest.TestCase):
                     self.assertIn(PROJECTION.PUMPKIN_PIE_RELEASE_URL, html)
                     self.assertIn(PROJECTION.THANKSGIVING_RELEASE_URL, html)
                 else:
-                    self.assertEqual(image["src"], urljoin(site, "images/gfish-promo-ad.jpg"))
+                    self.assertEqual(image["src"], urljoin(site, "images/gfeesh-promo-ad.jpg"))
+                    self.assertIn("Catch the latest", feesh.get_text())
+                    self.assertIn("FRESH FEESH", feesh.get_text())
+                    self.assertIn("color:#7fff00;", feesh.find("strong")["style"])
+                    self.assertIn("color:#c15cff;", feesh.find_all("strong")[-1]["style"])
                     self.assertNotIn(PROJECTION.THANKSGIVING_RELEASE_URL, html)
                 for page in ("nfleTMP.htm", "archives/2026/nfle26-10F.htm"):
                     self.assertEqual(urljoin(urljoin(site, page), nba.find("img")["src"]),
                                      urljoin(site, "images/nbaedge-banner.jpg"))
                     self.assertEqual(urljoin(urljoin(site, page), image["src"]), image["src"])
-        for asset in ("nbaedge-banner.jpg", "gfeesh-thanksgiving-ad.jpg"):
+        for asset in ("nbaedge-banner.jpg", "gfeesh-thanksgiving-ad.jpg", "gfeesh-promo-ad.jpg"):
             self.assertTrue((PROJECTION.ROOT / "images" / asset).is_file())
 
     def test_banner_ads_have_readable_overlay_and_caption_structure(self):
@@ -140,6 +147,14 @@ class NflProjectionTests(unittest.TestCase):
         )
         self.assertIn("position:absolute", artwork.find("a").parent["style"])
         self.assertIn("What's better than Thanksgiving", artwork.find_next_sibling("div").get_text())
+
+        regular_feesh = BeautifulSoup(PROJECTION.render_feeshvertisement(), "html.parser")
+        regular_image = regular_feesh.find("img")
+        overlay = regular_image.find_next("div")
+        self.assertIn("background:rgba(0,0,0,0.78)", overlay["style"])
+        self.assertIn("left:0", overlay["style"])
+        self.assertIn("right:0", overlay["style"])
+        self.assertIn("Catch the latest", overlay.get_text(" ", strip=True))
 
     def test_weekly_template_generates_navigable_viewport_and_canonical_issue(self):
         stats = {
