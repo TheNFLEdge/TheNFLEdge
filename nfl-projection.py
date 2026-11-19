@@ -20,6 +20,9 @@ P_MULTIPLIERS = {
     "0.0": float(os.getenv("PG_PI_X", "1.5")),
 }
 MARGIN_ADJUSTMENT = float(os.getenv("PG_MD", "2.0"))
+THANKSGIVING_AD_WEEKS = {11, 12}
+PUMPKIN_PIE_RELEASE_URL = "https://distrokid.com/hyperfollow/greggyfeeshandthephlops/pumpkin-pie-feat-g-pan?ref=release"
+THANKSGIVING_RELEASE_URL = "https://distrokid.com/hyperfollow/greggyfeeshandthephlops/the-thanksgiving?ref=release"
 
 
 def confidence_bucket(wins, games):
@@ -110,6 +113,20 @@ def render_advertisement():
 </section>"""
 
 
+def render_nbaedge_advertisement():
+    return """<!--NBAEDGEADVERTISEMENT-->
+<section class="ad-box" data-ad-asset="nba-edge" aria-label="The NBA Edge advertisement" style="padding:0; overflow:hidden; background:#080808; border-color:#333;">
+    <a href="https://thenfledge.github.io/TheNBAEdge/index.html" target="_blank" rel="noopener noreferrer" style="display:block; color:#fff; text-align:center; text-decoration:none; font-family:Arial, sans-serif;">
+        <img src="https://thenfledge.github.io/TheNFLEdge/images/nbaedge-banner.jpg" alt="The NBA Edge basketball projections banner" loading="lazy" style="width:100%; height:auto; display:block;">
+        <div style="padding:20px 18px 22px;">
+            <h2 style="color:#ffd700;">Can't get enough winners?</h2>
+            <p><strong style="color:#fff;">Get the edge every night.</strong> The NBA Edge is back with Greggy the Greek's NBA Edge 2.0&mdash;a computer-generated projection engine serving up score projections for every NBA game, every night.</p>
+            <span style="display:inline-block; padding:12px 20px; border-radius:5px; background:#ffd700; color:#080808; font-weight:700;">Explore The NBA Edge &rarr;</span>
+        </div>
+    </a>
+</section>"""
+
+
 def render_feeshvertisement():
     return """<!--FEESHVERTISEMENT-->
 <section class="ad-box" aria-label="Advertisement">
@@ -122,6 +139,24 @@ def render_feeshvertisement():
         </div>
     </a>
 </section>"""
+
+
+def render_thanksgiving_feeshvertisement():
+    return f"""<!--FEESHVERTISEMENT-->
+<section class="ad-box" data-ad-asset="5" aria-label="Greggy FEESH and the Phlops Thanksgiving releases" style="padding:0; overflow:hidden; background:#21172a; border-color:#694b28;">
+    <img src="https://thenfledge.github.io/TheNFLEdge/images/gfeesh-thanksgiving-ad.jpg" alt="Greggy FEESH and the Phlops celebrate Thanksgiving with a turkey and a Giving Thanks sign" loading="lazy" style="width:100%; height:auto; display:block;">
+    <div style="padding:22px 18px; text-align:center; font-family:Arial, sans-serif;">
+        <h2 style="color:#ffd700;">What's better than Thanksgiving, turkey &amp; football?</h2>
+        <p><strong style="color:#8cff00;">FRESH FEESH&mdash;with a slice of Pumpkin Pie!</strong><br>
+        The latest and greatest from your new favorite band, <strong style="color:#e46aff;">Greggy FEESH and the Phlops</strong>.</p>
+        <p style="margin-bottom:18px;">Pre-order the new releases:</p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
+            <a href="{PUMPKIN_PIE_RELEASE_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 18px; border-radius:6px; background:#ffd700; color:#21172a; font-weight:700; text-decoration:none;">Pumpkin Pie (feat. G Pan)</a>
+            <a href="{THANKSGIVING_RELEASE_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 18px; border-radius:6px; background:#e46aff; color:#21172a; font-weight:700; text-decoration:none;">The Thanksgiving</a>
+        </div>
+    </div>
+</section>"""
+
 
 CHW_URL = "https://propropertylist.com/chw/"
 CHW_HERO_URL = "https://propropertylist.com/chw/images/chw_hero.jpg"
@@ -149,7 +184,7 @@ def render_chw_advertisement():
 </section>"""
 
 
-def render_week(matchups, stats):
+def render_week(matchups, stats, week=None):
     sections = []
     for group_start in range(0, 16, 4):
         group = matchups[group_start:group_start + 4]
@@ -158,7 +193,13 @@ def render_week(matchups, stats):
             for index, matchup in enumerate(group, 1)
         )
         if group_start + 4 >= 16:
-            sections.append(render_feeshvertisement())
+            sections.append(
+                render_thanksgiving_feeshvertisement()
+                if week in THANKSGIVING_AD_WEEKS
+                else render_feeshvertisement()
+            )
+        elif group_start == 0:
+            sections.append(render_nbaedge_advertisement())
         elif group_start == 4:
             sections.append(render_chw_advertisement())
         else:
@@ -173,7 +214,7 @@ def main():
     template = TEMPLATE_FILE.read_text(encoding="utf-8")
     week = int(data["target_week"])
     load_generation_state(week)
-    weekly_content = render_week(data["matchups"], data["team_stats"])
+    weekly_content = render_week(data["matchups"], data["team_stats"], week)
     final_html = template.replace("{{WEEK}}", str(week)).replace("<!-- GAME-CARDS -->\n            <!--ADVERTISEMENT-->", weekly_content)
     canonical_path = ROOT / f"nfle26-{week:02d}.htm"
     viewport_path = ROOT / "nfleTMP.htm"
