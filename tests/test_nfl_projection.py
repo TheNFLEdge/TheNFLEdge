@@ -90,6 +90,39 @@ class NflProjectionTests(unittest.TestCase):
                 with self.subTest(page=page):
                     self.assertEqual(urljoin(urljoin(site, page), image["src"]), expected)
 
+    def test_weekly_ad_placement_and_thanksgiving_selection(self):
+        matchups = [{"away": f"A{i}", "home": f"B{i}", "line": "A -1"} for i in range(16)]
+        site = "https://thenfledge.github.io/TheNFLEdge/"
+        for week in (10, 11, 12, 13):
+            with self.subTest(week=week):
+                html = PROJECTION.render_week(matchups, {}, week)
+                soup = BeautifulSoup(html, "html.parser")
+                sections = soup.select("section.ad-box")
+                self.assertEqual(len(sections), 4)
+                nba, chw, liberty, feesh = sections
+                self.assertEqual(nba["data-ad-asset"], "nba-edge")
+                self.assertEqual(nba.find("a")["href"], "https://thenfledge.github.io/TheNBAEdge/index.html")
+                self.assertIn("PRO Properties Group", chw.get_text())
+                self.assertIn("Liberty Mutual", liberty.get_text())
+                self.assertLess(html.index('data-game="A3-B3"'), html.index("<!--NBAEDGEADVERTISEMENT-->"))
+                self.assertLess(html.index("<!--NBAEDGEADVERTISEMENT-->"), html.index('data-game="A4-B4"'))
+                self.assertEqual(html.count("<!--ADVERTISEMENT-->"), 1)
+                self.assertEqual(html.count("<!--FEESHVERTISEMENT-->"), 1)
+                image = feesh.find("img")
+                if week in (11, 12):
+                    self.assertEqual(image["src"], urljoin(site, "images/gfeesh-thanksgiving-ad.jpg"))
+                    self.assertIn(PROJECTION.PUMPKIN_PIE_RELEASE_URL, html)
+                    self.assertIn(PROJECTION.THANKSGIVING_RELEASE_URL, html)
+                else:
+                    self.assertEqual(image["src"], urljoin(site, "images/gfish-promo-ad.jpg"))
+                    self.assertNotIn(PROJECTION.THANKSGIVING_RELEASE_URL, html)
+                for page in ("nfleTMP.htm", "archives/2026/nfle26-10F.htm"):
+                    self.assertEqual(urljoin(urljoin(site, page), nba.find("img")["src"]),
+                                     urljoin(site, "images/nbaedge-banner.jpg"))
+                    self.assertEqual(urljoin(urljoin(site, page), image["src"]), image["src"])
+        for asset in ("nbaedge-banner.jpg", "gfeesh-thanksgiving-ad.jpg"):
+            self.assertTrue((PROJECTION.ROOT / "images" / asset).is_file())
+
     def test_weekly_template_generates_navigable_viewport_and_canonical_issue(self):
         stats = {
             "NE": {"pf_sum": 33, "pa_sum": 32, "wins": 2, "gp": 4},

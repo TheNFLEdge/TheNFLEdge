@@ -9,6 +9,8 @@ The NFL projection site and historical archive for G.T.G.'s PanaGeoTech formula.
 
 The weekly page's navigation and banner are defined in `nfle26-template.htm`, so newly generated issues retain them. Their URLs use the GitHub Pages site address so they also work after an issue is moved into the archive. Updating the template does not update the existing viewport or archived issues; `nfleTMP.htm` can receive presentation-only updates without changing the canonical issue.
 
+The weekly generator places the NBA Edge ad after the first group of games, followed by the CHW, Liberty Mutual, and Feesh ads. The Feesh slot uses the Thanksgiving release ad for Weeks 11 and 12 and the regular ad for other weeks. Ad images use absolute site URLs so they remain visible in archives.
+
 ## Weekly rotation design
 
 `nfl_rotation_state.json` is the authoritative pointer to the active canonical issue. The numbered file, such as `nfle26-02.htm`, is the source of truth; `nfleTMP.htm` is a disposable viewport copy. The viewport may be annotated during the week, but it never selects a week, changes the handoff, or controls archiving.
