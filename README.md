@@ -11,6 +11,17 @@ The weekly page's navigation and banner are defined in `nfle26-template.htm`, so
 
 The weekly generator places the NBA Edge ad after the first group of games, followed by the CHW, Liberty Mutual, and Feesh ads. The Feesh slot uses the Thanksgiving release ad for Weeks 11 and 12 and the regular ad for other weeks. Ad images use absolute site URLs so they remain visible in archives.
 
+## Google Search discovery
+
+`robots.txt` allows crawlers and points to `sitemap.xml`, which lists the main public entry points. The archive vault links to individual seasons and issues; the sitemap intentionally excludes temporary pages and duplicate issue copies. Update the sitemap when a permanent entry point is added, removed, or renamed.
+
+After publishing these files to GitHub Pages:
+
+1. Confirm that `https://thenfledge.com/robots.txt` and `https://thenfledge.com/sitemap.xml` load successfully.
+2. Open [Google Search Console](https://search.google.com/search-console), add the `thenfledge.com` domain property, and verify ownership using the DNS TXT record Google provides.
+3. In **Sitemaps**, submit `https://thenfledge.com/sitemap.xml`. Use **URL inspection** to check the homepage and request indexing if appropriate.
+4. Monitor the sitemap and page indexing reports for errors. Discovery and indexing can take time and are not guaranteed; a `site:` search alone is not a complete indexing report.
+
 ## Weekly rotation design
 
 `nfl_rotation_state.json` is the authoritative pointer to the active canonical issue. The numbered file, such as `nfle26-02.htm`, is the source of truth; `nfleTMP.htm` is a disposable viewport copy. The viewport may be annotated during the week, but it never selects a week, changes the handoff, or controls archiving.
