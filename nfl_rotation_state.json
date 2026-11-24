@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "season": 2026,
-  "active_week": 11,
-  "active_issue": "nfle26-11.htm",
-  "active_issue_sha256": "64a00c609d665dd0b9d2eaaaa6a64b6858d09552637d5e60f6ac60a679df259a",
-  "generated_at": "2026-11-17T17:44:41.156587Z",
+  "active_week": 12,
+  "active_issue": "nfle26-12.htm",
+  "active_issue_sha256": "470321ccd4c63dbe15d70329330ff6438398afbff7d4ba535b95078eab242c44",
+  "generated_at": "2026-11-24T19:37:48.087525Z",
   "generated_by": "rotation",
   "viewport": "nfleTMP.htm"
 }
